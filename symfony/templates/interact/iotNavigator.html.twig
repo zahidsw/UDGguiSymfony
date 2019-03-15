@@ -1,0 +1,91 @@
+{% extends "Interact/layoutInteract.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.interact.iotNavigator'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+			$('#formChoice').on('submit', function() {
+		    	$.ajax({
+						url: $(this).attr('action'),
+						type: $(this).attr('method'),
+						data: $(this).serialize(),
+						success: function(html) { 
+							$("div#results").empty();
+							$("div#results").append(html);
+		                }
+		            });
+		        return false;
+		    });
+		});
+	</script>
+	
+	<script>
+		$(document).ready(function() {
+			var dlg = $("#dialog");
+			var height = '{{ is_tablet() ? 370 : 500 }}';
+			var width = '{{ is_tablet() ? 610  : 970 }}';
+		
+			$(function() {
+				$("#dialog").dialog({
+					autoOpen: false,
+					height: height,
+					width: width,
+					modal: true
+				});
+				
+			$("#opener").click(function() {
+				dlg.dialog("open");
+			});
+	
+			});
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.interact.iotNavigator'|trans }}&nbsp;(<a id="opener" style="cursor:pointer; text-decoration:underline;">{{ 'msg.simplified_view'|trans }}</a>)</h1>
+	
+	<form id="formChoice" action="{{ path('getResults') }}" method="post">
+	
+		{{ 
+			render(controller("App\\Controller\\NavigatorController:loadNavigator", 
+							{ 	'_locale': 			app.request.locale, 
+								'displayDevices':	0,
+								'prefix'		:	'_complex'
+							} 
+			)) 
+		}}
+		
+		<br/>
+		
+		{{ 'msg.filterCommonActions'|trans }}: 
+		
+		<input type="radio" name="bf" value="0">{{ 'msg.and'|trans }}
+		<input type="radio" name="bf" value="1" checked="checked">{{ 'msg.or'|trans }}
+		
+		<br/>
+
+		<input type="submit" value="{{ 'msg.search'|trans }}"	name="searchBtn" class="centerButton" />
+		
+		<br/><br/>
+		
+	</form>
+	
+	<!-- ------ Results ------- -->
+	
+	<div id="results"></div>
+	
+	<div id="dialog" title="{{ 'subMenu.interact.iotNavigator'|trans }}">{% include 'interact\\iotNavigatorSimple.html.twig' %}</div>
+	
+{% endblock %}

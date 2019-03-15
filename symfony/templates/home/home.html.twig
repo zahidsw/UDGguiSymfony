@@ -1,0 +1,130 @@
+{% extends "Home/layoutHome.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	    	$.ajaxSetup({ cache: false }); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
+	    	setInterval(function() {
+			    $('#remoteServerMsg').load("{{ path('iot6_HomeBundle_remoteServerMsg') }}");
+			    $('#lastAlerts').load("{{ path('iot6_HomeBundle_lastAlerts') }}");
+			}, 3000);
+	    });
+	</script>
+	
+	<script>
+		function scenario(scenarioId) {
+			
+			$( document ).ready(function() {
+				
+				$.ajax({
+	                url: '{{ path("iot6_SmartItBundle_Scenarios_Execute") }}',
+	                data: 'scenario_id='+ scenarioId,
+	                dataType: 'html',
+	                success: function(data, textStatus, xhr) {
+	                	var str = "Success";
+						if(data!='') {
+							str = "Error: " + data;
+						}
+	                    alert(str);
+	                },
+                	error: function(xhr, statusText) {
+						alert("Error: " + statusText);
+                    }
+	            });
+	            
+			});
+			
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<div class="leftColumn">
+	
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/interface/icons/interact.png') }}" />
+			<a href="{{ path('iot6_InteractBundle_iotNavigator') }}" class="title indent"><strong>{{ 'msg.interact'|trans }}</strong> {{ 'msg.with_smart_things'|trans }}</a>
+			<ul>
+				<li><a href="{{ path('iot6_InteractBundle_iotNavigator') }}">{{ 'msg.iot_navig'|trans }}</a></li>
+				<li><a href="{{ path('iot6_InteractBundle_mapList') }}">{{ 'msg.maps'|trans }}</a></li>
+			</ul>
+		</div>
+		
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.intelligence'|trans }}" src="{{ asset('assets/images/interface/icons/intelligence.png') }}" />
+			<a href="{{ path('iot6_SmartItBundle_Scenarios') }}" class="title indent"><strong>{{ 'msg.intelligence'|trans }}</strong> - {{ 'msg.make_it_smart'|trans }}</a>
+			<ul>
+				<li><a href="{{ path('iot6_SmartItBundle_Scenarios') }}">{{ 'msg.scenarios'|trans }}</a></li>
+				<li><a href="{{ path('iot6_SmartItBundle_RulesManager') }}">{{ 'msg.rules_manager'|trans }}</a></li>
+				<li>
+					{% for scenario in scenarios %}
+						<a onclick="scenario({{ scenario.id }});">
+							<img src="{{ asset('assets/images/scenarios/'~scenario.iconName) }}" />
+						</a>
+					{% else %}
+						Aucun scenario
+					{% endfor %}
+				</li>
+			</ul>
+		</div>
+		
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.apps_and_services'|trans }}" src="{{ asset('assets/images/interface/icons/icone_generique.png') }}" />
+			<a href="{{ path('iot6_AppsServicesBundle') }}" class="title indent"><strong>{{ 'msg.apps_and_services'|trans }}</strong></a>
+			<ul>
+				<li><a href="{{ path('iot6_AppsServicesBundle') }}">Application 1</a></li>
+				<li><a href="{{ path('iot6_AppsServicesBundle') }}">Application 2</a></li>
+				<li><a href="{{ path('iot6_AppsServicesBundle') }}">Application 3</a></li>
+			</ul>
+		</div>
+		
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.data_history'|trans }}" src="{{ asset('assets/images/interface/icons/history.png') }}" />
+			<a href="{{ path('iot6_DataBundle') }}" class="title indent"><strong>{{ 'msg.data_history'|trans }}</strong></a>
+		</div>
+		
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.config'|trans }}" src="{{ asset('assets/images/interface/icons/parameters.png') }}" />
+			<a href="{{ path('iot6_ConfigBundle_GeneralParameters') }}" class="title indent"><strong>{{ 'msg.config'|trans }}</strong></a>
+		</div>
+		
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.about_contact'|trans }}" src="{{ asset('assets/images/interface/icons/info.png') }}" />
+			<a href="{{ path('iot6_AboutBundle_About') }}" class="title indent"><strong>{{ 'msg.about_contact'|trans }}</strong></a>
+		</div>
+		
+	</div>
+	
+	<div id="remoteServerMsg" class="blocRight border">
+		<a href="{{ path('iot6_DataBundle') }}" class="title"><strong>{{ 'msg.message_remote_server'|trans }}</strong></a>
+		<img alt="{{ 'msg.loading'|trans }}..." src="{{ asset('assets/images/interface/icons/loader.gif') }}" />
+	</div>
+	
+	<div id="lastAlerts" class="blocRight border">
+		<a href="{{ path('iot6_AlertBundle') }}" class="title"><strong>{{ 'msg.last_alerts'|trans }}</strong></a>
+		<img alt="{{ 'msg.loading'|trans }}..." src="{{ asset('assets/images/interface/icons/loader.gif') }}" />
+	</div>
+	
+	<div class="blocRight">
+		<a href="{{ path('iot6_HomeBundle_bookmarkManagement') }}" class="title" id="shortcuts"><strong>{{ 'msg.shortcuts'|trans }}</strong></a>
+		<ul>
+			
+			{% for shortcut in shortcuts %}
+				<li><a href="{{ path(shortcut.route) }}">{{ shortcut.displayName|trans }}</a></li>
+			{% else %}
+				<li>Aucun raccourci</li>
+			{% endfor %}
+			
+		</ul>
+	</div>
+	
+{% endblock %}

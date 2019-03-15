@@ -1,0 +1,49 @@
+
+<script>
+
+	$(document).ready(function() {
+
+		$('#bookmark').click(function() {
+			var route = $('#bookmark').attr('data-action');
+
+			var idRoute = $('#hiddenIdRoute').val();
+			var url = Routing.generate(route, { 'id': idRoute });
+			
+			jQuery.ajax({
+				url: url,
+				type: 'GET',
+				success: function(data, textStatus, jqXHR) {
+					if(route == 'iot6_bookmarkAdd') {
+						$('#bookmark').attr('class', 'bookmarked');
+						$('#bookmark').attr('data-action', 'iot6_bookmarkDelete');
+						$('#bookmark').attr('title', '{{ "msg.bookmark_delete"|trans }}');
+					}
+					else {
+						$('#bookmark').attr('class', 'bookmarkedNon');
+						$('#bookmark').attr('data-action', 'iot6_bookmarkAdd');
+						$('#bookmark').attr('title', '{{ "msg.bookmark_add"|trans }}');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+				}
+			});
+			
+		});
+		
+	});
+
+</script>
+
+<div class="bookmarkDiv">
+	{% if display %}
+	
+		<input type="hidden" id="hiddenIdRoute" value="{{ idRoute }}" />
+		<div id="bookmarkDiv">
+			{% if add %}
+				<a class="bookmarkedNon" id="bookmark" data-action="iot6_bookmarkAdd" title="{{ 'msg.bookmark_add'|trans }}"></a>
+			{% else %}
+				<a class="bookmarked" id="bookmark" data-action="iot6_bookmarkDelete" title="{{ 'msg.bookmark_delete'|trans }}"></a>
+			{% endif %}
+		</div>
+	{% endif %}
+</div>

@@ -1,0 +1,18 @@
+{% extends is_mobile() ? is_tablet() ? "smartBoard.html.twig" : "mobile.html.twig" : "layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - About
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+ 
+{% block body %}
+	{{ parent() }}
+	
+	<div id="submenu">
+		{{ render(controller("App\\Controller\\MenuController:subMenuAbout", {'_locale':app.request.locale})) }}
+	</div>
+	
+{% endblock %}

@@ -1,0 +1,272 @@
+<table>
+	<tr>
+		<td class="cellImage">{{ 'nav.location'|trans }}:</td>
+		<td class="cellImage">
+			<img class="img2" src="{{ asset('assets/images/interface/icons/building.png') }}" alt="" />
+		</td>
+		<td class="cellSelect">
+			<select id="buildings{{ prefix }}" name="buildings{{ prefix }}">
+				<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+				{% for building in buildings %}
+			        
+			        {% if object is not null %}
+				        {% if building == object.building %}
+							<option selected="selected" value="{{ building.id }}">{{ building.name|capitalize }}</option>
+						{% else %}
+				        	<option value="{{ building.id }}">{{ building.name|capitalize }}</option>
+				        {% endif %}
+			        {% else %}
+			        	<option value="{{ building.id }}">{{ building.name|capitalize }}</option>
+			        {% endif %}
+			        
+			    {% endfor %}
+			</select>
+		</td>
+		<td class="cellImage">
+			<img class="img2" src="{{ asset('assets/images/interface/icons/floor.png') }}" alt="" />
+		</td>
+		<td class="cellSelect">
+			<select id="floors{{ prefix }}" name="floors{{ prefix }}">
+				<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+				{% for floor in floors %}
+				
+					{% if object is not null %}
+						{% if floor == object.floor %}
+							<option selected="selected" value="{{ floor.id }}">{{ floor.name|capitalize }}</option>
+						{% else %}
+				        	<option value="{{ floor.id }}">{{ floor.name|capitalize }}</option>
+				        {% endif %}
+			        {% else %}
+			        	<option value="{{ floor.id }}">{{ floor.name|capitalize }}</option>
+			        {% endif %}
+			        
+			    {% endfor %}
+			</select>
+		</td>
+		<td class="cellImage">
+			<img class="img2" src="{{ asset('assets/images/interface/icons/roomCategorie.png') }}" alt="" />
+		</td>
+		<td class="cellSelect">
+			<select id="roomTypes{{ prefix }}" name="roomTypes{{ prefix }}">
+				<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+				{% for roomType in roomTypes %}
+				
+					{% if object is not null %}
+						{% if roomType == object.roomType %}
+							<option selected="selected" value="{{ roomType.id }}">{{ roomType.name|capitalize }}</option>
+						{% else %}
+				        	<option value="{{ roomType.id }}">{{ roomType.name|capitalize }}</option>
+				        {% endif %}
+			        {% else %}
+			        	<option value="{{ roomType.id }}">{{ roomType.name|capitalize }}</option>
+			        {% endif %}
+			        
+			    {% endfor %}
+			</select>
+		</td>
+		<td class="cellImage">
+			<img class="img2" src="{{ asset('assets/images/interface/icons/room.png') }}" alt="" />
+		</td>
+		<td class="cellSelect">
+			<select id="rooms{{ prefix }}" name="rooms{{ prefix }}">
+				<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+				{% for room in rooms %}
+			        
+			        {% if object is not null %}
+				        {% if room == object.room %}
+							<option selected="selected" value="{{ room.id }}">{{ room.name|capitalize }}</option>
+						{% else %}
+				        	<option value="{{ room.id }}">{{ room.name|capitalize }}</option>
+				        {% endif %}
+					{% else %}
+			        	<option value="{{ room.id }}">{{ room.name|capitalize }}</option>
+			        {% endif %}
+			        
+			    {% endfor %}
+			</select>
+		</td>
+	</tr>
+	
+	{% if displayObjects %}
+		<tr>
+			<td class="cellImage">{{ 'nav.objects'|trans }}:</td>
+			<td class="cellImage">
+				<img class="img2" src="{{ asset('assets/images/interface/icons/objectFamily.png') }}" alt="" /></td>
+			</td>
+			<td class="cellSelect">
+				<select id="categories{{ prefix }}" name="categories{{ prefix }}">
+					<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+					{% for category in categories %}
+						
+						{% if object is not null %}
+							{% if category == object.category %}
+								<option selected="selected" value="{{ category.id }}">{{ category.internalName|capitalize }}</option>
+							{% else %}
+					        	<option value="{{ category.id }}">{{ category.internalName|capitalize }}</option>
+					        {% endif %}
+						{% else %}
+							<option value="{{ category.id }}">{{ category.internalName|capitalize }}</option>
+						{% endif %}
+				        
+				    {% endfor %}
+				</select>
+			</td>
+			<td class="cellImage">
+				<img class="img2" src="{{ asset('assets/images/interface/icons/objectFamily.png') }}" alt="" /></td>
+			</td>
+			<td class="cellSelect">
+				<select id="families{{ prefix }}" name="families{{ prefix }}">
+					<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+					{% for family in families %}
+					
+				        {% if object is not null %}
+					        {% if family == object.family %}
+								<option selected="selected" value="{{ family.id }}">{{ family.internalName|capitalize }}</option>
+							{% else %}
+					        	<option value="{{ family.id }}">{{ family.internalName|capitalize }}</option>
+					        {% endif %}
+						{% else %}
+							<option value="{{ family.id }}">{{ family.internalName|capitalize }}</option>
+						{% endif %}
+				        
+				    {% endfor %}
+				</select>
+			</td>
+			
+			{% if displayDevices %}
+			
+				<td class="cellImage">
+					<img class="img2" src="{{ asset('assets/images/interface/icons/device.png') }}" alt="" />
+				</td>
+				<td class="cellSelect">
+					<select id="devices{{ prefix }}" name="devices{{ prefix }}">
+						<option selected="selected" value="-1">{{ 'nav.all'|trans }}</option>
+						{% for device in devices %}
+						
+							{% if object is not null %}
+						        {% if device == object.device %}
+									<option selected="selected" value="{{ device.id }}">{{ device.assignedName|capitalize }}</option>
+								{% else %}
+						        	<option value="{{ device.id }}">{{ device.assignedName|capitalize }}</option>
+						        {% endif %}
+							{% else %}
+								<option value="{{ device.id }}">{{ device.assignedName|capitalize }}</option>
+							{% endif %}
+					        
+					    {% endfor %}
+					</select>
+				</td>
+			
+			{% else %}
+				<td>&nbsp;</td>
+			{% endif %}
+			
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+
+	{% endif %}
+	
+</table>
+		
+		
+<script>
+	var buildings{{ prefix }} 	= $('#buildings{{ prefix }}');
+    var floors{{ prefix }} 		= $('#floors{{ prefix }}');
+    var roomTypes{{ prefix }} 	= $('#roomTypes{{ prefix }}');
+    var rooms{{ prefix }} 		= $('#rooms{{ prefix }}');
+    var categories{{ prefix }} 	= $('#categories{{ prefix }}');
+    var families{{ prefix }} 	= $('#families{{ prefix }}');
+    var devices{{ prefix }} 	= $('#devices{{ prefix }}');
+
+    $(document).ready(function() {
+	    
+        buildings{{ prefix }}.on('change', function() {
+			var data = 'idBuilding='+ $(this).val();
+	        
+        	updateList(data, floors{{ prefix }}, 		'{{ path("getFloorsForBuilding") }}' );
+        	updateList(data, roomTypes{{ prefix }},		'{{ path("getRoomTypesForBuilding") }}' );
+        	updateList(data, rooms{{ prefix }}, 		'{{ path("getRoomsForBuilding") }}' );
+        	updateList(data, categories{{ prefix }}, 	'{{ path("getCategoriesForBuilding") }}' );
+        	updateList(data, families{{ prefix }}, 		'{{ path("getFamiliesForBuilding") }}' );
+        	updateList(data, devices{{ prefix }}, 		'{{ path("getDevicesForBuilding") }}' );
+        });
+
+        floors{{ prefix }}.on('change', function() {
+        	var data = 	'idFloor='+ $(this).val() + 
+        				'&idBuilding=' + buildings{{ prefix }}.val();
+        	
+        	updateList(data, roomTypes{{ prefix }},		'{{ path("getRoomTypesForFloor") }}' );
+        	updateList(data, rooms{{ prefix }},			'{{ path("getRoomsForFloor") }}' );
+        	updateList(data, categories{{ prefix }},	'{{ path("getCategoriesForFloor") }}' );
+        	updateList(data, families{{ prefix }}, 		'{{ path("getFamiliesForFloor") }}' );
+        	updateList(data, devices{{ prefix }}, 		'{{ path("getDevicesForFloor") }}' );
+        });
+
+        roomTypes{{ prefix }}.on('change', function() {
+		var data = 		'idRoomType=' + $(this).val() + 
+						'&idBuilding=' + buildings{{ prefix }}.val() + 
+						'&idFloor=' + floors{{ prefix }}.val() ;
+        	
+        	updateList(data, rooms{{ prefix }}, 		'{{ path("getRoomsForRoomType") }}' );
+        	updateList(data, categories{{ prefix }},	'{{ path("getCategoriesForRoomType") }}' );
+        	updateList(data, families{{ prefix }}, 		'{{ path("getFamiliesForRoomType") }}' );
+        	updateList(data, devices{{ prefix }}, 		'{{ path("getDevicesForRoomType") }}' );
+        });
+
+        rooms{{ prefix }}.on('change', function() {
+        	var data = 	'idRoom=' + $(this).val() +
+			        	'&idRoomType=' + roomTypes{{ prefix }}.val() + 
+						'&idBuilding=' + buildings{{ prefix }}.val() + 
+						'&idFloor=' + floors{{ prefix }}.val() ;
+        	
+        	updateList(data, categories{{ prefix }},	'{{ path("getCategoriesForRoom") }}' );
+        	updateList(data, families{{ prefix }}, 		'{{ path("getFamiliesForRoom") }}' );
+        	updateList(data, devices{{ prefix }}, 		'{{ path("getDevicesForRoom") }}' );
+        });
+
+        categories{{ prefix }}.on('change', function() {
+        	var data = 	'idCategory=' + $(this).val() + 
+        				'&idBuilding=' + buildings{{ prefix }}.val() + 
+        				'&idFloor=' + floors{{ prefix }}.val() +
+        				'&idRoomType=' + roomTypes{{ prefix }}.val() +
+        				'&idRoom=' + rooms{{ prefix }} .val();
+
+        	updateList(data, families{{ prefix }}, 	'{{ path("getFamiliesForCategory") }}' );
+        	updateList(data, devices{{ prefix }}, 	'{{ path("getDevicesForCategory") }}' );
+        });
+
+        families{{ prefix }}.on('change', function() {
+        	var data = 	'idFamily=' + $(this).val() +
+            			'&idCategory=' + categories{{ prefix }}.val() + 
+						'&idBuilding=' + buildings{{ prefix }}.val() + 
+						'&idFloor=' + floors{{ prefix }}.val() +
+						'&idRoomType=' + roomTypes{{ prefix }}.val() +
+						'&idRoom=' + rooms{{ prefix }} .val();
+						
+        	updateList(data, devices{{ prefix }}, 	'{{ path("getDevicesForFamily") }}' );
+	        });
+
+	    });
+
+	    
+		function updateList(data, dest, url) {
+            $.ajax({
+                url: url,
+                data: data,
+                dataType: 'json',
+                success: function(json) {
+                	dest.empty();
+                    $.each(json, function(index, value) {
+                    	var selected = "";
+	                    if(index == -1)
+		                    selected = "selected='selected'";
+                        dest.append('<option ' + selected + 'value="'+ index +'">'+ value +'</option>');
+                    });
+                }
+            });
+		}
+
+		
+	    
+</script>

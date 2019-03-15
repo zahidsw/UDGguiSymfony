@@ -1,0 +1,201 @@
+{% extends "iot6SmartItBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.smartIt.triggers'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<a class="subtitle2" href="{{ path('iot6_SmartItBundle_Triggers_Add') }}">[{{ 'msg.new_trigger'|trans }}]</a>
+	
+	<br/><br/>
+	
+	{% for flashMessage in app.session.flashbag.get('ko') %}
+	    <div class="messageKo">{{ flashMessage }}</div>
+	{% endfor %}
+	
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div>
+	{% endfor %}	
+	
+	<h1>{{ 'msg.trigger_active'|trans }}</h1>
+	
+	<br/>
+	
+	<div id='zebraTableDiv'>
+		<table style="width: 100%;">
+			<thead>
+				<th colspan="3">&nbsp;</th>
+				<th style="width: 200px;">{{ 'msg.event'|trans }}</th>
+				<th style="width: 200px;">{{ 'msg.source'|trans }}</th>
+				<th style="width: 200px;">{{ 'msg.rule'|trans }}</th>
+				<th style="width: 200px;">{{ 'msg.last_update'|trans }}</th>
+			</thead>
+			<tbody>
+				{% for trigger in activesTriggers %}
+					<tr>
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_SmartItBundle_Triggers_ActDesact', { 'id': trigger.id }) }}">
+								<img alt="{{ 'msg.deactivate'|trans }}" src="{{ asset('assets/images/interface/icons/actif.png') }}" />
+							</a>
+						</td>
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_SmartItBundle_Triggers_Edit', { 'id': trigger.id }) }}">
+								<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
+							</a>
+						</td>
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_SmartItBundle_Triggers_Delete', { 'id': trigger.id }) }}">
+								<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+									onclick="return(confirm('{{ 'ask.trigger_delete'|trans }}'));" />
+							</a>
+						</td>
+						<td>{{ trigger.action.internalName }}</td>
+						<td>
+							<ul>
+								{% if trigger.building is not null %}
+									<li>{{ trigger.building.name }}</li>
+								{% endif %}
+								{% if trigger.floor is not null %}
+									<li>{{ trigger.floor.name }}</li>
+								{% endif %}
+								{% if trigger.roomType is not null %}
+									<li>{{ trigger.roomType.name }}</li>
+								{% endif %}
+								{% if trigger.room is not null %}
+									<li>{{ trigger.room.name }}</li>
+								{% endif %}
+								{% if trigger.category is not null %}
+									<li>{{ trigger.category.internalName }}</li>
+								{% endif %}
+								{% if trigger.family is not null %}
+									<li>{{ trigger.family.internalName }}</li>
+								{% endif %}
+								{% if trigger.device is not null %}
+									<li>{{ trigger.device.assignedName }}</li>
+								{% endif %}
+							</ul>
+						</td>
+						<td>{{ trigger.rule.name }}</td>
+						<td>
+							{% if trigger.lastChange is not null %}
+								{{ trigger.lastChange | date("d.m.Y H:i:s") }}
+							{% else %}
+								&nbsp;
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbTriggersActives,
+				'nbItemPerPage': nbActivesProPage,
+				'route': 'iot6_SmartItBundle_Triggers',
+				'nbPagesDisplayed': 15,
+				'currentPage': pageActive,
+				'arg': 'pageActive'
+				}
+			)) 
+		%}
+		
+		<br/><br/><br/>
+		<h1>{{ 'msg.trigger_inactive'|trans }}</h1>
+		<br/>
+		
+		<table style="width: 100%;">
+			<thead>
+				<th colspan="3">&nbsp;</th>
+				<th style="width: 200px;">{{ 'msg.event'|trans }}</th>
+				<th style="width: 200px;">{{ 'msg.source'|trans }}</th>
+				<th style="width: 200px;">{{ 'msg.rule'|trans }}</th>
+				<th style="width: 200px;">{{ 'msg.last_update'|trans }}</th>
+			</thead>
+			<tbody>
+				{% for trigger in inactivesTriggers%}
+					<tr>
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_SmartItBundle_Triggers_ActDesact', { 'id': trigger.id }) }}">
+								<img alt="{{ 'msg.activate'|trans }}" src="{{ asset('assets/images/interface/icons/inactif.png') }}" />
+							</a>
+						</td>
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_SmartItBundle_Triggers_Edit', { 'id': trigger.id }) }}">
+								<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
+							</a>
+						</td>
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_SmartItBundle_Triggers_Delete', { 'id': trigger.id }) }}">
+								<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+									onclick="return(confirm('{{ 'ask.trigger_delete'|trans }}'));" />
+							</a>
+						</td>
+						<td>{{ trigger.action.internalname }}</td>
+						<td>
+							<ul>
+								{% if trigger.family is not null %}
+									<li>{{ trigger.family.internalName }}</li>
+								{% endif %}
+								{% if trigger.category is not null %}
+									<li>{{ trigger.category.internalName }}</li>
+								{% endif %}
+								{% if trigger.device is not null %}
+									<li>{{ trigger.device.assignedName }}</li>
+								{% endif %}
+								{% if trigger.roomType is not null %}
+									<li>{{ trigger.roomType.name }}</li>
+								{% endif %}
+								{% if trigger.room is not null %}
+									<li>{{ trigger.room.name }}</li>
+								{% endif %}
+								{% if trigger.floor is not null %}
+									<li>{{ trigger.floor.name }}</li>
+								{% endif %}
+								{% if trigger.building is not null %}
+									<li>{{ trigger.building.name }}</li>
+								{% endif %}
+							</ul>
+						</td>
+						<td>{{ trigger.rule.name }}</td>
+						<td>
+							{% if trigger.lastChange is not null %}
+								{{ trigger.lastChange | date("d.m.Y H:i:s") }}
+							{% else %}
+								&nbsp;
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbTriggersInactives,
+				'nbItemPerPage': nbInactivesProPage,
+				'route': 'iot6_SmartItBundle_Triggers',
+				'nbPagesDisplayed': 15,
+				'currentPage': pageActive,
+				'arg': 'pageInactive'
+				}
+			)) 
+		%}
+		
+	</div>
+	
+{% endblock %}

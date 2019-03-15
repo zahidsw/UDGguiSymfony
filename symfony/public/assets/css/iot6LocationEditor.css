@@ -1,0 +1,47 @@
+div.location_option_container {
+	border: solid 1px;
+	margin-bottom: 15px;
+}
+
+div.location_option_container > a {
+	background-color: #E5E4E2;
+	display: block;
+	font-weight: bold;
+	padding: 2px 0;
+}
+
+div.location_option_container img {
+	vertical-align:text-top;
+}
+
+#div_devices_list {
+	overflow-x: scroll;
+    overflow-y: hidden;
+    white-space:nowrap
+}
+
+div.location_device {
+	border: solid 1px;
+	display:inline-block;
+	margin: 5px;
+	height: 30px;
+	line-height: 30px;
+	padding: 5px;
+	background-color: white;
+}
+
+div.location_device:hover {
+	cursor: move;
+}
+
+#color-box {
+	width: 30px;
+	height: 30px;
+	border: solid 1px;
+	float: right;
+	margin-left: 10px;
+}
+
+#opacity_slider {
+	margin: 10px 0;
+}

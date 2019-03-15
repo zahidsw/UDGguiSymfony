@@ -1,0 +1,46 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.roomType_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.roomType_edit'|trans }}</h1>
+	
+	<br/><br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Locations_RoomTypes_Edit', {'id': roomType.id } ) }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>{{ form_label(form.name, 'conf.name'|trans) }}</td>
+				<td>{{ form_widget(form.name) }}</td>
+				<td>{{ form_errors(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.actual_image'|trans }}</td>
+				<td><img src="{{ asset('images/roomTypes/'~roomType.iconName) }}" alt="{{ roomType.iconName }}" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.file, 'conf.new_image'|trans) }}</td>
+				<td>{{ form_widget(form.file) }}</td>
+				<td>{{ form_errors(form.file) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Locations_RoomTypes') }}'" />
+	</form>
+	
+	
+{% endblock %}

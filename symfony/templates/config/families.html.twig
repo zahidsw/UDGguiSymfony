@@ -1,0 +1,72 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.devices'|trans }} - {{ 'conf.subMenu.families'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.devices'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:devicesMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.subMenu.families'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Devices_families_Add') }}">[{{ 'conf.family_add'|trans }}]</a>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%">
+			{% for family in families %}
+				<tr>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Devices_families_Edit', { 'id': family.id }) }}">
+							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Devices_families_Delete', { 'id': family.id }) }}">
+							<img src="{{ asset('images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'conf.ask.delete_family'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_ConfigBundle_Devices_families_Edit', { 'id': family.id }) }}">
+							{{ family.internalName }}
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbFamilies,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		%}
+	    
+	</div>
+{% endblock %}

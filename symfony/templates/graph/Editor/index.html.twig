@@ -1,0 +1,74 @@
+{% extends "graph/layoutGraph.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/iot6GraphEditor.css') }}" />
+	<link rel="stylesheet" href="{{ asset('assets/css/colpick.css') }}" />
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<div class="graph_option_container">
+		<a href="javascript:editor_hideShowDiv('devices');"><img id="img_devices" src="{{ asset('assets/images/graph/arrow_open.gif') }}" />{{ 'graph.select_device'|trans }}</a>
+		<div id="div_devices" style="padding:0 0 0 15px;">
+			{{
+				render(controller("App\\Controller\\NavigatorController:loadNavigator", 
+								{ 	'_locale': 			app.request.locale, 
+									'displayDevices':	1,
+									'displayVariables': true
+								} 
+				)) 
+			}}
+		</div>
+	</div>
+
+	{#
+		<div class="graph_option_container">
+			<a href="javascript:editor_hideShowDiv('variables');"><img id="img_variables" src="{{ asset('bundles/iot6graph/images/arrow_open.gif') }}" />{{ 'graph.select_variable'|trans }}</a>
+			<div id="div_variables"></div>
+		</div>
+	#}
+	
+	<div class="graph_option_container">
+		<a href="javascript:editor_hideShowDiv('variables_list');"><img id="img_variables_list" src="{{ asset('assets/images/graph/arrow_open.gif') }}" />{{ 'graph.list_variables_selected'|trans }}</a>
+		<div id="div_variables_list"></div>
+	</div>
+	
+	<div class="graph_option_container">
+		<a href="javascript:editor_hideShowDiv('graph_view');"><img id="img_graph_view" src="{{ asset('assets/images/graph/arrow_open.gif') }}" />{{ 'graph.graphic'|trans }}</a>
+		<div id="div_graph_view">
+			{% 
+				render(controller("App\\Controller\\ViewerController:viewer", 
+					{} 
+					)) 
+			%}
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		//global variables
+		var msg_no_device_selected = "{{ 'graph.no_device_selected'|trans }}";
+		var msg_no_variable = "{{ 'graph.no_variable'|trans }}";
+		var msg_no_variable_selected = "{{ 'graph.no_variable_selected'|trans }}";
+		var msg_ajax_error = "{{ 'graph.ajax_error'|trans }}";
+		var msg_add = "{{ 'graph.add'|trans }}";
+		var msg_remove = "{{ 'graph.remove'|trans }}";
+		var msg_device = "{{ 'graph.device'|trans }}";
+		var msg_variable = "{{ 'graph.variable'|trans }}";
+		var msg_unit = "{{ 'graph.unit'|trans }}";
+		var msg_color = "{{ 'graph.color'|trans }}";
+		var ajax_loading_image_path = "{{ asset('assets/images/graph/ajax-loader.gif') }}";
+		var arrow_closed_path = "{{ asset('assets/images/graph/arrow_closed.gif') }}";
+		var arrow_open_path = "{{ asset('assets/images/graph/arrow_open.gif') }}";
+		var add_path =  "{{ asset('assets/images/graph/add.jpg') }}";
+		var remove_path =  "{{ asset('assets/images/graph/remove.png') }}";
+	</script>
+
+	<script src="{{ asset('assets/js/iot6GraphEditor.js') }}"></script>
+	<script src="{{ asset('assets/js/colpick.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "iot6HomeBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'msg.shortcut_management'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'msg.shortcut_management'|trans }}</h1>
+	
+	<br/>
+
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div><br/>
+	{% endfor %}
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%;">
+			{% for shortcut in shortcuts %}
+				<tr>
+					<td style="width:70px; text-align:center;">
+						<a href="{{ path('iot6_HomeBundle_bookmarkDelete', {'id': shortcut.id}) }}" onclick="return(confirm('{{ 'msg.confirm_delete_shortcut'|trans }}'));" >
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}" />
+						</a>
+					</td>
+					<td style="width:600px;">{{ shortcut.displayName|trans }}</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td>&nbsp;</td>
+					<td>{{ 'no_shortcut'|trans }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+	
+	<br/><br/>
+	
+	<input type="button" value="{{ 'msg.back'|trans }}" onclick="window.location='{{ path('iot6_HomeBundle') }}'" />
+{% endblock %}

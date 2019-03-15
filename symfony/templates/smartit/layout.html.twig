@@ -1,0 +1,18 @@
+{% extends is_mobile() ? is_tablet() ? "::smartBoard.html.twig" : "::mobile.html.twig" : "::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - Smart It
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+ 
+{% block body %}
+	{{ parent() }}
+	
+	<div id="submenu">
+		{{ render(controller("iot6MenuBundle:Menu:subMenuSmartIt", {'_locale':app.request.locale})) }}
+	</div>
+	
+{% endblock %}

@@ -1,0 +1,52 @@
+	<script>
+		$(document).ready( function() {
+	
+			$("#monForm").submit(function () {
+	
+				$.ajax({
+					url: $(this).attr('action'),
+					type: $(this).attr('method'),
+					data: $(this).serialize(),
+					success: function(html) {
+						$("div#zoneTexte").empty();
+						$("div#zoneTexte").append(html);
+					}
+				});
+				
+				return false;
+			});
+		});
+	</script>
+	
+	<div id="zoneTexte"></div>
+	
+	<br/>
+	
+	
+	{{ form_start(form, {'attr': {'id': 'monForm'},'action': path('getCard', { 'id': card.id }) }) }}
+		{{ form_errors(form) }}
+		<div id="zebraTableDiv">
+			<table id="popupTable" style="width:100%;">
+				<tr>
+					<td style="width:30%">{{ 'msg.ipv6_address'|trans }}</td>
+					<td colspan="2">{{ card.ipv6address }}</td>
+				</tr>
+				<tr>
+					<td>{{ form_label(form.name, 'msg.name'|trans) }}</td>
+					<td>{{ form_widget(form.name) }}</td>
+					<td>{{ form_errors(form.name) }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.state'|trans }}</td>
+					<td>{{ form_widget(form.cardState) }}</td>
+					<td>{{ form_errors(form.cardState) }}</td>
+				</tr>
+			</table>	
+		</div>
+	
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'msg.edit'|trans }}" />
+	{{ form_end(form) }}

@@ -1,0 +1,15 @@
+<ul id="onglets">
+
+	{% for menu in menus %}
+		
+		<li style="background-color: {{ menu.color }}"
+		
+			{% if menu.route.bundlePrefix|lower in route %}
+	  			 class="active"
+			{% endif %}
+		
+		><a href="{{ path(menu.route.route) }}">{{ ('menu.'~menu.name) | trans }}</a></li>
+		
+	{% endfor %}
+	
+</ul>

@@ -1,0 +1,161 @@
+{% extends "iot6SmartItBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'msg.trigger_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<h1>{{ 'msg.trigger_edit'|trans }}</h1>
+	
+	<br/>
+	
+	{% for flashMessage in app.session.flashbag.get('ko') %}
+	    <div class="messageKo">{{ flashMessage }}</div><br/>
+	{% endfor %}
+	
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div><br/>
+	{% endfor %}
+	
+	<form method="post" action="{{ path('iot6_SmartItBundle_Triggers_Edit', { 'id': object.id } ) }}">
+	
+		<div class="sub_title1">{{ 'msg.when'|trans }}:</div>
+		
+		<table>
+			<tr>
+				<td style="width:123px">{{ 'msg.event'|trans }}:</td>
+				<td>
+					<select name="event">
+						{% for action in actions %}
+							{% if action == object.action %}
+								<option selected="selected" value="{{ action.id }}">{{ action.internalName }}</option>
+							{% endif %}
+							<option value="{{ action.id }}">{{ action.internalName }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<div class="sub_title1">{{ 'msg.source'|trans }}:</div>
+		
+		{% 
+			render(controller("iot6NavigatorBundle:Navigator:loadNavigator", 
+							{ 	'_locale': 			app.request.locale, 
+								'displayDevices':	1,
+								'object':			object
+							} 
+			)) 
+		%}
+		
+		<br/>
+		
+		<div class="sub_title1">{{ 'msg.action'|trans }}:</div>
+		
+		<table>
+			<tr>
+				<td style="width:123px">{{ 'msg.save_variables'|trans }}:</td>
+				<td>
+					<select name="saveVariable">
+						{% if object.saveVariable %}
+							<option selected="selected" value="1">{{ 'msg.yes'|trans }}</option>
+							<option value="0">{{ 'msg.no'|trans }}</option>
+						{% else %}
+							<option value="1">{{ 'msg.yes'|trans }}</option>
+							<option selected="selected" value="0">{{ 'msg.no'|trans }}</option>
+						{% endif %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.rule'|trans }}:</td>
+				<td>
+					<select name="rules">
+						{% for rule in rules %}
+							{% if rule == object.rule %}
+								<option selected="selected" value="{{ rule.id }}">{{ rule.name }}</option>
+							{% endif %}
+							<option value="{{ rule.id }}">{{ rule.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.override'|trans }}:</td>
+				<td>
+					<select name="override">
+						{% if object.override %}
+							<option selected="selected" value="1">{{ 'msg.yes'|trans }}</option>
+							<option value="0">{{ 'msg.no'|trans }}</option>
+						{% else %}
+							<option value="1">{{ 'msg.yes'|trans }}</option>
+							<option selected="selected" value="0">{{ 'msg.no'|trans }}</option>
+						{% endif %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.force'|trans }}:</td>
+				<td>
+					<select name="forced">
+						{% if object.forced %}
+							<option selected="selected" value="1">{{ 'msg.yes'|trans }}</option>
+							<option value="0">{{ 'msg.no'|trans }}</option>
+						{% else %}
+							<option value="1">{{ 'msg.yes'|trans }}</option>
+							<option selected="selected" value="0">{{ 'msg.no'|trans }}</option>
+						{% endif %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.is_active'|trans }}:</td>
+				<td>
+					<select name="isActive">
+						{% if object.isActive %}
+							<option selected="selected" value="1">{{ 'msg.yes'|trans }}</option>
+							<option value="0">{{ 'msg.no'|trans }}</option>
+						{% else %}
+							<option value="1">{{ 'msg.yes'|trans }}</option>
+							<option selected="selected" value="0">{{ 'msg.no'|trans }}</option>
+						{% endif %}
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<div class="sub_title1">{{ 'msg.other'|trans }}:</div>
+		
+		<table>
+			<tr>
+				<td style="width:123px">{{ 'msg.comment'|trans }}:</td>
+				<td>
+					<textarea name="comments" class="comments">{{ object.comment }}</textarea>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'msg.edit'|trans }}" />
+		&nbsp;
+		<input type="button" value="{{ 'msg.cancel'|trans }}" onclick="window.location='{{ path('iot6_SmartItBundle_Triggers') }}'" />
+		
+		
+	</form>
+	
+{% endblock %}

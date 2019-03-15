@@ -1,0 +1,39 @@
+{% extends is_mobile() ? is_tablet() ? "smartBoard.html.twig" : "mobile.html.twig" : "layout.html.twig" %}
+
+{% block title %}
+	{{ parent() }} - Login
+{% endblock %}
+ 
+{% block body %}
+
+	<br/>
+	<div style="text-align:center;"><h1>{{ 'msg.welcome'|trans }}</h1></div>
+	<br/>
+	
+	{% for type, messages in app.session.flashbag.all() %}
+		{% for key, message in messages %}
+			<div class="flash-{{ type }}">
+				{{ message|trans({}, 'FOSUserBundle') }}
+			</div>
+		{% endfor %}
+	{% endfor %}
+	
+	<div>
+		{% block fos_user_content %}
+		{% endblock fos_user_content %}
+	</div>
+ 
+ 	<br/><br/><br/>
+ 
+ 	<table id="tabImages">
+ 		<tr style="text-align: center; vertical-align: middle;">
+ 		
+ 			{% if not is_mobile() %}
+				{% for image in images|slice(0,5) %}
+					<td><img class="img1" src="{{ app.request.getBasePath() }}/{{ imagePath }}{{ image }}" alt="" /></td>
+				{% endfor %}
+			{% endif %}
+ 		</tr>
+ 	</table>
+ 
+{% endblock %}

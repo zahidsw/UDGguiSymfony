@@ -1,0 +1,90 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.generalParam'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script src="{{ asset('assets/scripts/spectrum.js') }}"></script>
+	<link rel="stylesheet" href="{{ asset('assets/css/spectrum.css') }}" />
+	
+	<script>
+		$(document).ready(function() {
+
+			{% for menu in menus %}
+				$("#colorpicker_{{ menu.name }}").spectrum({
+				    color: "{{ menu.color }}"
+				});
+			{% endfor %}
+			
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.tab_colors'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/msg.html.twig' %}
+	
+	<form method="post" id="formColors" action="{{ path('iot6_ConfigBundle_GeneralParameters') }}">
+		<div id="zebraTableDiv">
+			<table>
+				{% for menu in menus %}
+					<tr>
+						<td style="width:350px; height:40px;">{{ ('menu.'~menu.name)|trans }}</td>
+						<td>
+							<input id="colorpicker_{{ menu.name }}" name="colorpicker_{{ menu.id }}" />
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+		
+		<br/>
+		
+		<input type="submit" name="set" value="{{ 'conf.change_colors'|trans }}" />
+		<input type="submit" name="default" value="{{ 'conf.reset_colors'|trans }}" />
+	</form>
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.other_param'|trans }}</h1>
+	
+	<form method="post" id="formParams" action="{{ path('iot6_ConfigBundle_GeneralParameters') }}">
+		<table>
+			{% set currentCat = -1 %}
+		
+			{% for configParam in configParams %}
+				
+				 {% if configParam.paramCategorie.id != currentCat %}
+				 	<tr><td colspan="2">&nbsp;</td></tr>
+				 	<tr><td colspan="2">&nbsp;</td></tr>
+				 	<tr><th colspan="2" style="text-align:left;">{{ configParam.paramCategorie.name|trans }}</th></tr>
+				 	<tr><td colspan="2">&nbsp;</td></tr>
+				 {% endif %}
+			
+				<tr>
+					<td style="width: 250px;">{{ configParam.param }}</td>
+					<td><input type="text" name="param_{{ configParam.id }}" value="{{ configParam.defaultValue }}" /></td>
+				</tr>
+				
+				{% set currentCat = configParam.paramCategorie.id %}
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		<input type="submit" name="setParam" value="{{ 'conf.set'|trans }}" />
+		<input type="submit" name="defaultParam" value="{{ 'conf.reset_param'|trans }}" />
+	</form>
+	
+	<br/>
+	
+{% endblock %}

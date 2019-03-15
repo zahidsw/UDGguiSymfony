@@ -1,0 +1,113 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.accessAndSecurity'|trans }} - {{ 'conf.user_add'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+		$( document ).ready(function() {
+			
+		    $("#ltr").click(function(){
+		        $("#source > option:selected").each(function(){
+		            $(this).remove().appendTo("#destination");
+		        });
+		    });
+
+		    $("#rtl").click(function(){
+		        $("#destination > option:selected").each(function(){
+			        if($(this).val() != 1) {
+		            	$(this).remove().appendTo("#source");
+			        }
+		        });
+		    });
+
+		    $('#send').click(function() {
+		        $('#destination option').prop('selected', 'selected');
+		    });
+			    
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.accessAndSecurity'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:accessSecurityMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.user_add'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Add' ) }}" }}>
+		<table>
+			<tr>
+				<td>{{ 'conf.username'|trans }}</td>
+				<td><input type="text" class="long" name="username" required="required" /></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.email'|trans }}:</td>
+				<td><input type="text" class="long" name="email" required="required"/></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.password'|trans }}:</td>
+				<td><input type="password" class="long" name="pass" required="required" /></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.confirmation'|trans }}:</td>
+				<td><input type="password" class="long" name="conf" required="required" /></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.active'|trans }}:</td>
+				<td><input type="checkbox" name="isActive" /></td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<table>
+			<tr>
+				<td>{{ 'conf.roles_availables'|trans }}</td>
+				<td>&nbsp;</td>
+				<td>{{ 'conf.roles_selected'|trans }}</td>
+			</tr>
+			<tr>
+				<td>
+					<select id="source" multiple="" size="10" class="selectList">
+						{% for role in rolesSource %}
+							<option value="{{ role.id }}">{{ role.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+				<td>
+					<input id="ltr" type="button" value=">>" />
+					<br/>
+					<input id="rtl" type="button" value="<<" />
+				</td>
+				<td>
+					<select id="destination" name="roles[]" multiple="" size="10" class="selectList">
+						{% for role in rolesDestination %}
+							<option value="{{ role.id }}">{{ role.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<input type="submit" name="send" id="send" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_AccessSecurity_Users') }}'" />
+	</form>
+	
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "Location/layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<div id="submenu">
+		{{ render(controller("App\\Controller\\MenuController:subMenuInteract", {'_locale':app.request.locale})) }}
+	</div>
+	
+	{% 
+		render(controller("App\\Controller\\ViewerController:viewer", 
+			{} 
+		)) 
+	%}
+{% endblock %}

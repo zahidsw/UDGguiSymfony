@@ -1,0 +1,19 @@
+/logs
+
+###> symfony/framework-bundle ###
+/symfony/.env.local
+/symfony/.env.local.php
+/symfony/.env.*.local
+/symfony/public/bundles/
+/symfony/var/
+/symfony/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/phpunit-bridge ###
+/symfony/.phpunit
+/symfony/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/web-server-bundle ###
+/symfony/.web-server-pid
+###< symfony/web-server-bundle ###

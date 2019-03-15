@@ -1,0 +1,310 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #E8E8E8;
+    font-size: 0.9em;
+    -webkit-text-size-adjust: none;
+}
+
+div.clear {
+    clear: both;
+}
+a {
+    color: blue;
+}
+img {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.banner {
+    height: 67px;
+    background-image:url(../images/interface/banner_udg_mobile.png);
+}
+
+#main {
+    width: 311px;
+    left: 0px;
+    position: absolute;
+    background-color: white;
+    padding: 5px 5px 15px 5px;
+}
+#menu {
+    margin: -20px 0px 5px 55px;
+}
+a.menu_item {
+    color:white;
+    padding: 0px;
+    margin-right: 5px;
+    font-weight: normal;
+    text-decoration: none;
+}
+a.selected, a.menu_item:hover {
+    color: #E8E8E8;
+}
+
+
+h1.title {
+    font-size: 1.2em;
+    background-color: #DFD1D1;
+    padding: 3px;
+}
+
+/*--------------------- Content Container -----------------*/
+/***** Liens *****/
+
+#content a {
+	color: #000;
+	text-decoration: none;
+}
+
+#content a:hover {
+	text-decoration: underline;
+}
+
+#content .title {
+    color: #000;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+#content .title strong {
+	font-size: 17px;
+}
+
+/*--------------------- HomePage -----------------*/
+
+div.border {
+	border: 1px solid black;
+	border-radius: 20px 20px 20px 20px;
+	box-shadow: -1px -2px 1px #000;
+}
+
+div.bloc {
+    padding: 5px;
+    margin-top: 15px;
+}
+
+.bloc span {
+	display: block;
+}
+
+.bloc ul {
+	margin-left: -20px;
+}
+
+.bloc ul.warning {
+	list-style-image:url('../images/interface/icons/listAlert.png');
+	margin-left: 0px;
+}
+
+.bloc li {
+	margin-left: 5px;
+	list-style-type: none;
+}
+
+
+.bloc img.legend {
+	float: right;
+	height: 40px;
+	margin-top: -11px;
+}
+
+.load {
+	display: block;
+    margin: 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****************************** SCENARIOS *************************************/
+div.scenario {
+    float:left;
+    margin-right: 5px;
+    margin-left: 15px;
+    margin-bottom: 65px;
+    padding: 3px;
+    cursor: pointer;
+    max-width : 120px;
+}
+
+div.nameScenario {
+    position:absolute;
+    max-width : 120px;
+}
+
+div.scenario:hover {
+    background-color: #efebef;
+    color: red;
+
+}
+img.scenario {
+    width: 72px;
+    height: 72px;
+}
+
+/***************************DEVICES **********************************/
+img.device {
+    width : 57px;
+    height : 57px;
+}
+
+#images_nav_what, #images_nav_where  {
+    float : left;
+}
+
+#texte_nav_what, #texte_nav_where {
+    float : left;
+    width : 60px;
+    height : 45px;
+}
+
+pager#deviceManager {
+    width: 300px;
+    float: left;
+}
+
+#results {
+    /*border: solid 1px #e8e8e8;*/
+    width: 100%;
+}
+#actions {
+    /*border: solid 1px #e8e8e8;*/
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+}
+#results table {
+    width: 100%;
+    font-size : 0.8em;
+}
+#results th {
+    text-align: left;
+    background-color: #3399ff;
+}
+
+#results tr.row1 {
+    background-color: #3399ff;
+}
+#results tr.row2 {
+    background-color: #3399ff;
+}
+
+#results tr.deviceInfo {
+    font-size : 0.9em;
+}
+
+#results tr {
+    height : 1.5em;
+}
+
+div.arrow {
+    /*background:transparent url(/images/spriteArrows.png) no-repeat scroll left center;*/
+    background:url(/images/spriteArrows.png) no-repeat -33px top;
+    width:11px;
+    height: 11px;
+    display: inline-block;
+    vertical-align:middle;
+    cursor:pointer;
+}
+div.arrowDown {
+    background:url(/images/spriteArrows.png) no-repeat 0px top;
+    width:11px;
+    height: 11px;
+    display: inline-block;
+    vertical-align:middle;
+    cursor:pointer;
+}
+#pager {
+    margin: 15px 0 5px 0;
+}
+#pager a {
+    border: 1px solid;
+    color: black;
+    margin: 0 3px;
+    padding: 0 5px;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+}
+#pager a.current {
+    background-color: #FFFFCC;
+    font-weight: bold;
+}
+#pager a:hover {
+    background-color: #E8E8E8;
+}
+
+#addToFavorites {
+    text-align:right;
+}
+div.actions_title {
+    font-weight: bold;
+    text-align: left;
+    background-color: #8110ef;
+    padding-left: 5px;
+    color: #FFFFFF;
+    margin-bottom: 5px;
+}
+div.action {
+    float: left;
+    border: solid 1px green;
+    text-align: center;
+    padding: 5px 10px 5px 10px;
+}
+div.action:hover {
+    background-color: #e8e8e8;
+    cursor: pointer;
+    color: red;
+}
+div.action img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    border: solid 1px #e8e8e8;
+    margin: auto;
+    margin-bottom: 5px;
+}
+#device_info, #room_info {
+    float : left;
+}
+
+
+/***************************** LISTS ***********************************/
+table.list tr.row1 {
+}
+table.list tr.row2 {
+    background-color: #e8e8e8;
+}
+/***************************BUTTONS **********************************/
+input.ok {
+    color: green;
+}
+input.cancel {
+    color: red;
+}
+
+

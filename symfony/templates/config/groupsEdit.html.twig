@@ -1,0 +1,142 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.devices'|trans }} - {{ 'conf.group_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script src="{{ asset('scripts/functions.js') }}"></script>
+	
+	<script>
+		$( document ).ready(function() {
+
+			var sourceSelect = $('#source');
+			$("#category").val('{{ group.category }}');
+			fillSource({{ group.category }});
+			
+			$('#category').on('change', function() {
+				sourceSelect.empty();
+				$('#destination').empty();
+				
+				fillSource($(this).val());
+			});
+
+			$("#ltr").click(function(){
+		        $("#source > option:selected").each(function(){
+		            $(this).remove().appendTo("#destination");
+		            sort($("#destination option"));
+		            $("#destination option").prop("selected", false);
+		        });
+		    });
+
+		    $("#rtl").click(function(){
+		        $("#destination > option:selected").each(function(){
+		            $(this).remove().appendTo("#source");
+		            sort($("#source option"));
+		            $("#source option").prop("selected", false);
+		        });
+		    });
+
+		    $('#send').click(function() {
+		        $('#destination option').prop('selected', 'selected');
+		    });
+		});
+
+		function fillSource($catId) {
+			var sourceSelect = $('#source');
+			
+			if($catId == 1) {
+				{% for item in buildings %}
+					sourceSelect.append($("<option />").val('{{ item.id }}').text('{{ item.name }}'));
+				{% endfor %}
+			}
+			else if($catId == 2) {
+				{% for item in floors %}
+					sourceSelect.append($("<option />").val('{{ item.id }}').text('{{ item.name }}'));
+				{% endfor %}
+			}
+			else if($catId == 3) {
+				{% for item in rooms %}
+					sourceSelect.append($("<option />").val('{{ item.id }}').text('{{ item.name }}'));
+				{% endfor %}
+			}
+			else if($catId == 4) {
+				{% for item in devices %}
+					sourceSelect.append($("<option />").val('{{ item.id }}').text('{{ item.assignedName }}'));
+				{% endfor %}
+			}
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.group_edit'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Devices_groups_Edit', { 'id': group.id } ) }}">
+		<table>
+			<tr>
+				<td>{{ 'conf.name'|trans }}</td>
+				<td><input type="text" class="long" name="name" value="{{ group.name }}" required="required" /></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.description'|trans }}:</td>
+				<td><input type="text" class="long" name="description" value="{{ group.description }}" /></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.category'|trans }}:</td>
+				<td>
+					<select id="category" name="category" required="required">
+						<option value="1">{{ 'conf.buildings'|trans }}</option>
+						<option value="2">{{ 'conf.floors'|trans }}</option>
+						<option value="3">{{ 'conf.rooms'|trans }}</option>
+						<option value="4">{{ 'conf.devices'|trans }}</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<table>
+			<tr>
+				<td>{{ 'conf.entities_availables'|trans }}</td>
+				<td>&nbsp;</td>
+				<td>{{ 'conf.entities_selected'|trans }}</td>
+			</tr>
+			<tr>
+				<td>
+					<select id="source" multiple="" size="10" class="selectList"></select>
+				</td>
+				<td>
+					<input id="ltr" type="button" value=">>" />
+					<br/>
+					<input id="rtl" type="button" value="<<" />
+				</td>
+				<td>
+					<select id="destination" name="entities[]" multiple="" size="10" required="required" class="selectList">
+						{% for entity in entities %}
+							<option value="{{ entity.id }}">{{ entity.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<input id="send" name="send" type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Devices_groups') }}'" />
+	</form>
+	
+	
+{% endblock %}

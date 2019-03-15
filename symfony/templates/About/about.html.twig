@@ -1,0 +1,29 @@
+{% extends "about/layoutAbout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.about.about'|trans }}</h1>
+	
+	<br/>
+	
+	<table>
+		<tr>
+			<td>{{ 'about.author'|trans }}:</td>
+			<td>Mandat International</td>
+		</tr>
+		<tr>
+			<td>{{ 'about.version'|trans }}:</td>
+			<td>1.0.0</td>
+		</tr>
+	</table>
+	
+{% endblock %}

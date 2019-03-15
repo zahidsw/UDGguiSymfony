@@ -1,0 +1,64 @@
+<table id="tablesorter" class="tablesorter">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>E/A</th>
+			<th>Device name</th>
+			<th>UID</th>
+			<th>Event / Action</th>
+			<th>Building</th>
+			<th>Floor</th>
+			<th>Type</th>
+			<th>Room</th>
+			<th>Object</th>
+			<th>Map</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for data in dataList %}
+			<tr>
+				<td style="font-size:10px; text-align:center; width: 50px;">
+					{{ data.creationDate|date("d/m/Y H:i:s") }}
+				</td>
+				<td style="text-align:center; font-size:10px; width: 30px;">
+					{% if data.isAction %}A{% else %}E{% endif %}
+				</td>
+				<td style="font-size:10px; width: 70px;">
+					{{ data.displayedName }}
+				</td>
+				<td style="font-size:10px; width: 40px;">
+					{{ data.hostId }}
+				</td>
+				<td style="font-size:10px; width: 80px;">
+					{{ data.actionMessage }}
+				</td>
+				<td style="font-size:10px; width: 50px;">
+					{{ data.buildingName }}
+				</td>
+				<td style="font-size:10px; width: 50px;">
+					{{ data.floorName }}
+				</td>
+				<td style="font-size:10px; text-align:center; width: 60px;">
+					<img src="{{ asset('images/roomTypes/'~data.roomTypeIcon) }}" alt="{{ data.roomTypeName }}" />
+				</td>
+				<td style="font-size:10px; width: 50px;">
+					{{ data.roomName }}
+				</td>
+				<td style="font-size:10px; text-align:center; width: 30px;">
+					<a href="{{ path('iot6_InteractBundle_deviceShow', { id: data.deviceId } ) }}"><img src="{{ asset('assets/images/interface/icons/device.png') }}" /></a>
+				</td>
+				<td style="font-size:10px; text-align:center; width: 30px;">
+					{% if data.latitude is not null and data.longitude is not null %}
+						<a href="{{ path('iot6_InteractBundle_mapList', { 'devices': data.deviceId }) }}"><img src="{{ asset('assets/images/interface/icons/map.png') }}" /></a>
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<script>
+	$(document).ready(function() { 
+		$("#tablesorter").tablesorter({widthFixed: true, widgets: ['zebra']}); 
+	}); 
+</script>

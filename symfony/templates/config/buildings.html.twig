@@ -1,0 +1,72 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.menu.buildings'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.locations'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/locationsMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.menu.buildings'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Locations_Buildings_Add') }}">[{{ 'conf.building_add'|trans }}]</a>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%">
+			{% for building in buildings %}
+				<tr>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_Buildings_Edit', { 'id': building.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_Buildings_Delete', { 'id': building.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_ConfigBundle_Locations_Buildings_Edit', { 'id': building.id }) }}">
+							{{ building.name }}
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbBuildings,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		}}
+	    
+	</div>
+{% endblock %}

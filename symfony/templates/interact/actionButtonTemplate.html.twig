@@ -1,0 +1,120 @@
+{% if action.dataFormat == -1 %} {# format: NOT USED - keep for backup - old format for simple button #}
+	<div class="action" style="width:10%;">
+		{% if action.ImageName is null %}
+			<img src="{{ asset('images/actions/default.png') }}" onclick="action('{{ action.id }}');" alt="{{ action.internalName }}" />
+		{% else %}
+			<img src="{{ asset('images/actions/' ~ action.imageName) }}" onclick="action('{{ action.id }}');" alt="{{ action.internalName }}" />
+		{% endif %}
+		<br/>
+		<span><a onclick="action('{{ action.id }}');">{{ action.internalName }}</a></span>
+	</div>
+{% elseif action.dataFormat == 0 %} {# format: trigger - simple button #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		
+		{% if action.ImageName is null %}
+			<img src="{{ asset('images/actions/default.png') }}" onclick="action('{{ action.id }}');" alt="{{ action.internalName }}" />
+		{% else %}
+			<img src="{{ asset('images/actions/' ~ action.imageName) }}" onclick="action('{{ action.id }}');" alt="{{ action.internalName }}" />
+		{% endif %}
+		
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="action('{{ action.id }}');" />
+	</div>
+{% elseif action.dataFormat == 1 %} {# format: binary - on/off #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		 <div id="action_{{ action.id }}" class="inline">
+			<input type="radio" id="action_{{ action.id }}_on" name="radio_{{ action.id }}" checked="checked" value="1"><label class="label_on" for="action_{{ action.id }}_on">ON</label>
+			<input type="radio" id="action_{{ action.id }}_off" name="radio_{{ action.id }}" value="0"><label class="label_off" for="action_{{ action.id }}_off">OFF</label>
+		</div>
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',1)" />
+		<script>$(function() {createOnOff("#action_{{ action.id }}");});</script>
+	</div>
+{% elseif action.dataFormat == 2 %} {# format: percent - slide 0-100% #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<div id="action_{{ action.id }}" class="action_slider_div inline"></div>
+		<div id="action_{{ action.id }}_display" class="slider_value inline">(50)</div>
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',2)" />
+		<script>$(function() {createSlider("#action_{{ action.id }}");});</script>
+	</div>
+{% elseif action.dataFormat == 3 %} {# format: integer - input field #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<input id="action_{{ action.id }}" onkeypress="return filterInteger(event);" type="text" />
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',3)" />
+		<div class="action_dataformat">({{ 'msg.action_dataformat_integer'|trans }})</div>
+	</div>
+{% elseif action.dataFormat == 4 %} {# format: double - input field #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<input id="action_{{ action.id }}" onkeypress="return filterDouble(event);" type="text" />
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',4)" />
+		<div class="action_dataformat">({{ 'msg.action_dataformat_double'|trans }})</div>
+	</div>
+{% elseif action.dataFormat == 5 %} {# format: duration - day/hour/minute/seconds #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		
+		{{ 'msg.action_dataformat_duration_days'|trans }} <select id="action_{{ action.id }}_days">
+			{% for i in 0..365 %}
+				<option value="{{ i }}">{{ i }}</option>
+			{% endfor %}
+		</select>
+		{{ 'msg.action_dataformat_duration_hours'|trans }} <select id="action_{{ action.id }}_hours">
+			{% for i in 0..23 %}
+				<option value="{{ i }}">{{ i }}</option>
+			{% endfor %}
+		</select>
+		{{ 'msg.action_dataformat_duration_minutes'|trans }} <select id="action_{{ action.id }}_minutes">
+			{% for i in 0..59 %}
+				<option value="{{ i }}">{{ i }}</option>
+			{% endfor %}
+		</select>
+		{{ 'msg.action_dataformat_duration_seconds'|trans }} <select id="action_{{ action.id }}_seconds">
+			{% for i in 0..59 %}
+				<option value="{{ i }}">{{ i }}</option>
+			{% endfor %}
+		</select>
+		
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',5)" />
+	</div>
+{% elseif action.dataFormat == 6 %} {# format: string - input field #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<input id="action_{{ action.id }}" type="text" />
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',6)" />
+		<div class="action_dataformat">({{ 'msg.action_dataformat_string'|trans }})</div>
+	</div>
+{% elseif action.dataFormat == 7 %} {# format: email - input field #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<input id="action_{{ action.id }}" type="text" />
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',7)" />
+		<div class="action_dataformat">({{ 'msg.action_dataformat_email'|trans }})</div>
+	</div>
+{% elseif action.dataFormat == 8 %} {# format: sms - input field #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<input id="action_{{ action.id }}" onkeypress="return filterSMS(event);" onchange="javascript:submitField('action_{{ action.id }}',8)" type="text" />
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',8)" />
+		<div class="action_dataformat">({{ 'msg.action_dataformat_sms'|trans }})</div>
+	</div>
+{% elseif action.dataFormat == 9 %} {# format: triplet - 3 input fields (string, string, unit list) #}
+	<div class="interact_action">
+		<div class="interract_action_titel">{{ action.internalName }}</div>
+		<input id="action_{{ action.id }}_triplet_variable" type="text" /> = 
+		<input id="action_{{ action.id }}_triplet_value" type="text" />
+		<select id="action_{{ action.id }}_triplet_unit">
+			{% for unit in units %}
+				<option value="{{ unit }}">{{ unit }}</option>
+			{% endfor %}
+		</select>
+		<input type="button" value="{{ 'msg.action_send'|trans }}" onclick="javascript:submitField('action_{{ action.id }}',9)" />
+		<div class="action_dataformat">({{ 'msg.action_dataformat_triplet'|trans }})</div>
+	</div>
+{% else %}
+	<div class="action" style="width:10%;">
+		???
+	</div>
+{% endif %}

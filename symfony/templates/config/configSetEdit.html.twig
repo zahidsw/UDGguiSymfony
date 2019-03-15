@@ -1,0 +1,88 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'conf.configSet_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+		$(document).ready(function() {
+			var wrapper = $('.multi-fields', this);
+			var maxInputs = 8;
+			var fieldCount = {{ configSet.settings|length }};
+			
+			$('.multi-field-wrapper').each(function() {
+				
+			    $(".add-field", $(this)).click(function(e) {
+				    if($('.multi-field', wrapper).length <= maxInputs) {
+			        	$('.multi-field:first-child', wrapper).clone(true).appendTo(wrapper).find('input').val('').focus();
+			        	fieldCount++;
+			    	}
+			    });
+			    
+			    $('.multi-field .remove-field', wrapper).click(function() {
+			        if ($('.multi-field', wrapper).length > 1) {
+			            $(this).parent('.multi-field').remove();
+			        }
+			        return false;
+			    });
+			});
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.configSet_edit'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/msg.html.twig' %}
+	
+	<br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_ConfigSet_Edit', { 'id': configSet.id } ) }}">
+		<table>
+			<tr>
+				<td>{{ 'conf.name'|trans }}:</td>
+				<td><input type="text" class="long" name="name" value="{{ configSet.name }}" required="required" /></td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.middleware_user'|trans }}:</td>
+				<td>
+					<select name="user" required="required">
+						{% for user in users %}
+							<option value="{{ user.id }}" {% if configSet.user == user %}selected="selected"{% endif %}>{{ user.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<label>{{ 'conf.key_value'|trans }}</label>
+	    <div class="multi-field-wrapper">
+			<div class="multi-fields">
+		        {% for setting in configSet.settings %}
+					<div class="multi-field">
+						<input type="text" name="keys[]" placeholder="Key" required="required" value="{{ setting.name }}" />
+						<input type="text" name="values[]" placeholder="Value" required="required" value="{{ setting.value }}" />
+						<a href="" class="remove-field">&times;</a>
+					</div>
+		        {% endfor %}
+			</div>
+	    <button type="button" class="add-field">{{ 'conf.add_field'|trans }}</button>
+		</div>
+		
+		<br/>
+		
+		<input id="send" name="send" type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_ConfigSet') }}'" />
+	</form>
+	
+	
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "Location/layoutLocation.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/iot6LocationEditor.css') }}" />
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<div id="submenu">
+		{{ render(controller("App\\Controller\\MenuController:subMenuInteract", {'_locale':app.request.locale})) }}
+	</div>
+	<br />
+	<div class="location_option_container">
+		<a href="javascript:editor_hideShowDiv('devices');"><img id="img_devices" src="{{ asset('assets/images/location/arrow_open.gif') }}" />{{ 'location.filter_device'|trans }}</a>
+		<div id="div_devices">
+			{{
+				render(controller("App\\Controller\\NavigatorController:loadNavigator", 
+					{ 	'_locale': 			app.request.locale, 
+						'displayDevices':	1
+					} 
+				)) 
+			}}
+		</div>
+	</div>
+
+	<div class="location_option_container">
+		<a href="javascript:editor_hideShowDiv('devices_list');"><img id="img_devices_list" src="{{ asset('assets/images/location/arrow_open.gif') }}" />{{ 'location.devices_list'|trans }}</a>
+		<div id="div_devices_list">
+		</div>
+	</div>
+	
+	<div class="location_option_container">
+		<a href="javascript:editor_hideShowDiv('canvas');"><img id="img_variables" src="{{ asset('assets/images/location/arrow_open.gif') }}" />{{ 'location.location'|trans }}</a>
+		<!-- Extra menu : moved to correct position by code -->
+		<div id="extended_locations_actions">
+			<a href="javascript:editor_renameLocation();">[{{ 'location.rename_location'|trans }}]</a>
+			<a href="javascript:editor_saveLocation();">[{{ 'location.save_location'|trans }}]</a>
+			<a href="javascript:editor_saveAsLocation();">[{{ 'location.saveAs_location'|trans }}]</a>
+			<a href="javascript:editor_deleteLocation();">[{{ 'location.delete_location'|trans }}]</a>
+			<input type="file" id="files" name="files[]" style="visibility:hidden;position:absolute;top:0;left:0;" />
+			<a href="javascript:editor_selectBackgroundImage();">[{{ 'location.select_background'|trans }}]</a>
+			<a href="javascript:editor_clearBackgroundImage();">[{{ 'location.clear_background'|trans }}]</a>
+		</div>
+		<!-- Extra tooltip actions : moved to correct position by code -->
+		<div id="extended_tooltip_action"><a href="javascript:editor_removeSelectedObject()">[{{ 'location.remove'|trans }}]</a></div>
+		<div id="extended_tooltip_content">
+			<select id="form_type" onchange="javascript:editor_changeFormOfSelectedObject();">
+				<option value="circle">{{ 'location.circle'|trans }}</option>
+				<option value="rect">{{ 'location.rect'|trans }}</option>
+				<option value="triangle">{{ 'location.triangle'|trans }}</option>
+			</select>
+			<div id="color-box" class="color-box"></div>
+			<div id="opacity_slider"></div>
+			<input type="checkbox" id="form_display_image" onchange="javascript:editor_handleDisplayImageOption();" /> {{ 'location.display_image'|trans }}
+		</div>
+
+		{{
+			render(controller("App\\Controller\\ViewerController:viewer", 
+				{} 
+				)) 
+		}}
+	</div>
+	
+	<script type="text/javascript">
+		//global variables
+		var arrow_closed_path = "{{ asset('assets/images/location/arrow_closed.gif') }}";
+		var arrow_open_path = "{{ asset('assets/images/location/arrow_open.gif') }}";
+		base_page_url = '{{ url('iot6_location_editor') }}'; //override viewer
+		//translations
+		var msg_fileAPI = "{{ 'location.file_API'|trans }}";
+		var msg_notImage = "{{ 'location.notImage'|trans }}";
+		var msg_error_occured = "{{ 'location.error_occured'|trans|raw }}";
+		var msg_save_as = "{{ 'location.save_as'|trans }}";
+		var msg_copy_of = "{{ 'location.copy_of'|trans }}";
+		var msg_confirm_delete = "{{ 'location.confirm_delete'|trans|raw }}";
+		var msg_confirm_object_already_exists = "{{ 'location.confirm_object_already_exists'|trans|raw }}";
+		
+		//list of families icon name
+		var families_icon = { {% for f in families_icon  %} {{ loop.first ? "" : "," }}{{ f.id }}:"{{ f.iconName }}" {% endfor %} };
+	</script>
+	
+	<script src="{{ asset('assets/js/iot6LocationEditor.js') }}"></script>
+{% endblock %}

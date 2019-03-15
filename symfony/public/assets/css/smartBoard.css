@@ -1,0 +1,654 @@
+
+* { padding: 0; margin: 0; border: 0; font-size : 11px;}
+
+body {
+	font-family: Arial, Helvetica, sans-serif !important;
+	background: #9999cc url('../images/interface/bg_gradient.png') repeat-x;
+	font-size: 0.9em !important;
+	padding-top: 15px;
+	margin:auto;
+	width: 600px;
+}
+
+a {
+	color: white;
+}
+
+img {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+#banner {
+  height: 163px;
+  background: url('../images/interface/banner_udg_smartBoard.png') no-repeat;
+}
+
+.container {
+  position : relative;
+  top : -68px;
+}
+
+#login {
+	float: right;
+    margin-right: 10px;
+    margin-top: -124px;
+}
+
+#login a {
+	font-size: 12px;
+}
+
+#languages {
+	float: right;
+	margin-right: 5px;
+    margin-top: -5px;
+}
+
+#languages img{
+    width: 17px;
+    height: 12px;
+}
+
+/*------------------backgrouds elements positionning--------------------*/
+
+#bg_content {
+    border: 1px solid #333333;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 3px 3px 6px 0 #222222;
+    height: 1%;
+    margin: 2px auto -5px;
+    min-height: 350px;
+    padding: 40px 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/***** Liens *****/
+
+#bg_content a {
+	color: #000;
+	text-decoration: none;
+}
+
+#bg_content a:hover {
+	text-decoration: underline;
+}
+
+#bg_content .title {
+    color: #000;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+#bg_content .title strong {
+	font-size: 13px;
+}
+
+#bg_content a.indent {
+	display: block;
+    margin-left: 70px;
+}
+
+#bg_content a.indent:hover {
+	text-decoration: underline;
+}
+
+/*------------------Home screen backgrouds--------------------*/                   
+/*
+div.clear {
+	clear: both;
+}
+*/
+/*------------------Menu design--------------------*/
+
+#menu {
+	padding-bottom : 26px;
+	padding-left: 25px;
+}
+
+#onglets {
+	position : absolute;
+	border : 1px solid transparent;
+	padding : 0;
+	list-style-type : none;
+	left : 50%;
+	margin-top : 12px;
+	width : 600px;
+	margin-left : -286px;
+}
+
+#onglets li {
+	float : left;
+	height : 13px;
+	background-color: #C71E1E;
+	margin : 2px 2px 0 2px !important;  /* Pour les navigateurs autre que IE */
+	margin : 1px 2px 0 2px;  /* Pour IE  */
+	width: 67px;
+	text-align: center;
+	border-radius: 5px 5px 0 0;
+	box-shadow: -1px -2px 1px #444;
+	border-bottom: 1px solid #333;
+}
+
+#onglets li.active {
+	border: 0px;
+	height: 14px;
+}
+
+#onglets a {
+	display : block;
+	text-decoration : none;
+	padding-top: 0;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+#onglets a:hover {
+	border-radius: 5px 5px 0 0;
+	padding-top: 1px;
+}
+
+
+/*------------------Footer-----------------------------*/
+#reflet {
+    float : left;
+    position : relative;
+    top : 15px;
+    margin:auto;
+    width: 600px;
+    height: 79px;
+    background: url('../images/interface/reflection_bottom_smartBoar.png' ) no-repeat left bottom;
+}
+
+/*------------------Sub Menu design--------------------*/
+
+#submenu {
+    text-align : center;
+    font-weight: bold;
+    margin-top: -30px;
+}
+    
+#submenu a {
+	text-decoration: none;
+	color: #fff;
+}
+
+#submenu a:hover {
+	text-decoration: underline;
+}
+#submenu a.selected {
+  color: yellow;
+}
+
+/*----------------- Sub Menu 2 design --------------------- */
+.subtitle2 {
+	color: white !important;
+}
+
+/*---------------- Formulaires ------------*/
+
+/* ---- Login ---- */
+
+#loginContainer {
+	margin: 0 0 auto;
+	width: 560px;
+}
+
+#loginContainer label {
+	display: block;
+    line-height: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+}
+
+#loginContainer input[type="text"],
+#loginContainer input[type="password"] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+}
+
+#tabImages {
+	width: 560px;
+}
+
+#loginContainer input[type="checkbox"] {
+    position: relative;
+    top: 19px;
+    width: 759px;
+}
+
+/* ---- END Login ---- */
+
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="email"]{
+	background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #555555;
+    outline: medium none;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    line-height: 20px;
+    padding: 5px;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0 none;
+}
+
+.long {
+	width: 250px;
+}
+
+.short {
+	width: 50px;
+}
+
+select{
+	background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #555555;
+    outline: medium none;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    line-height: 20px;
+    padding: 5px;
+    max-width: 130px;
+}
+
+select:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0 none;
+}
+
+input[type=submit],
+input[type=button] {
+	background: none repeat scroll 0 0 #777;
+    border: medium none;
+    border-radius: 10px 10px 10px 10px;
+    color: #FFFFFF;
+    padding: 7px 25px;
+    text-shadow: 0 1px 1px #000000;
+    text-align: center;
+    box-shadow: -1px -2px 1px #444444;
+    display: inline-block;
+ }
+
+input[type=submit]:hover,
+input[type=button]:hover {
+	background: #999;
+	cursor: pointer;
+ }
+ 
+input[type="submit"].centerButton,
+input[type="button"].centerButton {
+	margin-left: auto;
+	margin-right: auto;
+	background: none repeat scroll 0 0 #777;
+    border: medium none;
+    border-radius: 10px 10px 10px 10px;
+    color: #FFFFFF;
+    padding: 7px 25px;
+    text-shadow: 0 1px 1px #000000;
+    text-align: center;
+    box-shadow: -1px -2px 1px #444444;
+    display: block;
+}
+ 
+div.error {
+ 	background-color: pink;
+    border: 1px solid #CCCCCC;
+    border-radius: 10px 10px 10px 10px;
+    display: block;
+    line-height: 30px;
+    margin: 0 345px auto;
+    text-align: center;
+    width: 300px;
+}
+
+div.customError {
+	background-color: #FFC0CB;
+    border: 1px solid #CCCCCC;
+    border-radius: 10px 10px 10px 10px;
+    line-height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 300px;
+}
+
+div.customSuccess {
+	background-color: green;
+	color: white;
+    border: 1px solid #CCCCCC;
+    border-radius: 10px 10px 10px 10px;
+    line-height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 300px;
+}
+
+/*--------------------- Images -----------------*/
+
+img.img1 {
+	max-height: 90px;
+    max-width: 90px;
+}
+
+img.img2 {
+	max-height: 20px;
+    max-width: 20px;
+}
+
+
+/*--------------------- HomePage -----------------*/
+
+div.leftColumn {
+	float: left;
+}
+
+div.blocLeft {
+	min-height: 40px;
+	margin-bottom: 20px;
+}
+
+.blocLeft ul {
+	margin-left: 50px;
+	padding-top: 4px;
+}
+
+.blocLeft li {
+	margin-left: 50px;
+	list-style-type: none;
+}
+
+.blocLeft ul li a img {
+	max-height: 40px;
+    max-width: 40px;
+    padding-top: 10px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.blocLeft img.legend {
+	float: left;
+	max-height: 40px;
+	max-width: 40px;
+	margin-top: -9px;
+}
+
+div.blocRight {
+    float: right;
+    margin-bottom: 20px;
+    padding: 20px;
+    width: 180px;
+}
+
+div.border {
+	border: 1px solid black;
+	border-radius: 20px 20px 20px 20px;
+	box-shadow: -1px -2px 1px #000;
+}
+
+.blocRight span {
+	display: block;
+}
+
+.blocRight ul {
+	padding-top: 10px;
+}
+
+.blocRight ul.warning {
+	list-style-image:url('../images/interface/icons/listAlert.png');
+	margin-left: 10px;
+}
+
+.blocRight li {
+	margin-left: 15px;
+}
+
+.blocRight img {
+	display: block;
+    margin: 0 auto;
+}
+
+/*--------------------- InteractPage (IoT6 navigator) -----------------*/
+
+td.cellImage {
+	width: 60px;
+	text-align: left;
+}
+
+td.cellImage img {
+	float: right;
+}
+
+td.cellSelect {
+	width: 140px;
+}
+
+.cellSelect select {
+	width: 100px;
+}
+
+/*------------------- SmartIt pages (scenarios) ----------------- */
+
+div.scenarios {
+	margin-left: auto;
+    margin-right: auto;
+    width: 522px;
+}
+
+.scenarios div {
+	float: left;
+	height: 80px;
+    margin-top: 20px;
+    overflow: auto;
+    padding: 10px;
+    text-align: center;
+    width: 110px;
+}
+.scenarios div:hover {
+	background-color: #efebef;
+	color: red;
+	cursor: pointer;
+}
+.scenarios img {
+	width: 50px;
+	height: 50px;
+}
+
+/*------------------- SmartIt pages (zebra table) ----------------- */
+
+#zebraTableDiv tr:nth-child(odd) {
+	background: #eee;
+}
+#zebraTableDiv thead th {
+	background-color: #ccc;
+}
+#zebraTableDiv td {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+#zebraTableDiv td img {
+	max-width: 40px;
+	max-height: 40px;
+}
+#zebraTableDiv td ul li {
+	margin-left: 15px;
+}
+
+#popupTable td {
+		height: 35px;
+}
+
+/*------------------- SmartIt pages (editor) ----------------- */
+
+.editor {
+	width: 450px;
+	height: 200px;
+}
+
+.comments {
+	width: 450px;
+	height: 100px;
+}
+
+/*------------------- SmartIt pages (pagination) ----------------- */
+
+.pagination {
+	display: inline-block;
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.pagination li {
+	margin-left: 4px;
+	margin-right: 4px;
+ 	float:left; /*pour IE*/
+}
+.pagination li a {
+	color: white !important;
+	text-decoration: underline!important;
+}
+
+.paginationNav {
+	display: inline-block;
+}
+
+.paginationNav a:hover {
+	text-decoration: none !important;
+}
+
+/*---------------- Tableau centré ---------*/
+
+.centerTab {
+	text-align: center;
+    width: 560px;
+}
+
+/*---------------- Favoris ---------*/
+.bookmarkDiv {
+	float: right;
+	margin-top: -30px;
+}
+a.bookmarkedNon {
+	background-image:url(../images/interface/icons/bookmarkedNon.png);
+	background-size:25px 25px;
+	width: 25px;
+	height: 25px;
+	display: block;
+	cursor: pointer;
+}
+a.bookmarked {
+	background-image:url(../images/interface/icons/bookmarked.png);
+	background-size:25px 25px;
+	width: 25px;
+	height: 25px;
+	display: block;
+	cursor: pointer;
+}
+.bookmarkedNon:hover {
+	background-image:url(../images/interface/icons/bookmarked.png);
+}
+.bookmarked:hover {
+	background-image:url(../images/interface/icons/bookmarkedNon.png);
+}
+
+/*----------------- Table header -----------*/
+th.tableHeader{
+	text-align: left;
+	background: #aaa;
+}
+
+/*------------------- SmartIt pages (if this then that) ----------------- */
+div.sub_title1 {
+	background-color: #bbb;
+	width: 100%;
+	font-weight: bold;
+}
+div.sub_title2 {
+	background-color: #eee;
+	font-weight: bold;
+    margin-left: 20px;
+    width: 538px;
+}
+div.sub_content {
+	margin-left: 20px;
+}
+
+/*--------------------- Config ---------------------*/
+table td img {
+	max-width: 40px;
+	max-height: 40px;
+}
+
+#appsFrame {
+	border: 1px solid #000000;
+    display: block;
+    height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+}
+
+div.messageOk {
+	background-color: #A9F5A9;
+    border: 1px solid #088A29;
+    border-radius: 8px 8px 8px 8px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    text-align: center;
+    width: 200px;
+}
+
+div.messageKo {
+	background-color: #F6CECE;
+    border: 1px solid #B40404;
+    border-radius: 8px 8px 8px 8px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    text-align: center;
+    width: 200px;
+}
+
+.action {
+	display: block;
+	width: 60px;
+	float: left;
+	text-align: center;
+	cursor: pointer;
+	margin-right: 6px;
+	min-height: 80px;
+	margin-top: 7px;
+}
+
+.action img {
+	max-width: 26px;
+	max-height: 26px;
+}
+
+.action a {
+	font-size: 8px;
+	word-wrap: break-word;
+}
+		

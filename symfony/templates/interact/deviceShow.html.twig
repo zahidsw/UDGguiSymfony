@@ -1,0 +1,204 @@
+{% extends "Interact/layoutInteract.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - Devices profiles
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="{{ asset('assets/scripts/jquery.qrcode.min.js') }}"></script>
+	
+	<script>
+		$(document).ready(function() {
+
+			$('#qrcode').qrcode( { width: 50, height: 50, text: '{{ url }}'} );
+			$('#qrcodeDialog').qrcode( { width: 170, height: 170, text: '{{ url }}'} );
+
+			
+			$( "#dialog" ).dialog({
+				autoOpen: false,
+				height: 350,
+				width: 400,
+				modal: true,
+				draggable: false,
+				resizable: false,
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+
+			$( "#openDialog" ).click(function() {
+				$( "#dialog" ).dialog( "open" );
+			});
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>Devices Show</h1>
+	
+	<br/>
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%;">
+			<tr>
+				<td>{{ 'msg.name'|trans }}</td>
+				<td>{{ device.assignedName }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.family'|trans }}</td>
+				<td>
+					{% if device.family is not null %}
+						{{ device.family.internalName }}
+						<img alt="{{ device.family.internalName }}" src="{{ asset('assets/images/families/'~device.family.iconName) }}" />	
+					{% else %}
+						{{ 'msg.no_family'|trans }}
+					{% endif  %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.category'|trans }}</td>
+				<td>
+					{% if device.category is not null %}
+						{{ device.category.internalName }}
+						<img alt="{{ device.category.internalName }}" src="{{ asset('assets/images/families/'~device.category.iconName) }}" />	
+					{% else %}
+						{{ 'msg.no_category'|trans }}
+					{% endif  %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.uid'|trans }}</td>
+				<td>{{ device.id }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.ipv6_address'|trans }}</td>
+				<td>{{ device.ipv6address }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.accessibility'|trans }}</td>
+				<td>{{ device.accessProfile }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.legacy_communication_protocol'|trans }}</td>
+				<td>
+					{% if device.protocol is not null %}
+						{{ device.protocol.name }}
+						<img alt="{{ device.protocol.name }}" src="{{ asset('assets/images/protocols/'~device.protocol.iconName) }}" />
+					{% else %}
+						{{ 'msg.no_protocol'|trans }}
+					{% endif  %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.legacy_communication_protocol_address'|trans }}</td>
+				<td>
+					{% if device.card is not null %}
+						{{ device.card.ipv6address }}
+					{% else %}
+						{{ 'msg.no_address'|trans }}
+					{% endif  %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.status'|trans }}</td>
+				<td>
+					{% if device.validationStatus == 0 %}
+						{{ 'msg.discovered'|trans }}
+					{% elseif device.validationStatus == 1 %}
+						{{ 'msg.accepted'|trans }}
+					{% elseif device.validationStatus == -1 %}
+						{{ 'msg.suspended'|trans }}
+					{% elseif device.validationStatus == -2 %}
+						{{ 'msg.refused'|trans }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.key_data'|trans }}</td>
+				<td>
+					<ul>
+						{% for variable in variables %}
+							<li>{{ variable.name }}: {{ variable.stringValue }} {{ variable.unit }}</li>
+						{% else %}
+							<li>{{ 'msg.no_data'|trans }}</li>
+						{% endfor %}
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.last_data_at'|trans }}</td>
+				<td>{{ device.lastDataAt|date('d/m/Y H:i:s') }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.detected_at'|trans }}</td>
+				<td>{{ device.detectedAt|date('d/m/Y H:i:s') }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.last_config_change'|trans }}</td>
+				<td>
+					{% if device.lastChange is null %}
+					    {{ 'msg.no_date'|trans }}
+					{% else %}
+						{{ device.lastChange|date('d/m/Y H:i:s') }}
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.location'|trans }}</td>
+				<td>
+					{% if device.latitude is not null and device.longitude is not null %}
+						<a href="{{ path('iot6_InteractBundle_mapList', { 'devices': device.id } ) }}">
+							<img src="{{ asset('assets/images/interface/icons/map.png') }}" />
+					{% endif %}
+							{% if device.room is not null %}
+								{{ device.room.name }}
+								{% if device.room.floor is not null %}
+									, {{ device.room.floor.name }}
+									{% if device.room.floor.building is not null %}
+										, {{ device.room.floor.building.name }}
+									{% endif %}
+								{% endif %}
+							{% endif %}
+					{% if device.latitude is not null and device.longitude is not null %}
+						</a>
+					{% endif %}
+				</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.generic_description'|trans }}</td>
+				<td>{{ device.description }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.comments'|trans }}</td>
+				<td>{{ device.comments }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'msg.qr_code'|trans }}</td>
+				<td style="text-align:center;">
+					<a id="openDialog" alt="{{ 'msg.qr_code'|trans }}" style="cursor:pointer;">
+						{{ 'msg.click_to_enlarge'|trans }}
+						<div id="qrcode"></div>
+					</a>
+					<br/>
+					<a href="{{ url }}">{{ url }}</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="dialog" title="{{ 'msg.qr_code'|trans }}" style="text-align:center;">
+		<div id="qrcodeDialog"></div>
+		<br/>
+			<a href="{{ url }}" target="_blank">{{ url }}</a>
+	</div>
+	
+{% endblock %}

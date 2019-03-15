@@ -1,0 +1,57 @@
+msg:
+    message_remote_server:     '从远程服务器的消息'
+    last_alerts:               'Dernières alertes'
+    interact:                  'Interagir'
+    with_smart_things:         'avec vos objets intelligents'
+    iot_navig:                 'Navigateur IoT'
+    maps:                      'Plans'
+    intelligence:              'Intelligence'
+    make_it_smart:             'rendez-les intelligents'
+    scenarios:                 'Scénarios'
+    rules_manager:             'Gestionnaire de règles'
+    apps_and_services:         'Applications'
+    data_history:              'Historique des données'
+    config:                    'Configuration'
+    about_contact:             'A propos & contact'
+    loading:                   'Chargement'
+    shortcuts:                 'Raccourcis'
+    
+    
+addRule:          'Ajouter une règle'
+iotNavigator:     'Naviguateur IoT'
+devices:          'Périphériques'
+config:           'Configuration'
+interact:         'Interagir'
+mapList:          'Liste map'
+
+menu:
+    home:            '欢迎'
+    interact:        '相互作用'
+    smartIt:         '智能'
+    appsAndService:  '应用程序和服务'
+    alert:           '警报'
+    data:            '数据'
+    config:          '配置'
+    about:           '关于'
+    
+subMenu:
+    interact:
+        iotNavigator:          'IoT Navigator'
+        devicesProfile:        'Devices Profiles'
+        mapList:               'Map list'
+    smartIt:
+        scenarios:             'Scenarios'
+        rulesManager:          'Rules manager'
+        scheduler:             'Scheduler'
+        rulesJavaEditor:       'Rules Java Editor'
+        triggers:              'Triggers'
+        ifThisThenThat:        'If This Then That'
+    config:
+        generalParam:          'General parameters'
+        locations:             'Locations'
+        devices:               'Devices'
+        udgModules:            'UDG Modules'
+        accessAndSecurity:     'Access and Security'
+    about:
+        about:                 'A propos'
+        contact:               'Contact'

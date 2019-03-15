@@ -1,0 +1,53 @@
+div.interact_action {
+	border: solid 1px #CCCCCC;
+	background-color: #F7F7F7;
+	display: inline-block;
+	padding: 5px;
+	border-radius: 10px;
+	margin: 0 10px 10px 0;
+	vertical-align: top;
+}
+
+div.inline {
+	display: inline-block;
+}
+
+div.interract_action_titel {
+	text-align: center;
+	font-size: 9px;
+	margin: 0 0 5px 0;
+}
+
+div.interact_action input {
+	margin: 0;
+}
+
+input.input_error {
+	background-color: red;
+	border: solid 1px red;
+}
+
+div.action_dataformat {
+	font-size: 9px;
+}
+
+/*Img*/
+div.interact_action img {
+	height: 40px;
+	vertical-align: bottom;
+}
+
+/*Slider*/
+div.slider_value {
+	text-align: center;
+}
+div.action_slider_div {
+	width: 100px;
+}
+
+/*On/off*/
+label.label_on.ui-state-active { background: #48D866; }
+label.label_on.ui-state-active span.ui-button-text { color: white; }
+label.label_off.ui-state-active { background: #9E3329; }
+label.label_off.ui-state-active span.ui-button-text { color: white; }
+

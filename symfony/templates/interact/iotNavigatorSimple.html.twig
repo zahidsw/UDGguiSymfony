@@ -1,0 +1,37 @@
+
+<form id="formIoTSimple" action="{{ path('getResultsSimple') }}" method="post">
+	
+	{{
+
+		render(controller("App\\Controller\\NavigatorController:loadNavigator", 
+						{ 	'_locale': 			app.request.locale, 
+							'displayDevices':	0,
+							'displayObjects':	false,
+						} 
+		)) 
+	}}
+		
+	<br/>
+
+	<input type="submit" value="{{ 'msg.search'|trans }}"	name="searchBtnSimple" class="centerButton" />
+	
+</form>
+
+<div id="resultsSimple"></div>
+
+<script>
+	$(document).ready(function() {
+		$('#formIoTSimple').on('submit', function() {
+	    	$.ajax({
+					url: $(this).attr('action'),
+					type: $(this).attr('method'),
+					data: $(this).serialize(),
+					success: function(html) { 
+						$("div#resultsSimple").empty();
+						$("div#resultsSimple").append(html);
+	                }
+	            });
+	        return false;
+	    });
+	});
+</script>

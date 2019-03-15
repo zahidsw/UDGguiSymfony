@@ -1,0 +1,49 @@
+{% extends "layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - Show
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>Alert</h1>
+	
+	<br/><br/>
+	
+	<form method="post" action="{{ path('iot6_AlertBundle_ShowEdit', { id: alert.id } ) }}">
+		
+		<table>
+			<tr>
+				<td style="width:100px;">Statut:</td>
+				<td>
+					<select name="status">
+						<option value="0" {% if alert.status == 0 %}selected="selected"{% endif %}>Not read</option>
+						<option value="1" {% if alert.status == 1 %}selected="selected"{% endif %}>Requires Action</option>
+						<option value="2" {% if alert.status == 2 %}selected="selected"{% endif %}>Done</option>
+					</select>
+				</td>
+			</tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr>
+				<td>Date:</td>
+				<td>{{ alert.createdAt|date("d.m.Y H:i:s") }}</td>
+			</tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr>
+				<td style="vertical-align:top;">Message:</td>
+				<td><textarea rows="5" cols="70" readonly="readonly">{{ alert.message }}</textarea></td>
+			</tr>
+		</table>
+		
+		<br/><br/>
+		
+		<input type="submit" value="Modifier" name="edit" />&nbsp;<input type="button" value="Annuler" onclick="history.back();" />
+		
+	</form>
+	
+{% endblock %}

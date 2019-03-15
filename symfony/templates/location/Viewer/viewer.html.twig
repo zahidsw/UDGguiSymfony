@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="{{ asset('assets/css/colpick.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/css/iot6LocationViewer.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" />
+
+<div id="div_canvas">
+	{{ 'location.list_locations'|trans }} <select id="s_locations" onchange="javascript:viewer_loadCurrentLocationIntoCanvas();"></select>
+	<div id="optional_extended_menu"></div>
+	<a href="javascript:viewer_reloadWithParamInURL();">[ URL ]</a>
+	<br /><br />
+	<canvas id="c" class="canvas_default" width="500" height="500"></canvas>
+	<div id="canvas_tooltip">
+		<div id="canvas_tooltip_content">
+			<table>
+				<tr><td><span id="selected_name"></span></td></tr>
+				<tr><td id="td_tooltip_content"></td></tr>
+				<tr><td id="td_tooltip_variables"></td></tr>
+				<tr>
+					<td id="td_tooltip_actions">
+						<a href="javascript:viewer_openSelectedObject()">[{{ 'location.open'|trans }}]</a>
+					</td>
+				</tr>
+				<tr>
+					<td id="td_tooltip_actions">
+						<a href="{{ url('iot6_GraphBundle_Editor') }}"><img src="{{ asset('assets/images/interface/icons/graph.png') }}" name="Graph" /></a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<img src="{{ asset('assets/images/location/popup_arrow_down.gif') }}" />
+	</div>
+</div>
+<div id="modal_waiting" class="modal"></div>
+
+<script type="text/javascript">
+	//global variables
+	var ajax_loading_image_path = "{{ asset('assets/images/location/ajax-loader.gif') }}";
+	var object_view_path =  "{{ path('iot6_InteractBundle_deviceShow', {'id':'xxx'}) }}";
+	var base_page_url = '{{ url('iot6_location_viewer') }}';
+	//translation
+	var msg_error_occured = "{{ 'location.error_occured'|trans }}";
+	var msg_error_retrieve_location = "{{ 'location.error_retrieve_location'|trans }}";
+	var msg_no_existing_location = "{{ 'location.no_existing_location'|trans }}";
+	var msg_select_location = "{{ 'location.select_location'|trans }}";
+	var msg_tooltip_var_id = "{{ 'location.tooltip_var_id'|trans }}";
+	var msg_tooltip_var_variables = "{{ 'location.tooltip_var_variables'|trans }}";
+	var msg_tooltip_var_protocol = "{{ 'location.tooltip_var_protocol'|trans }}";
+	var msg_tooltip_var_ipv6 = "{{ 'location.tooltip_var_ipv6'|trans }}";
+	var msg_tooltip_var_timestamp = "{{ 'location.tooltip_var_timestamp'|trans }}";
+	
+	var family_icon_path = "{{ app.request.basepath }}/images/families/";
+</script>
+	
+<script src="{{ asset('assets/scripts/jquery-ui.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/js/iot6LocationViewer.js') }}"></script>
+<script src="{{ asset('assets/js/fabric.min.js') }}"></script>
+<script src="{{ asset('assets/js/colpick.js') }}"></script>

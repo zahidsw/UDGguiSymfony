@@ -1,0 +1,14 @@
+{% extends is_mobile() ? is_tablet() ? "::smartBoard.html.twig" : "::mobile.html.twig" : "::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - Alerts
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+ 
+{% block body %}
+	{{ parent() }}
+	
+{% endblock %}

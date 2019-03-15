@@ -1,0 +1,99 @@
+{% extends "iot6SmartItBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'msg.rule_add'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('css/codemirror.css') }}">
+	
+	<script src="{{ asset('scripts/codeMirror/codemirror.js') }}"></script>
+	<script src="{{ asset('scripts/codeMirror/codemirror_javascript.js') }}"></script>
+	
+	<script>
+		$(document).ready(function() {
+			$("#monForm").submit(function () {
+    			if($('#iot6_smartItBundle_rulesType_rule').val() == "") {
+    				$('#error').text("{{ 'error.fill_rule'|trans }}");
+    				return false;
+    			}
+			});
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<h1>{{ 'msg.rule_add'|trans }}</h1>
+	
+	<br/><br/>
+	
+	<div id="error" style="color:red; text-align:center;"></div>
+	
+	<form method="post" id="monForm" action="{{ path('iot6_SmartItBundle_RulesManager_Add') }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>{{ form_label(form.name, 'msg.name'|trans) }}</td>
+				<td>{{ form_widget(form.name) }}</td>
+				<td>{{ form_errors(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.ruleType, 'msg.type'|trans) }}</td>
+				<td>{{ form_widget(form.ruleType) }}</td>
+				<td>{{ form_errors(form.ruleType) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.isActive, 'msg.active'|trans) }}</td>
+				<td>{{ form_widget(form.isActive) }}</td>
+				<td>{{ form_errors(form.isActive) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.iconName, 'msg.image'|trans) }}</td>
+				<td>{{ form_widget(form.iconName) }}</td>
+				<td>{{ form_errors(form.iconName) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.action, 'msg.action'|trans) }}</td>
+				<td>{{ form_widget(form.action) }}</td>
+				<td>{{ form_errors(form.action) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.rule, 'msg.rule'|trans) }}</td>
+				<td>{{ form_widget(form.rule) }}</td>
+				<td>{{ form_errors(form.rule) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.comment, 'msg.comment'|trans) }}</td>
+				<td>{{ form_widget(form.comment) }}</td>
+				<td>{{ form_errors(form.comment) }}</td>
+			</tr>
+		</table>
+		
+		<input type="hidden" name="backUrl" value="{{ backUrl }}" />
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'msg.add'|trans }}" />&nbsp;<input type="button" value="{{ 'msg.cancel'|trans }}" onclick="window.location='{{ backUrl }}'" />
+	</form>
+	
+	<script>
+		var config = {
+						mode: "javascript",
+						lineNumbers: true,
+						matchBrackets: true
+				};
+	
+		var txtArea = document.getElementById('iot6_smartItBundle_rulesType_rule');
+		var myCodeMirror = CodeMirror.fromTextArea(txtArea, config);
+	</script>
+	
+{% endblock %}

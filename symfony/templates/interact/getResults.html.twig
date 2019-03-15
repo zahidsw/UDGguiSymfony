@@ -1,0 +1,134 @@
+	<!-- ------ Actions ------- -->
+	
+	{% if actions is defined %}
+		<h1>{{ 'msg.common_action'|trans }}</h1>
+	{% endif %}
+	
+	{% if error is defined %}
+		<div class="error">{{ 'msg.no_common_action_devices'|trans }}</div>
+	{% else %}
+		{% if actions is defined %}
+			<div style="overflow:hidden;">
+				{% for action in actions %}
+					{{ include('interact/actionButtonTemplate.html.twig', {'action': action, 'units':units}) }}
+			    {% endfor %}
+		    </div>
+		{% endif %}
+	{% endif %}
+	
+	<br/>
+	
+	<!-- ------ Devices ------- -->
+	
+	{% if devices is defined %}
+		<h1>Devices</h1>
+	{% endif %}
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%;">
+			<thead>
+				<tr>
+					<th>{{ 'msg.cat_short'|trans }}</th>
+					<th>{{ 'msg.name'|trans }}</th>
+					<th>{{ 'msg.uid'|trans }}</th>
+					<th>{{ 'msg.building'|trans }}</th>
+					<th>{{ 'msg.floor'|trans }}</th>
+					<th>{{ 'msg.room'|trans }}</th>
+					<th>{{ 'msg.last_data'|trans }}</th>
+					<th>{{ 'msg.key_data'|trans }}</th>
+					<th>{{ 'msg.object'|trans }}</th>
+					<th>{{ 'msg.map'|trans }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for device in devices %}
+					<tr>
+						<td style="text-align:center;">
+							{% if device.category is not null %}
+								<img alt="{{ device.category.internalName }}" src="{{ asset('assets/images/families/'~device.category.iconName) }}" />
+							{% else %}
+								<img src="{{ asset('assets/images/families/all.png') }}" />
+							{% endif %}
+						</td>
+						<td><a href="{{ path('iot6_InteractBundle_deviceShow', {id: device.id}) }}">{{ device.assignedName }}</a></td>
+						<td>{{ device.macAddress }}</td>
+						<td>{{ device.room.floor.building.name }}</td>
+						<td>{{ device.room.floor.name }}</td>
+						<td>{{ device.room.name }}</td>
+						<td>{{ device.lastDataAt|date('d/m/Y') }}</td>
+						
+						<td>
+							
+							<ul>
+								{% for variable in device.variables %}
+									<li>{{ variable.name }}: {{ variable.stringValue }} {{ variable.unit }}</li>
+								{% else %}
+									<li>{{ 'msg.no_data'|trans }}</li>
+								{% endfor %}
+							</ul>
+							
+						</td>
+						
+						<td style="text-align:center;"><a href="{{ path('iot6_InteractBundle_deviceShow', {id: device.id}) }}"><img src="{{ asset('assets/images/interface/icons/device.png') }}" /></a></td>
+						<td style="text-align:center;">
+							{% if device.latitude is not null and device.longitude is not null %}
+								<a href="{{ path('iot6_InteractBundle_mapList', { 'devices': device.id } ) }}">
+									<img src="{{ asset('assets/images/interface/icons/map.png') }}" />
+								</a>
+							{% endif %}
+						</td>
+					</tr>
+				{% else %}
+					<tr><td colspan="10">{{ 'msg.no_device'|trans }}</td></tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+	<br/>
+			
+	<script>
+		function actionWithParam(actionID, paramsList) {
+			$( document ).ready(function() {
+				
+				$.ajax({
+	                url: '{{ path("iot6_InteractBundle_Action_Execute") }}',
+	                data: 'action_id='+ actionID + '&device_id_list={{ devicesID }}' + '&params_list=' + paramsList,
+	                dataType: 'html',
+	                success: function(data, textStatus, xhr) {
+	                	var str = "{{ 'msg.success'|trans }}";
+						if(data!='') {
+							str = "{{ 'msg.no_success'|trans }}: " + data;
+						}
+	                    alert(str);
+	                },
+                	error: function(xhr, statusText) {
+						alert("{{ 'msg.no_success'|trans }}: " + statusText);
+                    }
+	            });
+	            
+			});
+		}
+
+		function action(actionID) {
+			$( document ).ready(function() {
+				
+				$.ajax({
+	                url: '{{ path("iot6_InteractBundle_Action_Execute") }}',
+	                data: 'action_id='+ actionID + '&device_id_list={{ devicesID }}',
+	                dataType: 'html',
+	                success: function(data, textStatus, xhr) {
+	                	var str = "{{ 'msg.success'|trans }}";
+						if(data!='') {
+							str = "{{ 'msg.no_success'|trans }}: " + data;
+						}
+	                    alert(str);
+	                },
+                	error: function(xhr, statusText) {
+						alert("{{ 'msg.no_success'|trans }}: " + statusText);
+                    }
+	            });
+	            
+			});
+		}
+	</script>

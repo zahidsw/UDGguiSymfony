@@ -1,0 +1,70 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.udgModules'|trans }} - {{ 'conf.subMenu.services'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.udgModules'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/udgModulesMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.subMenu.services'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/msg.html.twig' %}
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%">
+			<thead>
+				<tr>
+					<th>{{ 'conf.name'|trans }}</th>
+					<th>{{ 'conf.version'|trans }}</th>
+					<th>{{ 'conf.released'|trans }}</th>
+					<th>{{ 'conf.vendor'|trans }}</th>
+					<th>{{ 'conf.description'|trans }}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				{% for service in services %}
+					<tr>
+						<td><a href="{{ path('iot6_ConfigBundle_UdgModules_Services_Settings', { id: service.id } ) }}">{{ service.name }}</a></td>
+						<td style="text-align:center;">{{ service.version }}</td>
+						<td style="text-align:center;">{{ service.released|date("d/m/Y h:i:s") }}</td>
+						<td>{{ service.vendor }}</td>
+						<td>{{ service.description }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
+		<br/>
+		
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbServices,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		}}
+	    
+	</div>
+	
+{% endblock %}

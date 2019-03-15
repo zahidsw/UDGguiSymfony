@@ -1,0 +1,21 @@
+{% extends is_mobile() ? is_tablet() ? "smartBoard.html.twig" : "mobile.html.twig" : "layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - Interact
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/iot6InteractActions.css') }}" />
+{% endblock %}
+ 
+{% block body %}
+	{{ parent() }}
+	
+	<div id="submenu">
+		{{ render(controller("App\\Controller\\MenuController:subMenuInteract", {'_locale':app.request.locale})) }}
+	</div>
+	
+	<script type="text/javascript" src="{{ asset('assets/scripts/jquery-ui.min.js') }}"></script>
+	<script src="{{ asset('assets/js/iot6InteractActions.js') }}"></script>
+{% endblock %}

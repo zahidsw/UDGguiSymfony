@@ -1,0 +1,169 @@
+
+	<script>
+		$(document).ready( function() {
+			$("#monForm").submit(function () {
+
+				$.ajax({
+					url: $(this).attr('action'),
+					type: $(this).attr('method'),
+					data: $(this).serialize(),
+					success: function(html) {
+						$("div.zoneTexte").empty();
+						$("div.zoneTexte").append(html);
+						$("#cancelAdd").val("{{ 'msg.back'|trans }}");
+					}
+				});
+				
+				return false;
+			});
+		});
+	</script>
+	
+	<script>
+		$(document).ready( function() {
+			$('#addProtocolButton').click(function() {
+				$('#addDeviceForm').show('fast');
+				$('#showProtocolForm').hide(1000);
+				$("div.zoneTexte").empty();
+			});
+
+			$('#cancelAdd').click(function() {
+				$('#showProtocolForm').show('fast');
+				$('#addDeviceForm').hide(1000);
+			});
+		});
+	</script>
+	
+	<div id="showProtocolForm">
+	
+		<div id="zebraTableDiv">
+			<table style="width:100%">
+				<tr>
+					<td style="width:30%">{{ 'msg.name'|trans }}</td>
+					<td>{{ protocol.name }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.description'|trans }}</td>
+					<td>{{ protocol.description }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.version'|trans }}</td>
+					<td>{{ protocol.version }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.released'|trans }}</td>
+					<td>{{ protocol.released|date("d/m/Y") }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.default_tcp_port'|trans }}</td>
+					<td>{{ protocol.defaultTcpPort }}</td>
+				</tr>
+			</table>
+		</div>
+		
+		<br/><br/>
+		
+		<input id="addProtocolButton" type="button" value="{{ 'msg.add_device'|trans }}" />
+	</div>
+	
+	<div id="addDeviceForm" style="display:none;">
+	
+		<div class="zoneTexte"></div>
+	
+		{{ form_start(form, {'attr': {'id': 'monForm'},'action': path('getProtocol', { 'id': protocol.id }) }) }}
+			<div id="zebraTableDiv">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:30%">{{ form_label(form.ipv6address, 'msg.ipv6_address'|trans) }}</td>
+						<td>{{ form_widget(form.ipv6address) }}</td>
+						<td>{{ form_errors(form.ipv6address) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.physicalCode, 'msg.physical_code'|trans) }}</td>
+						<td>{{ form_widget(form.physicalCode) }}</td>
+						<td>{{ form_errors(form.physicalCode) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.assignedName, 'msg.assigned_name'|trans) }}</td>
+						<td>{{ form_widget(form.assignedName) }}</td>
+						<td>{{ form_errors(form.assignedName) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.description, 'msg.description'|trans) }}</td>
+						<td>{{ form_widget(form.description) }}</td>
+						<td>{{ form_errors(form.description) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.comments, 'msg.comments'|trans) }}</td>
+						<td>{{ form_widget(form.comments) }}</td>
+						<td>{{ form_errors(form.comments) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.detectedAt, 'msg.detected_at'|trans) }}</td>
+						<td>{{ form_widget(form.detectedAt) }}</td>
+						<td>{{ form_errors(form.detectedAt) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.lastDataAt, 'msg.last_data_at'|trans) }}</td>
+						<td>{{ form_widget(form.lastDataAt) }}</td>
+						<td>{{ form_errors(form.lastDataAt) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.family, 'msg.family'|trans) }}</td>
+						<td>{{ form_widget(form.family) }}</td>
+						<td>{{ form_errors(form.family) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.protocol, 'msg.protocol'|trans) }}</td>
+						<td>{{ form_widget(form.protocol) }}</td>
+						<td>{{ form_errors(form.protocol) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.module, 'msg.module'|trans) }}</td>
+						<td>{{ form_widget(form.module) }}</td>
+						<td>{{ form_errors(form.module) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.card, 'msg.card'|trans) }}</td>
+						<td>{{ form_widget(form.card) }}</td>
+						<td>{{ form_errors(form.card) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.model, 'msg.model'|trans) }}</td>
+						<td>{{ form_widget(form.model) }}</td>
+						<td>{{ form_errors(form.model) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.room, 'msg.room'|trans) }}</td>
+						<td>{{ form_widget(form.room) }}</td>
+						<td>{{ form_errors(form.room) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.positionX, 'msg.positionX'|trans) }}</td>
+						<td>{{ form_widget(form.positionX) }}</td>
+						<td>{{ form_errors(form.positionX) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.positionY, 'msg.positionY'|trans) }}</td>
+						<td>{{ form_widget(form.positionY) }}</td>
+						<td>{{ form_errors(form.positionY) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.positionZ, 'msg.positionZ'|trans) }}</td>
+						<td>{{ form_widget(form.positionZ) }}</td>
+						<td>{{ form_errors(form.positionZ) }}</td>
+					</tr>
+				</table>
+			
+				{{ form_rest(form) }}
+				
+				<br/>
+				<div class="zoneTexte"></div>
+			</div>
+		
+			<input type="submit" value="{{ 'msg.add'|trans }}" />&nbsp;<input id="cancelAdd" type="button" value="{{ 'msg.cancel'|trans }}" />
+		{{ form_end(form) }}
+
+		<br/>
+		
+	</div>

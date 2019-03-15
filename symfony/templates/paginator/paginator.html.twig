@@ -1,0 +1,57 @@
+
+{% set route_params = app.request.get('_route_params') %}
+{% if route_params == NULL %} 
+	{% set route_params = [] %}
+{% endif %}
+
+{% if nbItems > nbItemPerPage %}
+	{% if currentPage > 1 %}
+		<div class="paginationNav">
+		
+			<a href="{{ path(route, route_params | merge({ (arg): 1 }) ) }}">
+				<img src="{{ asset('images/interface/icons/first.png') }}" />
+			</a>
+			<a href="{{ path(route, route_params | merge({ (arg): currentPage-1 }) ) }}">
+				<img src="{{ asset('images/interface/icons/previous.png') }}" />
+			</a>
+		</div>
+	{% endif %}
+
+	<ul class="pagination">
+	
+		{% set min = 1 %}
+		{% set max = nbPages %}
+		
+		{% if currentPage > nbPagesDisplayed %}
+			{% set min = currentPage - nbPagesDisplayed %}
+		{% endif %}
+		
+		{% if currentPage +  nbPagesDisplayed < nbPages %}
+			{% set max = currentPage + nbPagesDisplayed %}
+		{% endif %}
+	
+		{% for p in range(min, max) %}
+			<li{% if p == currentPage %} class="active"{% endif %}>
+	        	{% if p == currentPage %}
+	        		{{ p }}
+	        	{% else %}
+	        		<a href="{{ path(route, route_params | merge({ (arg): p }) ) }}">{{ p }}</a>
+	        	{% endif %}
+	          	
+	        </li>
+		{% endfor %}
+		
+    </ul>
+    
+    {% if currentPage < nbPages %}
+    	<div class="paginationNav">
+    		<a href="{{ path(route, route_params | merge({ (arg): currentPage+1 }) ) }}">
+				<img src="{{ asset('images/interface/icons/next.png') }}" />
+			</a>
+			<a href="{{ path(route, route_params | merge({ (arg): nbPages }) ) }}">
+				<img src="{{ asset('images/interface/icons/last.png') }}" />
+			</a>
+		</div>
+	{% endif %}
+	
+{% endif %}

@@ -1,0 +1,79 @@
+{% extends "iot6HomeBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	
+    <script type="text/javascript">// <![CDATA[
+    $(document).ready(function() {
+    $.ajaxSetup({ cache: false }); // This part addresses an IE bug. without it, IE will only load the first number and will never refresh
+    setInterval(function() {
+    $('#remoteServerMsg').load("{{ path('iot6_HomeBundle_remoteServerMsg') }}");
+    $('#lastAlerts').load("{{ path('iot6_HomeBundle_lastAlerts') }}");
+    }, 3000);
+    });
+    // ]]></script>
+	
+	<div id="remoteServerMsg" class="bloc border">
+		<a href="" class="title"><strong>{{ 'msg.message_remote_server'|trans }}</strong></a>
+		<img class="load" alt="{{ 'msg.loading'|trans }}..." src="{{ asset('assets/images/interface/icons/loader.gif') }}" />
+	</div>
+	
+	<div class="bloc">
+		<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/interface/icons/interact.png') }}" />
+		<a href="" class="title"><strong>{{ 'msg.interact'|trans }}</strong> {{ 'msg.with_smart_things'|trans }}</a>
+		<ul>
+			<li><a href="">{{ 'msg.iot_navig'|trans }}</a></li>
+			<li><a href="">{{ 'msg.maps'|trans }}</a></li>
+		</ul>
+	</div>
+	
+	<div class="bloc">
+		<img class="legend" alt="{{ 'msg.intelligence'|trans }}" src="{{ asset('assets/images/interface/icons/intelligence.png') }}" />
+		<a href="" class="title"><strong>{{ 'msg.intelligence'|trans }}</strong> - {{ 'msg.make_it_smart'|trans }}</a>
+		<ul>
+			<li><a href="">{{ 'msg.scenarios'|trans }}</a></li>
+			<li><a href="">{{ 'msg.rules_manager'|trans }}</a></li>
+			<li><a href=""><img alt="{{ 'msg.scenarios'|trans }}" src="{{ asset('assets/images/interface/icons/scenario.png') }}" /></a></li>
+		</ul>
+	</div>
+	
+	<div class="bloc">
+		<img class="legend" alt="{{ 'msg.apps_and_services'|trans }}" src="{{ asset('assets/images/interface/icons/icone_generique.png') }}" />
+		<a href="" class="title"><strong>{{ 'msg.apps_and_services'|trans }}</strong></a>
+		<ul>
+			<li><a href="">Application 1</a></li>
+			<li><a href="">Application 2</a></li>
+			<li><a href="">Application 3</a></li>
+		</ul>
+	</div>
+	
+	<div id="lastAlerts" class="bloc">
+		<a href=""><strong>{{ 'msg.last_alerts'|trans }}</strong></a>
+		<img class="load" alt="{{ 'msg.loading'|trans }}..." src="{{ asset('assets/images/interface/icons/loader.gif') }}" />
+	</div>
+	
+	<div class="bloc">
+		<img class="legend" alt="{{ 'msg.data_history'|trans }}" src="{{ asset('assets/images/interface/icons/history.png') }}" />
+		<a href="" class="title"><strong>{{ 'msg.data_history'|trans }}</strong></a>
+	</div>
+		
+	<div class="bloc">
+		<img class="legend" alt="{{ 'msg.config'|trans }}" src="{{ asset('assets/images/interface/icons/parameters.png') }}" />
+		<a href="" class="title"><strong>{{ 'msg.config'|trans }}</strong></a>
+	</div>
+	
+	<div class="bloc">
+		<img class="legend" alt="{{ 'msg.about_contact'|trans }}" src="{{ asset('assets/images/interface/icons/info.png') }}" />
+		<a href="" class="title"><strong>{{ 'msg.about_contact'|trans }}</strong></a>
+	</div>
+	
+{% endblock %}

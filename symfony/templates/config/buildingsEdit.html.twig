@@ -1,0 +1,66 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.building_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.building_edit'|trans }}</h1>
+	
+	<br/><br/>
+	
+	{{ form_start(form, {'attr': {'id': 'form'},'action': path('iot6_ConfigBundle_Locations_Buildings_Edit', { 'id': building.id }) }) }}
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>{{ form_label(form.name, 'conf.name'|trans) }}</td>
+				<td>{{ form_widget(form.name) }}</td>
+				<td>{{ form_errors(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.actual_image'|trans }}</td>
+				<td><img src="{{ asset('images/buildings/'~building.imageName) }}" alt="{{ building.imageName }}" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.file, 'conf.new_image'|trans) }}</td>
+				<td>{{ form_widget(form.file) }}</td>
+				<td>{{ form_errors(form.file) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.importanceLevel, 'conf.importance_level'|trans) }}</td>
+				<td>{{ form_widget(form.importanceLevel) }}</td>
+				<td>{{ form_errors(form.importanceLevel) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.energyLevel, 'conf.energy_level'|trans) }}</td>
+				<td>{{ form_widget(form.energyLevel) }}</td>
+				<td>{{ form_errors(form.energyLevel) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.espId, 'conf.esp_id'|trans) }}</td>
+				<td>{{ form_widget(form.espId) }}</td>
+				<td>{{ form_errors(form.espId) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.buildingState, 'conf.building_state'|trans) }}</td>
+				<td>{{ form_widget(form.buildingState) }}</td>
+				<td>{{ form_errors(form.buildingState) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Locations_Buildings') }}'" />
+	{{ form_end(form) }}
+	
+	
+{% endblock %}

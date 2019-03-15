@@ -1,0 +1,8 @@
+{#
+<a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'fr'})) }}"><img alt="[FR]" src="{{ asset('assets/images/language/french.png') }}" /></a>
+<a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}"><img alt="[EN]" src="{{ asset('assets/images/language/english.png') }}" /></a>
+#}					
+
+{% for language in languages %}
+	<a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge( { '_locale': language.abbreviation } ) ) }}"><img alt="[{{ language.name | capitalize }}]" src="{{ asset('assets/images/language/'~language.icon) }}" /></a>
+{% endfor %}

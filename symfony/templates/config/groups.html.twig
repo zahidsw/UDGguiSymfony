@@ -1,0 +1,98 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.devices'|trans }} - {{ 'conf.subMenu.groups'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.devices'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:devicesMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.subMenu.groups'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Devices_groups_Add') }}">[{{ 'conf.group_add'|trans }}]</a>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table id="table" style="width:100%;">
+			<thead>
+				<tr>
+					<th colspan="2"></th>
+					<th>{{ 'conf.name'|trans }}</th>
+					<th>{{ 'conf.category'|trans }}</th>
+				</tr>
+			</thead>
+		
+			<tbody>
+				{% for group in groups %}
+					<tr>
+					
+						{#
+						{% if user.enabled %}
+							<td style="width: 30px; text-align: center;">
+								<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_ActDesact', { 'id': user.id }) }}">
+									<img alt="{{ 'conf.deactivate'|trans }}" src="{{ asset('images/interface/icons/actif.png') }}" />
+								</a>
+							</td>
+						{% else %}
+							<td style="width: 30px; text-align: center;">
+								<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_ActDesact', { 'id': user.id }) }}">
+									<img alt="{{ 'conf.activate'|trans }}" src="{{ asset('images/interface/icons/inactif.png') }}" />
+								</a>
+							</td>
+						{% endif %}
+						#}
+						
+						<td style="width:30px; text-align:center;">
+							<a href="{{ path('iot6_ConfigBundle_Devices_groups_Edit', { 'id': group.id }) }}">
+								<img src="{{ asset('images/interface/icons/edit.png') }}" />
+							</a>
+						</td>
+						
+						<td style="width:30px; text-align:center;">
+							<a href="{{ path('iot6_ConfigBundle_Devices_groups_Delete', { 'id': group.id }) }}">
+								<img src="{{ asset('images/interface/icons/delete.png') }}"
+									onclick="return(confirm('{{ 'conf.ask.delete_group'|trans }}'));" />
+							</a>
+						</td>
+						<td>
+							<a href="{{ path('iot6_ConfigBundle_Devices_groups_Edit', { 'id': group.id }) }}">
+								{{ group.name }}
+							</a>
+						</td>
+						<td>
+							{% if group.category == 1 %}
+								{{ 'conf.buildings'|trans }}
+							{% elseif group.category == 2 %}
+								{{ 'conf.floors'|trans }}
+							{% elseif group.category == 3 %}
+								{{ 'conf.rooms'|trans }}
+							{% elseif group.category == 4 %}
+								{{ 'conf.devices'|trans }}
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+		
+	<br/>
+	
+{% endblock %}

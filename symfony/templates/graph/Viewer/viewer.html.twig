@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="{{ asset('assets/css/iot6GraphViewer.css') }}" />
+
+<script type="text/javascript">
+		var base_page_url = '{{ url('iot6_GraphBundle_Editor') }}';
+		//****global variables used for translations
+		var ajax_loading_image_path = "{{ asset('assets/images/graph/ajax-loader.gif') }}";
+		var msg_date_label = "{{ 'graph.date'|trans }}";
+		var msg_variable_already_exists = "{{ 'graph.variable_already_exists'|trans }}";
+		var msg_no_variable_to_show_in_graph = "{{ 'graph.no_variable_to_show_in_graph'|trans }}";
+		var msg_no_value = "{{ 'graph.no_value'|trans }}";
+		var msg_unit_not_compatible = "{{ 'graph.unit_not_compatible'|trans|raw }}";
+</script>
+
+{{ 'graph.from'|trans }} <input type="text" value="" name="from" id="from" />
+{{ 'graph.to'|trans }} <input type="text" value="" name="to" id="to" />
+{{ 'graph.granularity'|trans }} 
+	<select id="granularity">
+		<option selected="selected" value="0">{{ 'graph.granularity_none'|trans }}</option>
+		<option value="1">{{ 'graph.granularity_minute'|trans }}</option>
+		<option value="2">{{ 'graph.granularity_hour'|trans }}</option>
+		<option value="3">{{ 'graph.granularity_day'|trans }}</option>
+		<option value="4">{{ 'graph.granularity_month'|trans }}</option>
+		<option value="5">{{ 'graph.granularity_year'|trans }}</option>
+	</select>
+{{ 'graph.alpha'|trans }} <div id="alpha_slider"></div>
+<a href="javascript:viewer_reloadWithParamInURL();" style="margin-right:5px;">[ URL ]</a>
+<input type="button" value="{{ 'graph.filter'|trans }}" onclick="javascript:viewer_ajax_showGraph();" />
+
+<div id="div_graph" style="width:100%"></div>
+<div id="div_graph_label"></div>
+
+<script src="{{ asset('assets/js/iot6GraphViewer.js') }}"></script>
+<script src="{{ asset('assets/js/dygraph-combined.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/scripts/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/scripts/jquery-ui-timepicker-addon.js') }}"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('assets/css/jquery-ui.css') }}">

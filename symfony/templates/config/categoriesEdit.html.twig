@@ -1,0 +1,46 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.devices'|trans }} - {{ 'conf.category_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.category_edit'|trans }}</h1>
+	
+	<br/><br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Devices_categories_Edit', {'id': category.id }) }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td style="width:120px;">{{ form_label(form.internalName, 'conf.name'|trans) }}</td>
+				<td>{{ form_widget(form.internalName) }}</td>
+				<td>{{ form_errors(form.internalName) }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.actual_image'|trans }}</td>
+				<td><img src="{{ asset('images/categories/'~category.iconName) }}" alt="{{ category.iconName }}" /></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.file, 'conf.new_image'|trans) }}</td>
+				<td>{{ form_widget(form.file) }}</td>
+				<td>{{ form_errors(form.file) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Devices_categories') }}'" />
+	</form>
+	
+	
+{% endblock %}

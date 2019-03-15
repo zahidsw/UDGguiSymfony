@@ -1,0 +1,38 @@
+{% extends "layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+		$(document).ready(function() {
+			$('#appChoice').change(function() {
+				$('#appsFrame').attr('src', $(this).val());
+			});
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'menu.appsAndService'|trans }}</h1>
+	
+	<br/>
+	
+	<select id="appChoice" value="appChoice">
+		<option selected value="">{{ 'msg.select_service'|trans }}</option>
+		{% for app in apps %}
+			<option value="{{ app.url }}">{{ app.name }}</option>
+		{% endfor %}
+	</select>
+	
+	<br/><br/>
+	
+	<iframe id="appsFrame"></iframe>
+
+{% endblock %}

@@ -1,0 +1,264 @@
+{% extends "iot6SmartItBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'msg.add_scheduler'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+	function generateCron(field) {
+		if(field == 3) {
+			v = document.getElementById('day_week');
+			v.selectedIndex = 0;
+		}
+		else if(field == 5) {
+			v = document.getElementById('day_month');
+			v.selectedIndex = 0;
+		}
+
+		cron = '';
+		
+		v = document.getElementById('seconds');
+		cron += v.value + ' ';
+		
+		v = document.getElementById('minutes');
+		cron += v.value + ' ';
+		
+		v = document.getElementById('hours');
+		cron += v.value + ' ';
+		
+		v = document.getElementById('day_month');
+		if(v.value != '*')
+			cron += v.value + ' ';
+		else {
+			v2 = document.getElementById('day_week');
+			if(v2.value == '*')
+				cron += v.value + ' ';
+			else
+				cron += '? ';
+		}
+		
+		v = document.getElementById('month');
+		cron += v.value + ' ';
+		
+		v = document.getElementById('day_week');
+		if(v.value == '*')
+			cron += '? ';
+		else {
+			v2 = document.getElementById('day_month');
+			if(v2.value == '*')
+				cron += v.value + ' ';
+			else
+				cron += '? ';
+		}
+		
+		v = document.getElementById('year');
+		cron += v.value;
+		
+		v = document.getElementById('iot6_smartItBundle_schedulesType_scheduleCron');
+		v.value = cron;
+	}
+	</script>
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<h1>{{ 'msg.add_scheduler'|trans }}</h1>
+	
+	<br/><br/>
+	
+	{% set cronTab = form.vars.value.scheduleCron | split(' ') %}
+	
+	<form method="post" id="monForm" action="{{ path('iot6_SmartItBundle_Scheduler_Add') }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table style="width:100%;">
+			<thead>
+				<tr>
+					<th colspan="3" class="tableHeader">{{ 'msg.when'|trans }}</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width:200px;">{{ 'msg.seconds'|trans }}:</td>
+					<td colspan="2">
+						<select id="seconds" name="seconds" onchange="generateCron(0);">
+							<option value="*">* - {{ 'msg.every_second'|trans }}</option>
+							{% for i in 0..59 %}
+								<option value="{{ i }}" 
+								
+								{% if i == cronTab[0] and cronTab[0] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ i }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.minutes'|trans }}:</td>
+					<td colspan="2">
+						<select id="minutes" name="minutes" onchange="generateCron(1);">
+							<option value="*">* - {{ 'msg.every_minute'|trans }}</option>
+							{% for i in 0..59 %}
+								<option value="{{ i }}"
+								
+								{% if i == cronTab[1] and cronTab[1] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ i }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.hours'|trans }}:</td>
+					<td colspan="2">
+						<select id="hours" name="hours" onchange="generateCron(2);">
+							<option value="*">* - {{ 'msg.every_hour'|trans }}</option>
+							{% for i in 0..23 %}
+								<option value="{{ i }}"
+								
+								{% if i == cronTab[2] and cronTab[2] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ i }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.day_of_month'|trans }}:</td>
+					<td colspan="2">
+						<select id="day_month" name="day_month" onchange="generateCron(3);">
+							<option value="*">* - {{ 'msg.every_day_of_month'|trans }}</option>
+							{% for i in 1..31 %}
+								<option value="{{ i }}"
+								
+								{% if i == cronTab[3] and cronTab[3] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ i }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.months'|trans }}:</td>
+					<td colspan="2">
+						<select id="month" name="month" onchange="generateCron(4);">
+							<option value="*">* - {{ 'msg.every_month'|trans }}</option>
+							{% for i in 1..12 %}
+								<option value="{{ i }}"
+								
+								{% if i == cronTab[4] and cronTab[4] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ date('2012-' ~ i ~ '-01') |date('F') }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.day_of_week'|trans }}:</td>
+					<td colspan="2">
+						<select id="day_week" name="day_week" onchange="generateCron(5);">
+							<option value="*">* - {{ 'msg.every_day_of_week'|trans }}</option>
+							{% for i in 1..7 %}
+								<option value="{{ i }}"
+								
+								{% if i == cronTab[5] and cronTab[5] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ date('2014-12-' ~ i) |date('l') }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.years'|trans }}:</td>
+					<td colspan="2">
+						<select id="year" name="year" onchange="generateCron(6);">
+							<option value="*">* - {{ 'msg.every_year'|trans }}</option>
+							{% for i in 1970..2099 %}
+								<option value="{{ i }}"
+								
+								{% if i == cronTab[6] and cronTab[6] != '*' %}
+									 selected="selected"
+								{% endif %}
+								
+								>{{ i }}</option>
+							{% endfor %}
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ form_label(form.scheduleCron, 'msg.cron_syntaxe'|trans) }}</td>
+					<td>{{ form_widget(form.scheduleCron) }}</td>
+					<td>{{ form_errors(form.scheduleCron) }}</td>
+				</tr>
+			</tbody>
+		</table>	
+		
+		<br/>
+		
+		<table style="width:100%;">
+			<thead>
+				<tr>
+					<th colspan="3" class="tableHeader">{{ 'msg.what'|trans }}</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width:200px;">{{ form_label(form.rule, 'msg.rule'|trans ~ ':') }}</td>
+					<td>{{ form_widget(form.rule) }}</td>
+					<td>{{ form_errors(form.rule) }}</td>
+				</tr>
+				<tr>
+					<td>{{ form_label(form.target, 'msg.target'|trans ~ ":") }}</td>
+					<td>{{ form_widget(form.target) }}</td>
+					<td>{{ form_errors(form.target) }}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<br/>
+		
+		<table style="width:100%;">
+			<thead>
+				<tr>
+					<th colspan="3" class="tableHeader">{{ 'msg.other'|trans }}</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width:200px;">{{ form_label(form.isActive, 'msg.is_active'|trans ~ ":") }}</td>
+					<td>{{ form_widget(form.isActive) }}</td>
+					<td>{{ form_errors(form.isActive) }}</td>
+				</tr>
+				<tr>
+					<td>{{ form_label(form.comment, 'msg.comment'|trans ~ ":") }}</td>
+					<td>{{ form_widget(form.comment) }}</td>
+					<td>{{ form_errors(form.comment) }}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'msg.add'|trans }}" />&nbsp;<input type="button" value="{{ 'msg.cancel'|trans }}" onclick="window.location='{{ path('iot6_SmartItBundle_Scheduler') }}'" />
+	</form>
+	
+{% endblock %}

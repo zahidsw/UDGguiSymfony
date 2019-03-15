@@ -1,0 +1,72 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.subMenu.roomTypes'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.locations'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:locationsMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.subMenu.roomTypes'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Locations_RoomTypes_Add') }}">[{{ 'conf.roomType_add'|trans }}]</a>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table style="width:100%">
+			{% for roomType in roomTypes %}
+				<tr>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_RoomTypes_Edit', { 'id': roomType.id }) }}">
+							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_RoomTypes_Delete', { 'id': roomType.id }) }}">
+							<img src="{{ asset('images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'conf.ask.delete_roomType'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_ConfigBundle_Locations_RoomTypes_Edit', { 'id': roomType.id }) }}">
+							{{ roomType.name }}
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbRoomTypes,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		%}
+	    
+	</div>
+{% endblock %}

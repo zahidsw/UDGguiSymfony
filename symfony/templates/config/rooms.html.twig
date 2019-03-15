@@ -1,0 +1,153 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.subMenu.rooms'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+
+		$(document).ready(function() {
+			var $buildings = $('#buildings');
+		    var $floors = $('#floors');
+
+		    $buildings.on('change', function() {
+		    	var val = $(this).val();
+
+		    	if(val != '') {
+		    		$floors.empty();
+
+		    		$.ajax({
+		                url: '{{ path("getFloorsForBuilding") }}',
+		                data: 'idBuilding='+ val,
+		                dataType: 'json',
+		                success: function(json) {
+		                    $.each(json, function(index, value) {
+		                    	var selected = "";
+			                    if(index == -1)
+				                    selected = "selected='selected'";
+		                        $floors.append('<option ' + selected + 'value="'+ index +'">'+ value +'</option>');
+		                    });
+		                }
+		            });
+		    	}
+		    });
+		});
+	
+		function getResult() {
+			var floors = document.getElementById('floors');
+			var idFloor = floors.options[floors.selectedIndex].value;
+			
+			var path = '{{ path('iot6_ConfigBundle_Locations_Rooms', { 'idFloor': 'idFloorToReplace'  } ) }}';
+			path = path.replace("idFloorToReplace", idFloor);
+
+			window.location.href = path;
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.locations'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:locationsMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.subMenu.rooms'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Locations_Rooms_Add') }}">[{{ 'conf.room_add'|trans }}]</a>
+	
+	<br/><br/>
+	
+	<select id="buildings" name="buildings">
+		<option value="-1">{{ 'conf.all_buildings'|trans }}</option>
+		
+		{% set idSelected = app.request.get('idBuilding') %}
+		
+		{% for building in buildings %}
+			<option 
+			
+				{% if idSelected == building.id %}
+					selected="selected" 
+				{% endif %}
+				
+			value="{{ building.id }}">{{ building.name }}</option>
+		{% endfor %}
+	</select>
+	
+	<select id="floors" name="floors">
+		<option value="-1">{{ 'conf.all_floors'|trans }}</option>
+		
+		{% set idSelected = app.request.get('idFloor') %}
+		
+		{% for floor in floors %}
+			<option 
+			
+				{% if idSelected == floor.id %}
+					selected="selected" 
+				{% endif %}
+				
+			value="{{ floor.id }}">{{ floor.name }}</option>
+		{% endfor %}
+	</select>
+	
+	<input type="button" value="{{ 'conf.select'|trans }}" onclick="getResult();"/>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table id="table" style="width:100%">
+			{% for room in rooms %}
+				<tr>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_Rooms_Edit', { 'id': room.id }) }}">
+							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_Rooms_Delete', { 'id': room.id }) }}">
+							<img src="{{ asset('images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'conf.ask.delete_room'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_ConfigBundle_Locations_Rooms_Edit', { 'id': room.id }) }}">
+							{{ room.name }}
+						</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td>{{ 'conf.no_room'|trans }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbRooms,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		%}
+	    
+	</div>
+{% endblock %}

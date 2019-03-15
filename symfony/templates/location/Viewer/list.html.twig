@@ -1,0 +1,68 @@
+{% extends "Location/layoutLocation.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/iot6LocationList.css') }}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('assets/css/jquery-ui.css') }}">
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<div id="submenu">
+		{{ render(controller("App\\Controller\\MenuController:subMenuInteract", {'_locale':app.request.locale})) }}
+	</div>
+	
+	<table>
+		{% set currentBuilding = -1 %}
+		{% for floor in floors %}
+			{% if currentBuilding != floor.building.id %}
+				{% set currentBuilding = floor.building.id %}
+				<tr><td class="building">{{ floor.building.name }}</td><tr>
+			{% endif %}
+			<tr>
+				<td>
+					{% if floor.location != null %}
+						<a href="{{ url("iot6_location_editor") }}?location_preload={{ floor.location.id }}" title="{{ 'location.floor_view'|trans }}">
+							{{ floor.name }}
+							<img src="{{ asset('assets/images/location/view.png') }}" alt="{{ 'location.floor_view'|trans }}" /></a>
+						<a href="javascript:list_unlinkLocation({{ floor.id }});" title="{{ 'location.floor_unlink'|trans }}"><img src="{{ asset('assets/images/location/unlink.png') }}" alt="{{ 'location.floor_unlink'|trans }}" /></a>
+						<a href="javascript:list_showLinksFor({{ floor.id }});" title="{{ 'location.floor_link'|trans }}"><img src="{{ asset('assets/images/location/link.png') }}" alt="{{ 'location.floor_link'|trans }}" /></a>
+					{% else %}
+						{{ floor.name }}
+						<a href="{{ url("iot6_location_editor") }}?location_precreation_id={{ floor.id }}&location_precreation_name={{ floor.name }}" title="{{ 'location.floor_add'|trans }}"><img src="{{ asset('assets/images/location/add.png') }}" alt="{{ 'location.floor_add'|trans }}" /></a>
+						<a href="javascript:list_showLinksFor({{ floor.id }});" title="{{ 'location.floor_link'|trans }}"><img src="{{ asset('assets/images/location/link.png') }}" alt="{{ 'location.floor_link'|trans }}" /></a>
+					{% endif %}
+				</td>
+			<tr>
+		{% endfor %}
+	</table>
+	
+	<div id="dialog_link">
+		<select id="select_locations">
+			{% for location in locations %}
+				<option value="{{ location.id }}">{{ location.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	
+	<div id="modal_waiting" class="modal"></div>
+	
+	<script type="text/javascript">
+		//global variables
+		var ajax_loading_image_path = "{{ asset('assets/images/location/ajax-loader.gif') }}";
+		//translations
+		var msg_confirmUnlink = "{{ 'location.confirm_unlink'|trans|raw }}";
+		var msg_error_occured = "{{ 'location.error_occured'|trans|raw }}";
+		var msg_dialog_title = "{{ 'location.floor_link'|trans }}";
+		var msg_dialog_ok = "{{ 'location.dialog_ok'|trans }}";
+		var msg_dialog_cancel = "{{ 'location.dialog_cancel'|trans }}";
+	</script>
+	
+	<script src="{{ asset('assets/js/iot6LocationList.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/scripts/jquery-ui.min.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - Scenarios
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+		function scenario(scenarioId) {
+			
+			$( document ).ready(function() {
+				
+				$.ajax({
+	                url: '{{ path("iot6_SmartItBundle_Scenarios_Execute") }}',
+	                data: 'scenario_id='+ scenarioId,
+	                dataType: 'html',
+	                success: function(data, textStatus, xhr) {
+	                	var str = "{{ 'msg.success'|trans }}";
+						if(data!='') {
+							str = "{{ 'msg.no_success'|trans }}: " + data;
+						}
+	                    alert(str);
+	                },
+                	error: function(xhr, statusText) {
+						alert("{{ 'msg.no_success'|trans }}: " + statusText);
+                    }
+	            });
+	            
+			});
+			
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<h1>{{ 'msg.select_scenario'|trans }}</h1>
+	
+	<div class="scenarios">
+		{% for rule in rules%}
+			<a onclick="scenario({{ rule.id }});">
+				<div>
+					<img src="{{ asset('assets/images/scenarios/'~rule.iconName) }}" />
+					<br />
+					<span>{{ rule.name }}</span>
+				</div>
+			</a>
+		{% endfor %}
+	</div>
+	
+{% endblock %}

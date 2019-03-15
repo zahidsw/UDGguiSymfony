@@ -1,0 +1,16 @@
+
+{% for subMenu in liste_subMenu %}
+	
+	<a abc="{{ path(subMenu.href) }}"
+	
+	{% if path(subMenu.href) in route %}
+		class="selected" 
+	{% endif %}
+	
+	href="{{ path(subMenu.href) }}">{{ subMenu.name }}</a>
+	
+	{% if loop.last == false %}
+	 | 
+	{% endif %}
+	
+{% endfor %}

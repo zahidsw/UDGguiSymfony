@@ -1,0 +1,127 @@
+{% extends "layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script type="text/javascript" src="{{ asset('assets/scripts/jquery.tablesorter.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('assets/css/tableSorter.css') }}">
+    
+    <script type="text/javascript" src="{{ asset('assets/scripts/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/scripts/jquery-ui-timepicker-addon.js') }}"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('assets/css/jquery-ui.css') }}">
+    
+    <style>
+    	.ui-timepicker-div dl{ text-align: left; }
+		.ui-timepicker-div dl dt{ height: 25px; }
+		.ui-timepicker-div dl dd{ margin: -20px 0 0px 75px; }
+    </style>
+    
+    <script>
+    	$(document).ready(function() {
+			$( "#from" ).datetimepicker({
+				changeMonth: true,
+				changeYear: true,
+				dateFormat: 'dd-mm-yy',
+				timeFormat: 'HH:mm:ss',
+				stepSecond: 5,
+				onClose: function( selectedDate ) {
+					$( "#to" ).datetimepicker( "option", "minDate", selectedDate );
+				}
+			});
+
+			$( "#to" ).datetimepicker({
+				changeMonth: true,
+				changeYear: true,
+				dateFormat: 'dd-mm-yy',
+				timeFormat: 'HH:mm:ss',
+				stepSecond: 5,
+				onClose: function( selectedDate ) {
+					$( "#from" ).datetimepicker( "option", "maxDate", selectedDate );
+				}
+			});
+    	}); 
+    </script>
+    
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'menu.alert'|trans }}</h1>
+	
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div>
+	{% endfor %}
+	
+	<br/><br/>
+	
+	<form id="formFilter" method="get" action="{{ path('iot6_AlertBundle_getResult') }}">
+		
+		<!-- ----------------------------- Filtre ------------------------------- -->
+		
+		<table class="centerTab">
+			<tr>
+				<td>{{ 'alert.nb_item'|trans }}</td>
+				<td><input type="text" class="short" name="nbRecords" value="{{ nbRecords }}" /></td>
+				<td>{{ 'alert.status'|trans }}</td>
+				<td>
+					<select name="status">
+						<option selected="selected" value="-1">{{ 'alert.all'|trans }}</option>
+						<option value="0">{{ 'alert.not_read'|trans }}</option>
+						<option value="1">{{ 'alert.require_action'|trans }}</option>
+						<option value="2">{{ 'alert.done'|trans }}</option>
+					</select>
+				</td>
+				<td>{{ 'alert.from'|trans }}:</td>
+				<td><input type="text" value="" name="from" id="from" /></td>
+				<td>{{ 'alert.to'|trans }}:</td>
+				<td><input type="text" value="" name="to" id="to" /></td>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<input type="submit" name="btnSetFilter" id="btnSetFilter" value="{{ 'alert.filter'|trans }}" class="centerButton" />
+	</form>
+	
+	<script>
+    	$(document).ready(function() {
+    		
+    		$.ajax({
+				url: '{{ path("iot6_AlertBundle_getResult") }}',
+				type: 'get',
+				data: 'nbRecords={{ nbRecords }}&status=-1&from=&to=',
+				success: function(html) { 
+					$("#tableContainer").empty();
+					$("#tableContainer").append(html);
+                }
+			});
+    		
+    		$( "#btnSetFilter" ).click(function( event ) {
+
+    			$('#formFilter').unbind("submit").on('submit', function(e) {
+					e.preventDefault();
+    		    	$.ajax({
+    						url: $(this).attr('action'),
+    						type: $(this).attr('method'),
+    						data: $(this).serialize(),
+    						success: function(html) { 
+    							$("#tableContainer").empty();
+    							$("#tableContainer").append(html);
+    		                }
+					});
+    		    });
+    		});
+    	}); 
+    </script>
+	
+	<!-- ----------------------------- Tableau ------------------------------- -->
+	
+	<div id="tableContainer"></div>
+	
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.udgModules'|trans }} - {{ 'conf.subMenu.services'|trans }} - {{ 'conf.settings'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.udgModules'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:udgModulesMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.settings'|trans }}: {{ service.id }}</h1>
+	
+	<br/>
+	
+	{% if settings|length > 0 %}
+		<form method="post" id="form" action="{{ path('iot6_ConfigBundle_UdgModules_Services_Settings', { 'id': service.id }) }}">
+			<table>
+				<tr>
+					<th>{{ 'conf.param'|trans }}</th>
+					<th>{{ 'conf.value'|trans }}</th>
+				</tr>
+				{% for setting in settings %}
+					<tr>
+						<td>{{ setting.name }}</td>
+						<td><input class="long" type="text" name="txt_{{ setting.id }}" value="{{ setting.value }}"</td>
+					</tr>
+				{% endfor %}
+			</table>
+			
+			<br/>
+			
+			<input type="submit" value="{{ 'conf.edit'|trans }}" name="edit" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_UdgModules_Services') }}'" />
+			
+		</form>
+	{% else %}
+		{{ 'conf.no_param'|trans }}
+		
+		<br/><br/>
+		
+		<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_UdgModules_Services') }}'" />
+	{% endif %}
+	    
+	</div>
+	
+{% endblock %}

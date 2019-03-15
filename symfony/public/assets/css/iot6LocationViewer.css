@@ -1,0 +1,78 @@
+.canvas_default {
+	border: 1px solid #aaa;
+}
+
+.canvas_dropactive {
+	border: solid 2px blue;
+}
+
+.canvas_drophover {
+	border: solid 2px red;
+}
+
+#div_canvas {
+	padding: 5px;
+}
+
+#canvas_tooltip {
+	position:absolute;
+	text-align: center;
+	padding: 0;
+}
+#canvas_tooltip_content {
+	padding: 5px;
+	background-color: white;
+	border: solid 1px;
+	border-radius: 10px;
+}
+
+#device_variable_infos {
+	text-align: left;
+	border: solid 1px #BFBDBD;
+}
+
+#device_variable_infos span {
+	font-weight: bold;
+}
+
+/*#canvas_tooltip a {
+	position: relative;
+	top: -1px;
+}*/
+
+#selected_name {
+	font-weight: bold;
+}
+
+#optional_extended_menu {
+	display: inline-block;
+}
+
+/*********************************************************************
+** wait modal dialog
+*********************************************************************/
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    /*background: rgba( 255, 255, 255, .8 ) 
+                url('bundles/iot6Location/images/ajax-loader.gif')
+                50% 50% 
+                no-repeat;*/
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}

@@ -1,0 +1,6 @@
+<a href="{{ path('iot6_AlertBundle') }}" class="title"><strong>{{ 'msg.last_alerts'|trans }}</strong></a>
+<ul class="warning">
+	{% for alert in alerts %}
+        <li><a href="{{ path('iot6_AlertBundle') }}">{{ alert.message }}</a></li>
+    {% endfor %}
+</ul>

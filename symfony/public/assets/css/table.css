@@ -1,0 +1,15 @@
+table {  
+	background-color: white;  
+	width: 100%;  
+}
+tbody td {  
+	background-color: white;  
+}  
+tbody td.odd {  
+	background-color: #666;  
+	color: white;  
+}
+td.hovered {  
+	background-color: lightblue;  
+	color: #666;  
+}

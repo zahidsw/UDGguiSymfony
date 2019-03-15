@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	
+	<script>
+		window.jQuery || document.write('<script src="http://code.jquery.com/jquery-1.9.1.js"><\/script>')
+	</script>
+	
+	<script src="{{ asset('scripts/jquery.qrcode.min.js') }}"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	<title>Results</title>	
+	
+	<script>
+		$(document).ready(function() {
+			var uri = '{{ url }}';
+			uri = decodeURIComponent(uri);
+
+			$( "#accordion" ).accordion({
+				collapsible: true,
+				heightStyle: "content",
+				active: false
+			});
+			
+			$('#qrcode').qrcode( { width: 100, height: 100, text: uri} );
+			$('#qrcodeDialog').qrcode( { width: 200, height: 200, text: uri} );
+			
+			$( "#dialogQR" ).dialog({
+				autoOpen: false,
+				height: 350,
+				width: 400,
+				modal: true,
+				draggable: false,
+				resizable: false,
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+
+			$( "#openDialog" ).click(function() {
+				$( "#dialogQR" ).dialog({
+					title: "{{ 'msg.qr_code'|trans }}", 
+					modal: true,
+					autoOpen: false,
+					height: 350,
+					width: 400,
+					draggable: false,
+					resizable: false,
+					buttons: {
+						Ok: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				}).dialog( "open" );
+			});
+		});
+	</script>		
+			
+			
+	<script>
+		function actionWithParam() {
+			$( document ).ready(function() {
+
+				alert('TODO: develop web service');
+	            
+			});
+		}
+
+		function action(actionID) {
+			$( document ).ready(function() {
+				
+				$.ajax({
+	                url: '{{ path("iot6_InteractBundle_Action_Execute") }}',
+	                data: 'action_id=' + actionID + '&device_id_list={{ devicesID }}',
+	                dataType: 'html',
+	                success: function(data, textStatus, xhr) {
+	                	var str = "{{ 'msg.success'|trans }}";
+						if(data!='') {
+							str = "{{ 'msg.no_success'|trans }}: " + data;
+						}
+	                    alert(str);
+	                },
+                	error: function(xhr, statusText) {
+						alert("{{ 'msg.no_success'|trans }}: " + statusText);
+                    }
+	            });
+	            
+			});
+		}
+		
+		function actionOnDevice(actionID, deviceID) {
+			$( document ).ready(function() {
+				
+				$.ajax({
+	                url: '{{ path("iot6_InteractBundle_Action_Execute") }}',
+	                data: 'action_id='+ actionID + '&device_id_list=' + deviceID,
+	                dataType: 'html',
+	                success: function(data, textStatus, xhr) {
+	                	var str = "{{ 'msg.success'|trans }}";
+						if(data!='') {
+							str = "{{ 'msg.no_success'|trans }}: " + data;
+						}
+	                    alert(str);
+	                },
+                	error: function(xhr, statusText) {
+						alert("{{ 'msg.no_success'|trans }}: " + statusText);
+                    }
+	            });
+	            
+			});
+		}
+	</script>
+	
+	<style type="text/css">
+		ul { 
+			padding: 0; 
+			margin: 0; 
+			border: 0; 
+		}
+		
+		body {
+			font-family: Verdana,Arial,sans-serif;
+		}
+		.action {
+			display: block;
+			width: 45%;
+			float: left;
+			text-align: center;
+			cursor: pointer;
+			margin-right: 6px;
+			margin-top: 10px;
+			min-height: 80px;
+		}
+		.action a {
+			word-wrap: break-word;
+		}
+		.action img {
+			cursor:pointer;
+		}
+		div.error {
+			width: auto !important;
+		}
+		.accordionTab {
+			font-size: 0.9em;
+			width: 90%;
+		}
+		.accordionTab td {
+			height: 30px;
+		}
+		.accordionTab tr.alt td {
+			background-color:#eee;
+		}
+	</style>
+	
+	<style type="text/css">
+		{% if is_mobile() and not is_tablet() %}
+			body {
+				font-size: 1.6em;
+			}
+			h1.titlePerso {
+				font-size: 1.5em;
+			}
+			ul { 
+				font-size : 0.9em; 
+			}
+			.action a {
+				font-size: 0.9em;
+			}
+			.action img {
+				max-width: 70px;
+				max-height: 70px;
+			}
+			#accordion {
+				font-size: 1.5em;
+    			min-height: 150px;
+    			width: 100%;
+			}
+			#commonAndQRCode {
+				font-size: 1.4em;
+			    margin-top: 20px;
+			    width: 100%;
+			}
+		{% else %}
+			body {
+				font-size: 0.9em;
+			}
+			h1.titlePerso {
+				font-size: 1.2em;
+			}
+			ul { 
+				font-size : 13px; 
+			}
+			.action a {
+				font-size: 9px;
+			}
+			.action img {
+				max-width: 32px;
+				max-height: 32px;
+			}
+			#accordion {
+				width:50%;
+				min-height:150px;
+				float:left;
+			}
+			#commonAndQRCode {
+				float:right;
+				width:40%;
+				margin-top: -30px;
+			}
+		{% endif %}
+	</style>
+	
+</head>
+	
+<body>
+	{% if devices is defined %}
+		<h1 class="titlePerso">{{ 'msg.devices'|trans }}</h1>
+	{% endif %}
+	
+	<div id="accordion">
+	
+		{% for device in devices %}
+			<h3>{{ device.assignedName }}</h3>
+			<div>
+				<table class="accordionTab">
+					<tr class="alt">
+						<td style="width:40%;">{{ 'msg.category'|trans }}:</td>
+						<td>
+							{% if device.category is not null %}
+								<img alt="{{ device.category.internalName }}" title="{{ device.category.internalName }}" src="{{ asset('assets/images/families/'~device.category.iconName) }}" style="max-height:30px;max-width:30px;" />
+							{% else %}
+								<img src="{{ asset('assets/images/families/all.png') }}" alt="All" />
+							{% endif %}
+						</td>
+					</tr>
+					<tr>
+						<td>{{ 'msg.location'|trans }}:</td>
+						<td>
+							{{ device.room.floor.building.name }}, {{ device.room.floor.name }}, {{ device.room.name }}
+						</td>
+					</tr>
+					<tr class="alt">
+						<td>{{ 'msg.key_data'|trans }}:</td>
+						<td>
+							<ul style="margin-left:15px;">
+								{% for variable in device.variables %}
+									<li>{{ variable.name }}: {{ variable.stringValue }} {{ variable.unit }}</li>
+								{% else %}
+									<li>{{ 'msg.no_data'|trans }}</li>
+								{% endfor %}
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td style="vertical-align:top;">{{ 'msg.actions'|trans }}:</td>
+						<td>
+							{% for action in device.module.actions %}
+								<div class="action">
+									<img alt="{{ action.internalName }}" title="{{ action.internalName }}" onclick="actionOnDevice('{{ action.id }}', '{{ device.id }}');" src="{{ asset('images/actions/'~action.imageName) }}" />
+									<br/>
+									<span><a onclick="actionOnDevice('{{ action.id }}', '{{ device.id }}');">{{ action.internalName }}</a></span>
+								</div>
+							{% else %}
+								{{ 'msg.no_action'|trans }}
+							{% endfor %}
+						</td>
+					</tr>
+				</table>
+			</div>
+		{% else %}
+			<p>{{ 'msg.no_device'|trans }}</p>
+		{% endfor %}
+		
+	</div>
+	
+	<div id="commonAndQRCode">
+		<div style="overflow:hidden; margin-left:20px; margin-top:30px; padding:10px; border:2px solid #AAAAAA; border-radius:4px;">
+			{% if actions is defined %}
+				<h1 class="titlePerso">{{ 'msg.common_action'|trans }}</h1>
+			{% endif %}
+			
+			{% if error is defined %}
+				<div class="error" style="margin:0;">{{ 'msg.no_common_action_devices'|trans }}</div>
+			{% else %}
+				<br/>
+				{% if actions is defined %}
+					{% for action in actions %}
+						<div class="action">
+							<img alt="{{ action.internalName }}" title="{{ action.internalName }}" onclick="action('{{ action.id }}');" src="{{ asset('images/actions/'~action.imageName) }}" />
+							<br/>
+							<span><a onclick="action('{{ action.id }}');">{{ action.internalName }}</a></span>
+						</div>
+				    {% endfor %}
+				{% endif %}
+			{% endif %}
+		</div>
+		
+		{% if is_mobile() and not is_tablet() %}
+	
+		{% else %}
+			<br/>
+			<div style="overflow:hidden; margin-left:20px; margin-top:30px; padding:10px;border:2px solid #AAAAAA; border-radius:4px;">
+				<h1 class="titlePerso">{{ 'msg.qr_code'|trans }}</h1>
+				<a id="openDialog" style="cursor:pointer;text-align: center;"><div id="qrcode"><span>{{ 'msg.click_to_enlarge'|trans }}</span><br/></div></a>
+			</div>
+		{% endif %}
+	</div>
+	
+	{% if is_mobile() and not is_tablet() %}
+	
+	{% else %}
+		<div id="dialogQR" title="{{ 'msg.qr_code'|trans }}" style="text-align:center;">
+			<div id="qrcodeDialog"></div>
+		</div>
+	{% endif %}
+	
+	<br/><br/>
+	
+</body>
+</html>

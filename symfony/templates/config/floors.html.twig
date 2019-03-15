@@ -1,0 +1,109 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.subMenu.floors'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+		function getResult() {
+			var buildings = document.getElementById('buildings');
+			var idBuilding = buildings.options[buildings.selectedIndex].value;
+			
+			var path = '{{ path('iot6_ConfigBundle_Locations_Floors', { 'idBuilding': 'idBuildingToReplace'  } ) }}';
+			path = path.replace("idBuildingToReplace", idBuilding);
+
+			window.location.href = path;
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.locations'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:locationsMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.subMenu.floors'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Locations_Floors_Add') }}">[{{ 'conf.floor_add'|trans }}]</a>
+	
+	<br/><br/>
+	
+	<select id="buildings" name="buildings">
+		<option value="-1">{{ 'conf.all_buildings'|trans }}</option>
+		
+		{% set idSelected = app.request.get('idBuilding') %}
+		
+		{% for building in buildings %}
+			<option 
+			
+				{% if idSelected == building.id %}
+					selected="selected" 
+				{% endif %}
+				
+			value="{{ building.id }}">{{ building.name }}</option>
+		{% endfor %}
+	</select>
+	
+	<input type="button" value="{{ 'conf.select'|trans }}" onclick="getResult();"/>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table id="table" style="width:100%">
+			{% for floor in floors %}
+				<tr>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_Floors_Edit', { 'id': floor.id }) }}">
+							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_Locations_Floors_Delete', { 'id': floor.id }) }}">
+							<img src="{{ asset('images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'conf.ask.delete_floor'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_ConfigBundle_Locations_Floors_Edit', { 'id': floor.id }) }}">
+							{{ floor.name }}
+						</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td>{{ 'conf.no_floor'|trans }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbFloors,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		%}
+	    
+	</div>
+{% endblock %}

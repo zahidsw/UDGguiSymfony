@@ -1,0 +1,83 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.accessAndSecurity'|trans }} - {{ 'conf.subMenu.profil'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.accessAndSecurity'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/accessSecurityMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	{% include 'config/msg.html.twig' %}
+	
+	<h1>{{ 'conf.subMenu.profil'|trans }}</h1>
+	
+	<br/>
+	
+	{{ form_start(form, {'attr': {'id': 'form'},'action': path('iot6_ConfigBundle_AccessSecurity_Profil') }) }}
+		
+		{{ form_errors(form) }}
+		
+		<table>
+			<tr>
+				<td style="width:180px">{{ 'conf.username'|trans }}:</td>
+				<td colspan="2">{{ user.username }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.email, 'conf.email'|trans) }}</td>
+				<td>{{ form_widget(form.email) }}</td>
+				<td>{{ form_errors(form.email) }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.last_login'|trans }}:</td>
+				<td colspan="2">{{ user.lastLogin|date("d-m-Y H:i:s") }}</td>
+			</tr>
+		</table>
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" name="editProfil" />
+	{{ form_end(form) }}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.password'|trans }}</h1>
+	
+	<br/>
+	
+	{{ form_start(form, {'attr': {'id': 'form'},'action': path('iot6_ConfigBundle_AccessSecurity_Profil') }) }}
+		<table>
+			<tr>
+				<td style="width:180px">{{ 'conf.old_password'|trans }}:</td>
+				<td colspan="2"><input type="password" name="oldPass" required="required" /></td>
+			</tr>
+			<tr>
+				<td style="width:100px">{{ 'conf.new_password'|trans }}:</td>
+				<td colspan="2"><input type="password" name="newPass" required="required" /></td>
+			</tr>
+			<tr>
+				<td style="width:100px">{{ 'conf.confirmation'|trans }}:</td>
+				<td colspan="2"><input type="password" name="newPass2" required="required" /></td>
+			</tr>
+		</table>
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" name="editPass" />
+	{{ form_end(form) }}
+	
+	
+{% endblock %}

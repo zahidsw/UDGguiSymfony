@@ -1,0 +1,51 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.floor_add'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.floor_add'|trans }}</h1>
+	
+	<br/><br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Locations_Floors_Add') }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>{{ form_label(form.name, 'conf.name'|trans) }}</td>
+				<td>{{ form_widget(form.name) }}</td>
+				<td>{{ form_errors(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.building, 'conf.building'|trans) }}</td>
+				<td>{{ form_widget(form.building) }}</td>
+				<td>{{ form_errors(form.building) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.file, 'conf.image'|trans) }}</td>
+				<td>{{ form_widget(form.file) }}</td>
+				<td>{{ form_errors(form.file) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.positionZ, 'conf.positionZ'|trans) }}</td>
+				<td>{{ form_widget(form.positionZ) }}</td>
+				<td>{{ form_errors(form.positionZ) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Locations_Floors') }}'" />
+	</form>
+	
+	
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "about/layoutAbout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.about.contact'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.about.contact'|trans }}</h1>
+	
+	<br/>
+	
+	{% for flashMessage in app.session.flashbag.get('ko') %}
+    	<div class="messageKo">{{ flashMessage }}</div>
+    	<br/>
+	{% endfor %}
+	
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div>
+	    <br/>
+	{% endfor %}
+	
+	{{ form_start(form, {'attr': {'id': 'form'},'action': path('iot6_AboutBundle_Contact') }) }}
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td style="width:150px;">{{ form_label(form.name, 'about.name'|trans) }}</td>
+				<td>{{ form_widget(form.name) }}</td>
+				<td>{{ form_errors(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.email, 'about.email'|trans) }}</td>
+				<td>{{ form_widget(form.email) }}</td>
+				<td>{{ form_errors(form.email) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.message, 'about.message'|trans) }}</td>
+				<td>{{ form_widget(form.message) }}</td>
+				<td>{{ form_errors(form.message) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value={{ 'about.send'|trans }} class="centerButton" />
+	{{ form_end(form) }}
+	
+	
+{% endblock %}

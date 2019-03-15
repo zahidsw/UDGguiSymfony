@@ -1,0 +1,831 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+# the "app_lucky_number" route name is not important yet
+app_lucky_number:
+    path: /lucky/number
+    controller: App\Controller\LuckyController::number
+    
+
+iot6_HomeBundle:
+    path: /{_locale}/home
+    controller: App\Controller\HomeController:home
+
+home:
+    path: /
+    controller: App\Controller\HomeController:home
+    
+
+iot6_HomeBundle_remoteServerMsg:
+    path:  /ajax/remoteServerMsg
+    controller: App\Controller\HomeController:remoteServerMsg
+    
+iot6_HomeBundle_lastAlerts:
+    path:  /ajax/lastAlerts
+    controller:  App\Controller\HomeController:lastAlerts
+    
+iot6_HomeBundle_bookmarkManagement:
+    path:  /bookmarkManagement
+    controller: App\Controller\HomeController:bookmarkManagement
+    
+iot6_HomeBundle_bookmarkDelete:
+    path:  /bookmarkManagement/del/{id}
+    controller:  App\Controller\HomeController:bookmarkDelete
+
+########################################################################
+
+# Scenarios 
+iot6_SmartItBundle_Scenarios:
+    path:  /{_locale}/scenarios
+    controller: App\Controller\SmartItController:scenarios
+    
+iot6_SmartItBundle_Scenarios_Execute:
+    path: /{_locale}/scenarios/execute
+    controller: App\Controller\SmartItController:executeScenario
+    
+# Rules
+iot6_SmartItBundle_RulesManager:
+    path:  /rules/active/{pageActive/inactive/{pageInactive}
+    controller: App\Controller\SmartItController:rules
+    defaults:
+        pageActive: 1
+        pageInactive: 1
+    
+iot6_SmartItBundle_RulesManager_Add:
+    path:  /rules/add
+    controller: App\Controller\SmartItController:rulesAdd
+
+iot6_SmartItBundle_RulesManager_ActDesact:
+    path:  /rules/actDesact/{id
+    controller: App\Controller\SmartItController:rulesActDesact
+    requirements:
+        id: \d+
+        
+iot6_SmartItBundle_RulesManager_Edit:
+    path:  /rules/edit/{id
+    controller: App\Controller\SmartItController:rulesEdit
+    requirements:
+        id: \d+
+    
+iot6_SmartItBundle_RulesManager_Delete:
+    path:  /rules/delete/{id
+    controller: App\Controller\SmartItController:rulesDelete
+    requirements:
+        id: \d+
+        
+# Scheduler
+iot6_SmartItBundle_Scheduler:
+    path:  /scheduler/regular/{regular/punctual/{punctual
+    controller: App\Controller\SmartItController:scheduler   
+    defaults:
+        regular: 1
+        punctual: 1 
+    
+iot6_SmartItBundle_Scheduler_Add:
+    path:  /scheduler/add
+    controller: App\Controller\SmartItController:schedulesAdd
+
+iot6_SmartItBundle_Scheduler_ActDesact:
+    path:  /scheduler/actDesact/{id
+    controller: App\Controller\SmartItController:scheduleActDesact
+    requirements:
+        id: \d+
+
+iot6_SmartItBundle_Scheduler_Edit:
+    path:  /scheduler/edit/{id
+    controller: App\Controller\SmartItController:schedulesEdit
+    requirements:
+        id: \d+
+    
+iot6_SmartItBundle_Scheduler_Delete:
+    path:  /scheduler/delete/{id
+    controller: App\Controller\SmartItController:schedulesDelete
+    requirements:
+        id: \d+
+        
+# Triggers
+iot6_SmartItBundle_Triggers:
+    path:  /triggers/active/{pageActive/inactive/{pageInactive
+    controller: App\Controller\SmartItController:triggers 
+    defaults:
+        pageActive: 1
+        pageInactive: 1 
+    
+iot6_SmartItBundle_Triggers_Add:
+    path:  /triggers/add
+    controller: App\Controller\SmartItController:triggersAdd
+
+iot6_SmartItBundle_Triggers_ActDesact:
+    path:  /triggers/actDesact/{id
+    controller: App\Controller\SmartItController:triggersActDesact
+    requirements:
+        id: \d+
+
+iot6_SmartItBundle_Triggers_Edit:
+    path:  /triggers/edit/{id
+    controller: App\Controller\SmartItController:triggersEdit
+    requirements:
+        id: \d+
+    
+iot6_SmartItBundle_Triggers_Delete:
+    path:  /triggers/delete/{id
+    controller: App\Controller\SmartItController:triggersDelete" 
+    requirements:
+        id: \d+
+        
+# If This Then That
+iot6_SmartItBundle_Ittt:
+    path:  /ittt
+    controller: App\Controller\SmartItController:ittt"  
+    
+getActionsForDevices:
+    path: /ittt/ajax/getActionsForDevices
+    controller: App\Controller\SmartItController:getActionsForDevices
+    requirements: 
+        _format: xml|json
+        _method: GET 
+    
+getParametersForAction:
+    path: /ittt/ajax/getParametersForAction
+    controller: App\Controller\SmartItController:getParametersForAction
+    requirements: 
+        _format: xml|json
+        _method: GET 
+
+############################################################################### 
+
+# JQuery linked DropDownLists IoT Navigator
+
+# Building 
+getFloorsForBuilding:
+    path: /navigator/ajax/getFloorsForBuilding
+    controller: App\Controller\NavigatorController:getFloorsForBuilding
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getRoomTypesForBuilding:
+    path: /navigator/ajax/getRoomTypesForBuilding
+    controller: App\Controller\NavigatorController:getRoomTypesForBuilding
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getRoomsForBuilding:
+    path: /navigator/ajax/getRoomsForBuilding
+    controller: App\Controller\NavigatorController:getRoomsForBuilding
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getCategoriesForBuilding:
+    path: /navigator/ajax/getCategoriesForBuilding
+    controller: App\Controller\NavigatorController:getCategoriesForBuilding
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getFamiliesForBuilding:
+    path: /navigator/ajax/getFamiliesForBuilding
+    controller: App\Controller\NavigatorController:getFamiliesForBuilding
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getDevicesForBuilding:
+    path: /navigator/ajax/getDevicesForBuilding
+    controller: App\Controller\NavigatorController:getDevicesForBuilding
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+# Floor
+getRoomTypesForFloor:
+    path: /navigator/ajax/getRoomTypesForFloor
+    controller: App\Controller\NavigatorController:getRoomTypesForFloor
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getRoomsForFloor:
+    path: /navigator/ajax/getRoomsForFloor
+    controller: App\Controller\NavigatorController:getRoomsForFloor
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getCategoriesForFloor:
+    path: /navigator/ajax/getCategoriesForFloor
+    controller: App\Controller\NavigatorController:getCategoriesForFloor
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getFamiliesForFloor:
+    path: /navigator/ajax/getFamiliesForFloor
+    controller: App\Controller\NavigatorController:getFamiliesForFloor
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getDevicesForFloor:
+    path: /navigator/ajax/getDevicesForFloor
+    controller: App\Controller\NavigatorController:getDevicesForFloor
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+# RoomType
+getRoomsForRoomType:
+    path: /navigator/ajax/getRoomsForRoomType
+    controller: App\Controller\NavigatorController:getRoomsForRoomType
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getCategoriesForRoomType:
+    path: /navigator/ajax/getCategoriesForRoomType
+    controller: App\Controller\NavigatorController:getCategoriesForRoomType
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getFamiliesForRoomType:
+    path: /navigator/ajax/getFamiliesForRoomType
+    controller: App\Controller\NavigatorController:getFamiliesForRoomType
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getDevicesForRoomType:
+    path: /navigator/ajax/getDevicesForRoomType
+    controller: App\Controller\NavigatorController:getDevicesForRoomType
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+
+# Room
+getCategoriesForRoom:
+    path: /navigator/ajax/getCategoriesForRoom
+    controller: App\Controller\NavigatorController:getCategoriesForRoom
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getFamiliesForRoom:
+    path: /navigator/ajax/getFamiliesForRoom
+    controller: App\Controller\NavigatorController:getFamiliesForRoom
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+getDevicesForRoom:
+    path: /navigator/ajax/getDevicesForRoom
+    controller: App\Controller\NavigatorController:getDevicesForRoom
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+# Category
+getFamiliesForCategory:
+    path: /navigator/ajax/getFamiliesForCategory
+    controller: App\Controller\NavigatorController:getFamiliesForCategory
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getDevicesForCategory:
+    path: /navigator/ajax/getDevicesForCategory
+    controller: App\Controller\NavigatorController:getDevicesForCategory
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+    
+# Family
+getDevicesForFamily:
+    path: /navigator/ajax/getDevicesForFamily
+    controller: App\Controller\NavigatorController:getDevicesForFamily
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+
+#############################################################################
+
+iot6_InteractBundle_iotNavigator:
+    path:  /{_locale}/interact/iotNavigator
+    controller: App\Controller\InteractController:iotNavigator
+
+iot6_InteractBundle_devices:
+    path:  /{_locale}/interact/devices
+    controller: App\Controller\InteractController:devices
+    
+iot6_InteractBundle_deviceShow:
+    path:  /{_locale}/interact/devices/show/{id}
+    controller: App\Controller\InteractController:deviceShow
+
+iot6_InteractBundle_mapList:
+    path:  /{_locale}/interact/mapList/{devices}
+    controller: App\Controller\InteractController:mapList
+    defaults:
+        devices: null
+
+
+    
+# Ajax for Tree (popup)
+getCard:
+    path:  /{_locale}/ajax/getCard/{id}
+    controller: App\Controller\AjaxController:getCard
+    options:
+        expose: true
+
+getProtocol:
+    path:  /{_locale}/ajax/getProtocol/{id}
+    controller: App\Controller\AjaxController:getProtocol
+    options:
+        expose: true
+
+getDevice:
+    path:  /{_locale}/ajax/getDevice/{id}
+    controller: App\Controller\AjaxController:getDevice
+    options:
+        expose: true
+
+# Get Json data for Tree
+getJsonTree:
+    path: /ajax/getJsonTree
+    controller: App\Controller\AjaxController:getJsonTree
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+
+#JQuery results for DDL search (IoT Navigator)
+getResults:
+    path:  /ajax/getResults
+    controller: App\Controller\AjaxController:getResults
+
+iot6_InteractBundle_Action_Execute:
+    path: /ajax/action/execute
+    controller: App\Controller\AjaxController:execute
+    
+#JQuery results for DDL search (IoT Navigator simple)
+getResultsSimple:
+    path:  /grs
+    controller: App\Controller\AjaxController:getResultsSimple
+
+
+################################################################
+
+iot6_AppsServicesBundle:
+    path:  /{_locale}/appsservices
+    controller:  App\Controller\AppsServicesController:appServices
+    #App\Controller\LuckyController::number
+    
+iot6_AppsServicesBundle_getNewDevice:
+    path:  /ajax/getNewDevice
+    controller:  App\Controller\AppsServices:getNewDevice
+
+iot6_AppsServicesBundle_markAsRead:
+    path:  /ajax/markAsRead
+    controller:  App\Controller\AppsServices:markAsRead
+
+################################################################
+
+
+iot6_AlertBundle:
+    path:  /{_locale}/alert
+    controller: App\Controller\AlertController:alert
+    #App\Controller\LuckyController::number
+    
+iot6_AlertBundle_ShowEdit:
+    path:  /{_locale}/alert/show/{id}
+    controller: App\Controller\Alert:alertShowEdit
+    requirements:
+        id: \d+
+
+iot6_AlertBundle_getResult:
+    path:  /{_locale}/alert/ajax/getResult
+    controller: App\Controller\AlertController:getResult
+
+
+##################################################
+
+iot6_DataBundle:
+    path:  /{_locale}/data
+    controller: App\Controller\DataController:data
+    
+iot6_DataBundle_getResult:
+    path:  /{_locale}/data/ajax/getResult
+    controller: App\Controller\DataController:getResult
+
+#################################################
+
+iot6_ConfigBundle_GeneralParameters:
+    path:  /{_locale}/general
+    controller: App\Controller\ConfigController:generalParameters
+  
+###############
+
+# About 
+iot6_AboutBundle_About:
+    path:  /about
+    controller: App\Controller\AboutController:aboutPage
+    
+iot6_AboutBundle_Contact:
+    path: /contact
+    controller: App\Controller\AboutController:contact
+
+
+############################################################
+
+
+iot6_location_editor:
+    path:  /{_locale}/editor
+    controller: App\Controller\EditorController:index
+
+iot6_location_viewer:
+    path:  /{_locale}/viewer
+    controller: App\Controller\ViewerController:index
+
+iot6_location_list:
+    path:  /
+    controller: App\Controller\ViewerController:list
+
+getLocationsAction:
+    path: /{_locale}/viewer/getLocations
+    controller: App\Controller\ViewerController:getLocations
+    requirements:
+        _format: xml|json
+        _method: GET
+
+getLocationContentAction:
+    path: /{_locale}/viewer/getLocationContent
+    controller: App\Controller\ViewerController:getLocationContent
+    requirements:
+        _format: xml|json
+        _method: GET
+
+renameLocationAction:
+    path: /{_locale}/editor/renameLocation
+    controller: App\Controller\EditorController:renameLocation
+    requirements:
+        _format: xml|json
+        _method: GET
+
+saveLocationAction:
+    path: /{_locale}/editor/saveLocation
+    controller: App\Controller\EditorController:saveLocation
+    requirements:
+        _format: xml|json
+        _method: POST
+
+saveAsLocationAction:
+    path: /{_locale}/editor/saveAsLocation
+    controller: App\Controller\EditorController:saveAsLocation
+    requirements:
+        _format: xml|json 
+        _method: POST
+
+deleteLocationAction:
+    path: /{_locale}/editor/deleteLocation
+    controller: App\Controller\EditorController:deleteLocation
+    requirements:
+        _format: xml|json
+        _method: GET
+
+affectLocationAction:
+    path: /editor/affectLocation
+    controller: App\Controller\EditorController:affectLocation
+    requirements:
+        _format: xml|json
+        _method: GET
+
+unlinkLocationAction:
+    path: /editor/unlinkLocation
+    controller: App\Controller\EditorController:unlinkLocation
+    requirements:
+        _format: xml|json
+        _method: GET
+
+getDeviceParamsAction:
+    path: /{_locale}/viewer/getDeviceParams
+    controller: App\Controller\ViewerController:getDeviceParams
+    requirements:
+        _format: xml|json
+        _method: GET
+
+
+#############################################################
+
+iot6_GraphBundle_Editor:
+    path:  /{_locale}/editor
+    controller: App\Controller\GraphEditorCOntroller:index
+
+iot6_GraphBundle_Viewer:
+    path:  /{_locale}/viewer
+    controller: App\Controller\GraphViewerController:index	
+
+getVariablesForDeviceAction:
+    path: /{_locale}/editor/getVariablesForDeviceAction
+    controller: App\Controller\GraphEditorController:getVariablesForDevice
+    #defaults: controller: "iot6GraphBundle:Editor:getVariablesForDevice"}
+    requirements: 
+        _format: xml|json
+        _method: GET 
+
+getGraphDataForVariablesAction:
+    path: /{_locale}/viewer/getGraphDataForVariables
+    controller: App\Controller\GraphViewerController:getGraphDataForVariables
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+        
+populateDummyVariableHistory:
+    path:  /{_locale}/editor/populate
+    controller: App\Controller\GraphEditorController:populateDummyVariableHistory  
+
+
+
+# Buildings
+iot6_ConfigBundle_Locations_Buildings:
+    path:  /{_locale}/locations/buildings/page/{page}
+    controller: App\Controller\ConfigController:buildings
+    defaults:
+        page: 1
+    requirements:
+        id: \d+
+    
+iot6_ConfigBundle_Locations_Buildings_Add:
+    path:  /{_locale}/locations/buildings/add
+    controller: App\Controller\ConfigController:buildingsAdd
+    
+iot6_ConfigBundle_Locations_Buildings_Edit:
+    path:  /{_locale}/locations/buildings/edit/{id}
+    controller: App\Controller\ConfigController:buildingsEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Locations_Buildings_Delete:
+    path:  /{_locale}/locations/buildings/delete/{id}
+    controller: App\Controller\ConfigController:buildingsDelete
+    requirements:
+        id: \d+
+
+# Identified devices waiting for approval
+iot6_ConfigBundle_Devices_waitingApproval:
+    path:  /{_locale}/devices/approval/{page}
+    controller: App\Controller\ConfigController:waitingApproval
+    defaults:
+        page: 1
+    requirements:
+        id: \d+
+
+iot6_ConfigBundle_Devices_waitingApproval_validate:
+    path:  /{_locale}/devices/approval/validate/{id}
+    controller: App\Controller\ConfigController:validate
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Devices_waitingApproval_edit:
+    path:  /{_locale}/devices/approval/edit/{id}
+    controller: App\Controller\ConfigController:waitingApprovalEdit
+    options:
+        expose: true
+
+#---------------- UDG Modules ------------------
+
+# Protocols
+iot6_ConfigBundle_UdgModules_Protocols:
+    path:  /{_locale}/udgModules/protocols/page/{page}
+    controller: App\Controller\ConfigController:protocols
+    defaults:
+        page: 1 
+    requirements:
+        id: \d+
+
+# Services
+iot6_ConfigBundle_UdgModules_Services:
+    path:  /{_locale}/udgModules/services/page/{page}
+    controller: App\Controller\ConfigController:services
+    defaults:
+        page: 1
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_UdgModules_Services_Settings:
+    path:  /{_locale}/udgModules/services/settings/{id}
+    controller: App\Controller\ConfigController:serviceSettings
+
+#---------------- Config set ------------------
+
+iot6_ConfigBundle_ConfigSet:
+    path:  /{_locale}/configSet
+    controller: App\Controller\ConfigController:configSet
+
+iot6_ConfigBundle_ConfigSet_act:
+    path:  /{_locale}/configSet/act/{id}
+    controller: App\Controller\ConfigController:configSetAct
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_ConfigSet_Add:
+    path:  /{_locale}/configSet/add
+    controller: App\Controller\ConfigController:configSetAdd
+    
+iot6_ConfigBundle_ConfigSet_Edit:
+    path:  /{_locale}/configSet/edit/{id}
+    controller: App\Controller\ConfigController:configSetEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_ConfigSet_Delete:
+    path:  /{_locale}/configSet/delete/{id}
+    controller: App\Controller\ConfigController:configSetDelete
+    requirements:
+        id: \d+
+
+#---------------- Access Security ------------------
+
+iot6_ConfigBundle_AccessSecurity_Profil:
+    path:  /{_locale}/security/profil
+    controller: App\Controller\ConfigController:profil
+
+iot6_ConfigBundle_AccessSecurity_Users:
+    path:  /{_locale}/config/security/users
+    controller: App\Controller\ConfigController:users
+
+iot6_ConfigBundle_AccessSecurity_Users_ActDesact:
+    path:  /{_locale}/security/users/actDesact/{id}
+    controller: App\Controller\ConfigController:usersActDesact
+    requirements:
+        id: \d+
+
+iot6_ConfigBundle_AccessSecurity_Users_Add:
+    path:  /{_locale}/security/users/add
+    controller: App\Controller\ConfigController:usersAdd
+    
+iot6_ConfigBundle_AccessSecurity_Users_Edit:
+    path:  /{_locale}/security/users/edit/{id}
+    controller: App\Controller\ConfigController:usersEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_AccessSecurity_Users_Delete:
+    path:  /{_locale}/security/users/delete/{id}
+    controller: App\Controller\ConfigController:usersDelete
+    requirements:
+        id: \d+  
+
+iot6_ConfigBundle_Locations_Floors:
+    path:  /{_locale}/locations/floors/page/{page}/building/{idBuilding}
+    controller: App\Controller\ConfigController:floors
+    requirements:
+        id: \d+
+    defaults:
+        page: 1
+        idBuilding: -1
+    
+iot6_ConfigBundle_Locations_Floors_Add:
+    path: /{_locale} /locations/floors/add
+    controller: App\Controller\ConfigController:floorsAdd
+    
+iot6_ConfigBundle_Locations_Floors_Edit:
+    path:  /{_locale}/locations/floors/edit/{id}
+    controller: App\Controller\ConfigController:floorsEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Locations_Floors_Delete:
+    path:  /{_locale}/locations/floors/delete/{id}
+    controller: App\Controller\ConfigController:floorsDelete
+    requirements:
+        id: \d+
+
+# Rooms
+iot6_ConfigBundle_Locations_Rooms:
+    path:  /{_locale}/locations/rooms/page/{page}/floor/{idFloor}
+    controller: App\Controller\ConfigController:rooms
+    requirements:
+        id: \d+
+    defaults: 
+        page: 1
+        idFloor: -1
+    
+iot6_ConfigBundle_Locations_Rooms_Add:
+    path:  /{_locale}/locations/rooms/add
+    controller: App\Controller\ConfigController:roomsAdd
+    
+iot6_ConfigBundle_Locations_Rooms_Edit:
+    path:  /{_locale}/locations/rooms/edit/{id}
+    controller: App\Controller\ConfigController:roomsEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Locations_Rooms_Delete:
+    path:  /{_locale}/locations/rooms/delete/{id}
+    controller: App\Controller\ConfigController:roomsDelete
+    requirements:
+        id: \d+
+
+# Room types
+iot6_ConfigBundle_Locations_RoomTypes:
+    path:  /{_locale}/locations/roomTypes/page/{page}
+    controller: App\Controller\ConfigController:roomTypes
+    requirements:
+        id: \d+
+    defaults:
+        page: 1
+    
+iot6_ConfigBundle_Locations_RoomTypes_Add:
+    path:  /{_locale}/locations/roomTypes/add
+    controller: App\Controller\ConfigController:roomTypesAdd
+    
+iot6_ConfigBundle_Locations_RoomTypes_Edit:
+    path:  /{_locale}/locations/roomTypes/edit/{id}
+    controller: App\Controller\ConfigController:roomTypesEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Locations_RoomTypes_Delete:
+    path:  /{_locale}/locations/roomTypes/delete/{id}
+    controller: App\Controller\ConfigController:roomTypesDelete
+    requirements:
+        id: \d+
+
+# Device family list
+iot6_ConfigBundle_Devices_families:
+    path:  /{_locale}/devices/families/page/{page}
+    controller: App\Controller\ConfigController:families
+    requirements:
+        id: \d+
+    defaults:
+        page: 1
+        
+iot6_ConfigBundle_Devices_families_Add:
+    path:  /{_locale}/devices/families/add
+    controller: App\Controller\ConfigController:familiesAdd
+    
+iot6_ConfigBundle_Devices_families_Edit:
+    path:  /{_locale}/devices/families/edit/{id}
+    controller: App\Controller\ConfigController:familiesEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Devices_families_Delete:
+    path:  /{_locale}/devices/families/delete/{id}
+    controller: App\Controller\ConfigController:familiesDelete
+    requirements:
+        id: \d+
+
+# Device categories
+iot6_ConfigBundle_Devices_categories:
+    path:  /{_locale}/devices/categories/page/{page}
+    controller: App\Controller\ConfigController:categories
+    requirements:
+        id: \d+
+    defaults:
+        page: 1
+
+iot6_ConfigBundle_Devices_categories_Add:
+    path:  /{_locale}/devices/categories/add
+    controller: App\Controller\ConfigController:categoriesAdd
+    
+iot6_ConfigBundle_Devices_categories_Edit:
+    path:  /{_locale}/devices/categories/edit/{id}
+    controller: App\Controller\ConfigController:categoriesEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Devices_categories_Delete:
+    path:  /{_locale}/devices/categories/delete/{id}
+    controller: App\Controller\ConfigController:categoriesDelete
+    requirements:
+        id: \d+
+
+# Device groups
+iot6_ConfigBundle_Devices_groups:
+    path:  /{_locale}/devices/groups/
+    controller: App\Controller\ConfigController:groups
+
+iot6_ConfigBundle_Devices_groups_Add:
+    path:  /{_locale}/devices/groups/add
+    controller: App\Controller\ConfigController:groupsAdd
+    
+iot6_ConfigBundle_Devices_groups_Edit:
+    path:  /{_locale}/devices/groups/edit/{id}
+    controller: App\Controller\ConfigController:groupsEdit
+    requirements:
+        id: \d+
+        
+iot6_ConfigBundle_Devices_groups_Delete:
+    path:  /{_locale}/devices/groups/delete/{id}
+    controller: App\Controller\ConfigController:groupsDelete
+    requirements:
+        id: \d+    
+
+
+
+

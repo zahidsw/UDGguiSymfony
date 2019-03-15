@@ -1,0 +1,18 @@
+{% extends "graph/layoutGraph.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	{{
+		render(controller("App\\Controller\\ViewerController:viewer", 
+			{} 
+			)) 
+	}}
+{% endblock %}

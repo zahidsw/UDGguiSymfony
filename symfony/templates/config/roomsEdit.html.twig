@@ -1,0 +1,118 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.room_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+
+		$(document).ready(function() {
+			var $buildings = $('#buildings');
+		    var $floors = $('#iot6_interactBundle_roomsType_floor');
+
+		    $buildings.on('change', function() {
+		    	var val = $(this).val();
+
+		    	if(val != '') {
+		    		$floors.empty();
+
+		    		$.ajax({
+		                url: '{{ path("getFloorsForBuilding") }}',
+		                data: 'idBuilding='+ val,
+		                dataType: 'json',
+		                success: function(json) {
+		                    $.each(json, function(index, value) {
+		                    	var selected = "";
+			                    if(index == -1)
+				                    selected = "selected='selected'";
+		                        $floors.append('<option ' + selected + 'value="'+ index +'">'+ value +'</option>');
+		                    });
+		                }
+		            });
+		    	}
+		    });
+		});
+	
+		function getResult() {
+			var floors = document.getElementById('floors');
+			var idFloor = floors.options[floors.selectedIndex].value;
+			
+			var path = '{{ path('iot6_ConfigBundle_Locations_Rooms', { 'idFloor': 'idFloorToReplace'  } ) }}';
+			path = path.replace("idFloorToReplace", idFloor);
+
+			window.location.href = path;
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'conf.room_edit'|trans }}</h1>
+	
+	<br/><br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Locations_Rooms_Edit', {'id': room.id } ) }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>{{ form_label(form.name, 'conf.name'|trans) }}</td>
+				<td>{{ form_widget(form.name) }}</td>
+				<td>{{ form_errors(form.name) }}</td>
+			</tr>
+			<tr>
+				<td>{{ 'conf.subMenu.buildings'|trans }}</td>
+				<td colspan="2">
+					<select id="buildings" name="buildings">
+						<option value="-1">{{ 'conf.all'|trans }}</option>
+						{% for building in buildings %}
+							<option value="{{ building.id }}">{{ building.name }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.floor, 'conf.subMenu.floors'|trans) }}</td>
+				<td>{{ form_widget(form.floor) }}</td>
+				<td>{{ form_errors(form.floor) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.roomType, 'conf.subMenu.roomTypes'|trans) }}</td>
+				<td>{{ form_widget(form.roomType) }}</td>
+				<td>{{ form_errors(form.roomType) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.roomState, 'conf.room_state'|trans) }}</td>
+				<td>{{ form_widget(form.roomState) }}</td>
+				<td>{{ form_errors(form.roomState) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.importanceLevel, 'conf.importance_level'|trans) }}</td>
+				<td>{{ form_widget(form.importanceLevel) }}</td>
+				<td>{{ form_errors(form.importanceLevel) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.energyLevel, 'conf.energy_level'|trans) }}</td>
+				<td>{{ form_widget(form.energyLevel) }}</td>
+				<td>{{ form_errors(form.energyLevel) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.espId, 'conf.esp_id'|trans) }}</td>
+				<td>{{ form_widget(form.espId) }}</td>
+				<td>{{ form_errors(form.espId) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Locations_Rooms') }}'" />
+	</form>
+	
+	
+{% endblock %}

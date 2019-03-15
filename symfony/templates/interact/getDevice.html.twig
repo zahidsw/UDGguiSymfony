@@ -1,0 +1,347 @@
+	<script>
+		window.jQuery || document.write('<script src="http://code.jquery.com/jquery-1.9.1.js"><\/script>')
+	</script>
+	
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="{{ asset('assets/scripts/jquery.qrcode.min.js') }}"></script>
+	
+	<script>
+		$(document).ready(function() {
+
+			$('#qrcode').qrcode( { width: 50, height: 50, text: '{{ url }}'} );
+			$('#qrcodeDialog').qrcode( { width: 170, height: 170, text: '{{ url }}'} );
+			
+			$( "#dialog" ).dialog({
+				autoOpen: false,
+				height: 350,
+				width: 400,
+				modal: true,
+				draggable: false,
+				resizable: false,
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+
+			$( "#openDialog" ).click(function() {
+				$( "#dialog" ).dialog( "open" );
+			});
+		});
+	</script>
+
+	<script>
+		$(document).ready( function() {
+			$("#monForm").submit(function () {
+
+				$.ajax({
+					url: $(this).attr('action'),
+					type: $(this).attr('method'),
+					data: $(this).serialize(),
+					success: function(html) {
+						$("div.zoneTexte").empty();
+						$("div.zoneTexte").append(html);
+					}
+				});
+				
+				return false;
+			});
+		});
+	</script>
+	
+	<script>
+		$(document).ready( function() {
+			$('#editDevice').click(function() {
+				$('#edit').show('fast');
+				$('#show').hide(1000);
+				$("div.zoneTexte").empty();
+			});
+
+			$('#cancelEdit').click(function() {
+				$('#show').show('fast');
+				$('#edit').hide(1000);
+			});
+		});
+	</script>
+	
+	<br/><br/>
+	
+	<div id="show">
+		<div id="zebraTableDiv">
+			<table style="width:100%;">
+				<tr>
+					<td>{{ 'msg.name'|trans }}</td>
+					<td>{{ device.assignedName }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.family'|trans }}</td>
+					<td>
+						{% if device.family is not null %}
+							{{ device.family.internalName }}
+							<img alt="{{ device.family.internalName }}" src="{{ asset('assets/images/families/'~device.family.iconName) }}" />	
+						{% else %}
+							{{ 'msg.no_family'|trans }}
+						{% endif  %}
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.category'|trans }}</td>
+					<td>
+						{% if device.category is not null %}
+							{{ device.category.internalName }}
+							<img alt="{{ device.category.internalName }}" src="{{ asset('assets/images/families/'~device.category.iconName) }}" />	
+						{% else %}
+							{{ 'msg.no_category'|trans }}
+						{% endif  %}
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.uid'|trans }}</td>
+					<td>{{ device.id }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.ipv6_address'|trans }}</td>
+					<td>{{ device.ipv6address }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.accessibility'|trans }}</td>
+					<td>{{ device.accessProfile }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.legacy_communication_protocol'|trans }}</td>
+					<td>
+						{% if device.protocol is not null %}
+							{{ device.protocol.name }}
+							<img alt="{{ device.protocol.name }}" src="{{ asset('assets/images/protocols/'~device.protocol.iconName) }}" />
+						{% else %}
+							{{ 'msg.no_protocol'|trans }}
+						{% endif  %}
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.legacy_communication_protocol_address'|trans }}</td>
+					<td>
+						{% if device.card is not null %}
+							{{ device.card.ipv6address }}
+						{% else %}
+							{{ 'msg.no_address'|trans }}
+						{% endif  %}
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.status'|trans }}</td>
+					<td>
+						{% if device.validationStatus == 0 %}
+							{{ 'msg.discovered'|trans }}
+						{% elseif device.validationStatus == 1 %}
+							{{ 'msg.accepted'|trans }}
+						{% elseif device.validationStatus == -1 %}
+							{{ 'msg.suspended'|trans }}
+						{% elseif device.validationStatus == -2 %}
+							{{ 'msg.refused'|trans }}
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.key_data'|trans }}</td>
+					<td>
+						<ul>
+							{% for variable in variables %}
+								<li>{{ variable.name }}: {{ variable.stringValue }} {{ variable.unit }}</li>
+							{% else %}
+								<li>{{ 'msg.no_data'|trans }}</li>
+							{% endfor %}
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.last_data_at'|trans }}</td>
+					<td>{{ device.lastDataAt|date('d/m/Y H:i:s') }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.detected_at'|trans }}</td>
+					<td>{{ device.detectedAt|date('d/m/Y H:i:s') }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.last_config_change'|trans }}</td>
+					<td>
+						{% if device.lastChange is null %}
+						   {{ 'msg.no_date'|trans }}
+						{% else %}
+							{{ device.lastChange|date('d/m/Y H:i:s') }}
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.location'|trans }}</td>
+					<td>
+					
+						{% if device.latitude is not null and device.longitude is not null %}
+							<a href="{{ path('iot6_InteractBundle_mapList', { 'devices': device.id }) }}">
+								<img src="{{ asset('assets/images/interface/icons/map.png') }}" />
+						{% endif %}
+								{% if device.room is not null %}
+									{{ device.room.name }}
+									{% if device.room.floor is not null %}
+										, {{ device.room.floor.name }}
+										{% if device.room.floor.building is not null %}
+											, {{ device.room.floor.building.name }}
+										{% endif %}
+									{% endif %}
+								{% endif %}
+						{% if device.latitude is not null and device.longitude is not null %}
+							</a>
+						{% endif %}
+						
+					</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.generic_description'|trans }}</td>
+					<td>{{ device.description }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.comments'|trans }}</td>
+					<td>{{ device.comments }}</td>
+				</tr>
+				<tr>
+					<td>{{ 'msg.qr_code'|trans }}</td>
+					<td style="text-align:center;">
+						<a id="openDialog" alt="{{ 'msg.qr_code'|trans }}" style="cursor:pointer;">
+							{{ 'msg.click_to_enlarge'|trans }}
+							<div id="qrcode"></div>
+						</a>
+						<br/>
+						<a href="{{ url }}" target="_blank">{{ url }}</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="dialog" title="{{ 'msg.qr_code'|trans }}" style="text-align:center;">
+			<div id="qrcodeDialog"></div>
+			<br/>
+			<a href="{{ url }}" target="_blank">{{ url }}</a>
+		</div>
+		
+		<br/>
+		
+		<input type="button" id="editDevice" value="{{ 'msg.edit'|trans }}" />
+	</div>
+	
+	<div id="edit" style="display:none;">
+		<div class="zoneTexte"></div>
+		
+		<form method="post" id="monForm" action="{{ path('getDevice', {'id': device.id  }) }}" {{ form_enctype(form) }}>
+			
+			<div id="zebraTableDiv">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:30%">{{ form_label(form.ipv6address, 'msg.ipv6_address'|trans) }}</td>
+						<td>{{ form_widget(form.ipv6address) }}</td>
+						<td>{{ form_errors(form.ipv6address) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.physicalCode, 'msg.physical_code'|trans) }}</td>
+						<td>{{ form_widget(form.physicalCode) }}</td>
+						<td>{{ form_errors(form.physicalCode) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.assignedName, 'msg.name'|trans) }}</td>
+						<td>{{ form_widget(form.assignedName) }}</td>
+						<td>{{ form_errors(form.assignedName) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.description, 'msg.description'|trans) }}</td>
+						<td>{{ form_widget(form.description) }}</td>
+						<td>{{ form_errors(form.description) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.comments, 'msg.comments'|trans) }}</td>
+						<td>{{ form_widget(form.comments) }}</td>
+						<td>{{ form_errors(form.comments) }}</td>
+					</tr>
+					{#
+					<tr>
+						<td>{{ form_label(form.detectedAt, 'msg.detected_at'|trans) }}</td>
+						<td>{{ form_widget(form.detectedAt) }}</td>
+						<td>{{ form_errors(form.detectedAt) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.lastDataAt, 'msg.last_data'|trans) }}</td>
+						<td>{{ form_widget(form.lastDataAt) }}</td>
+						<td>{{ form_errors(form.lastDataAt) }}</td>
+					</tr>
+					#}
+					<tr>
+						<td>{{ form_label(form.family, 'msg.family'|trans) }}</td>
+						<td>{{ form_widget(form.family) }}</td>
+						<td>{{ form_errors(form.family) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.category, 'msg.category'|trans) }}</td>
+						<td>{{ form_widget(form.category) }}</td>
+						<td>{{ form_errors(form.category) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.protocol, 'msg.protocol'|trans) }}</td>
+						<td>{{ form_widget(form.protocol) }}</td>
+						<td>{{ form_errors(form.protocol) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.module, 'msg.module'|trans) }}</td>
+						<td>{{ form_widget(form.module) }}</td>
+						<td>{{ form_errors(form.module) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.card, 'msg.card'|trans) }}</td>
+						<td>{{ form_widget(form.card) }}</td>
+						<td>{{ form_errors(form.card) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.model, 'msg.model'|trans) }}</td>
+						<td>{{ form_widget(form.model) }}</td>
+						<td>{{ form_errors(form.model) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.room, 'msg.room'|trans) }}</td>
+						<td>{{ form_widget(form.room) }}</td>
+						<td>{{ form_errors(form.room) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.positionX, 'msg.positionX'|trans) }}</td>
+						<td>{{ form_widget(form.positionX) }}</td>
+						<td>{{ form_errors(form.positionX) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.positionY, 'msg.positionY'|trans) }}</td>
+						<td>{{ form_widget(form.positionY) }}</td>
+						<td>{{ form_errors(form.positionY) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.positionZ, 'msg.positionZ'|trans) }}</td>
+						<td>{{ form_widget(form.positionZ) }}</td>
+						<td>{{ form_errors(form.positionZ) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.longitude, 'msg.longitude'|trans) }}</td>
+						<td>{{ form_widget(form.longitude) }}</td>
+						<td>{{ form_errors(form.longitude) }}</td>
+					</tr>
+					<tr>
+						<td>{{ form_label(form.latitude, 'msg.latitude'|trans) }}</td>
+						<td>{{ form_widget(form.latitude) }}</td>
+						<td>{{ form_errors(form.latitude) }}</td>
+					</tr>
+				</table>
+				
+				{{ form_rest(form) }}
+					
+				<br/>
+				<div class="zoneTexte"></div>
+			</div>
+	
+			<input type="submit" value="{{ 'msg.edit'|trans }}" />&nbsp;<input id="cancelEdit" type="button" value="{{ 'msg.back'|trans }}" />
+		</form>
+	</div>

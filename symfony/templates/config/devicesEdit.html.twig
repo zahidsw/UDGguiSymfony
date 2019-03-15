@@ -1,0 +1,209 @@
+{% extends "iot6ConfigBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'conf.device_edit'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+	
+	<script>
+		$(document).ready(function() {
+
+			var buildings = $('#buildings');
+		    var floors = $('#floors');
+		    var rooms = $('#iot6_interactBundle_devicesType_room');
+
+			// On load
+			buildings.val('{{ device.room.floor.building.id }}');
+			floors.val('{{ device.room.floor.id }}');
+
+			rooms.empty();
+
+			var data = 	'idFloor='+ floors.val() + 
+						'&idBuilding=' + buildings.val();
+			updateList(data, rooms, '{{ path("getRoomsForFloor") }}', '{{ device.room.id }}' );
+			
+		    // On building change
+	        buildings.on('change', function() {
+				var data = 'idBuilding='+ $(this).val();
+		        
+	        	updateList(data, floors, '{{ path("getFloorsForBuilding") }}' );
+	        	updateList(data, rooms, '{{ path("getRoomsForBuilding") }}' );
+	        });
+
+	    	// On floor change
+	        floors.on('change', function() {
+	        	var data = 	'idFloor='+ $(this).val() + 
+	        				'&idBuilding=' + buildings.val();
+	        	
+	        	updateList(data, rooms, '{{ path("getRoomsForFloor") }}' );
+	        });
+	    });
+
+		function updateList(data, dest, url, selectedValue) {
+            $.ajax({
+                url: url,
+                data: data,
+                dataType: 'json',
+                success: function(json) {
+                	dest.empty();
+                    $.each(json, function(index, value) {
+                    	var selected = "";
+                    	if(selectedValue != null) {
+		                    if(index == selectedValue) {
+			                    selected = "selected='selected'";
+		                    }
+                    	}
+                    	else {
+                    		if(index == -1) {
+			                    selected = "selected='selected'";
+		                    }
+                        }
+                        dest.append('<option ' + selected + 'value="'+ index +'">'+ value +'</option>');
+                    });
+                }
+            });
+		}
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.devices'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'iot6ConfigBundle:Config:devicesMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>{{ 'conf.device_edit'|trans }}</h1>
+	
+	<br/><br/>
+	
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Devices_waitingApproval_edit', {'id': device.id } ) }}" {{ form_enctype(form) }}>
+		{{ form_errors(form) }}
+		<table>
+			<tr>
+				<td>{{ form_label(form.assignedName, 'conf.name'|trans) }}</td>
+				<td>{{ form_widget(form.assignedName) }}</td>
+				<td>{{ form_errors(form.assignedName) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.description, 'conf.description'|trans) }}</td>
+				<td>{{ form_widget(form.description) }}</td>
+				<td>{{ form_errors(form.description) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.comments, 'conf.comment'|trans) }}</td>
+				<td>{{ form_widget(form.comments) }}</td>
+				<td>{{ form_errors(form.comments) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.family, 'conf.family'|trans) }}</td>
+				<td>{{ form_widget(form.family) }}</td>
+				<td>{{ form_errors(form.family) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.category, 'conf.category'|trans) }}</td>
+				<td>{{ form_widget(form.category) }}</td>
+				<td>{{ form_errors(form.category) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.protocol, 'conf.protocol'|trans) }}</td>
+				<td>{{ form_widget(form.protocol) }}</td>
+				<td>{{ form_errors(form.protocol) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.module, 'conf.module'|trans) }}</td>
+				<td>{{ form_widget(form.module) }}</td>
+				<td>{{ form_errors(form.module) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.card, 'conf.card'|trans) }}</td>
+				<td>{{ form_widget(form.card) }}</td>
+				<td>{{ form_errors(form.card) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.model, 'conf.model'|trans) }}</td>
+				<td>{{ form_widget(form.model) }}</td>
+				<td>{{ form_errors(form.model) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.room, 'conf.room'|trans) }}</td>
+				<td>
+					<select id="buildings" name="buildings">
+						<option value="-1">{{ 'conf.all_buildings'|trans }}</option>
+						
+						{% set idSelected = app.request.get('idBuilding') %}
+						
+						{% for building in buildings %}
+							<option 
+							
+								{% if idSelected == building.id %}
+									selected="selected" 
+								{% endif %}
+								
+							value="{{ building.id }}">{{ building.name }}</option>
+						{% endfor %}
+					</select>
+					
+					<select id="floors" name="floors">
+						<option value="-1">{{ 'conf.all_floors'|trans }}</option>
+						
+						{% set idSelected = app.request.get('idFloor') %}
+						
+						{% for floor in floors %}
+							<option 
+							
+								{% if idSelected == floor.id %}
+									selected="selected" 
+								{% endif %}
+								
+							value="{{ floor.id }}">{{ floor.name }}</option>
+						{% endfor %}
+					</select>
+				
+					{{ form_widget(form.room) }}
+				</td>
+				<td>{{ form_errors(form.room) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.positionX, 'conf.positionX'|trans) }}</td>
+				<td>{{ form_widget(form.positionX) }}</td>
+				<td>{{ form_errors(form.positionX) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.positionY, 'conf.positionY'|trans) }}</td>
+				<td>{{ form_widget(form.positionY) }}</td>
+				<td>{{ form_errors(form.positionY) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.positionZ, 'conf.positionZ'|trans) }}</td>
+				<td>{{ form_widget(form.positionZ) }}</td>
+				<td>{{ form_errors(form.positionZ) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.longitude, 'conf.longitude'|trans) }}</td>
+				<td>{{ form_widget(form.longitude) }}</td>
+				<td>{{ form_errors(form.longitude) }}</td>
+			</tr>
+			<tr>
+				<td>{{ form_label(form.latitude, 'conf.latitude'|trans) }}</td>
+				<td>{{ form_widget(form.latitude) }}</td>
+				<td>{{ form_errors(form.latitude) }}</td>
+			</tr>
+		</table>	
+		
+		{{ form_rest(form) }}
+		
+		<br/>
+		
+		<input type="submit" value="{{ 'conf.edit'|trans }}" />
+		<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Devices_waitingApproval') }}'" />
+	</form>
+	
+{% endblock %}

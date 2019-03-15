@@ -1,0 +1,273 @@
+{% extends "iot6SmartItBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.smartIt.ifThisThenThat'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<h1>{{ 'subMenu.smartIt.ifThisThenThat'|trans }}</h1>
+	
+	<br/>
+	
+	<div id="error" class="messageKo" style="display:none;"></div><br/>
+	
+	{% for flashMessage in app.session.flashbag.get('ko') %}
+	    <div class="messageKo">{{ flashMessage }}</div><br/>
+	{% endfor %}
+	
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div><br/>
+	{% endfor %}
+	
+	<form id="formIttt" method="post" action="{{ path('iot6_SmartItBundle_Ittt') }}">
+		<div class="sub_title1">{{ 'msg.if'|trans }}:</div>
+		<br/>
+		<div class="sub_title2">{{ 'msg.source'|trans }}:</div>
+		
+		<div class="sub_content">
+		
+			{% 
+				render(controller("iot6NavigatorBundle:Navigator:loadNavigator", 
+								{ 	'_locale': 	app.request.locale, 
+									'prefix': 	'_source',
+									'displayDevices':	1  } 
+				)) 
+			%}
+			
+		</div>
+		
+		<br/>
+		
+		<div class="sub_title2">{{ 'msg.event'|trans }}:</div>
+		
+		<br/>
+		
+		<div class="sub_content">
+			<select id="events_source" name="events_source">
+				<option selected="selected" value="-1">{{ 'msg.select_event'|trans }}</option>
+			</select>
+			
+			<select id="parameters_source" name="parameters_source">
+				<option selected="selected" value="-1">{{ 'msg.select_parameter'|trans }}</option>
+			</select>
+			
+			<select id="relation_source" name="relation_source">
+				<option selected="selected" value="-1">{{ 'msg.select_comparator'|trans }}</option>
+				<option value="1">=</option>
+				<option value="2">></option>
+				<option value="3"><</option>
+			</select>
+			
+			<input type="text" id="value_source" name="value_source" placeholder="{{ 'msg.value'|trans }}" />
+		</div>
+		
+		<br/><br/>
+		
+		<div class="sub_title1">{{ 'msg.then'|trans }}:</div>
+		<br/>
+		<div class="sub_title2">{{ 'msg.target'|trans }}:</div>
+		
+		<div class="sub_content">
+		
+			{% 
+				render(controller("iot6NavigatorBundle:Navigator:loadNavigator", 
+								{ 	'_locale': 	app.request.locale, 
+									'prefix': 	'_target',
+									'displayDevices':	1  } 
+				)) 
+			%}
+			
+		</div>
+		
+		<br/>
+		
+		<div class="sub_title2">{{ 'msg.action'|trans }}:</div>
+		
+		<br/>
+		
+		<div class="sub_content">
+			<select id="actions_target" name="actions_target">
+				<option selected="selected" value="-1">{{ 'msg.select_action'|trans }}</option>
+			</select>
+			 
+			 <div id="divParameters" style="display:inline-block; margin-left:15px; vertical-align:top;"></div>
+		</div>
+		
+		<br/>
+		
+		<div style="display:block;">
+			<input type="submit" name="btnSaveITTT" value="{{ 'msg.validate'|trans }}" class="centerButton" />
+		</div>
+		
+	</form>
+	
+	<script>
+		$(document).ready(function() {
+			
+			$("#formIttt").submit(function () {
+
+				if($('#buildings_source').val() == -1 && $('#floors_source').val() == -1 && 
+						$('#roomTypes_source').val() == -1 && $('#rooms_source').val() == -1 && 
+						$('#categories_source').val() == -1 && $('#families_source').val() == -1 && 
+						$('#devices_source').val() == -1) 
+				{
+    				$('#error').text("{{ 'errror.select_one_source'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+
+				if($('#events_source').val() == -1) {
+    				$('#error').text("{{ 'errror.select_one_event'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+    			
+				if($('#parameters_source').val() == -1) {
+    				$('#error').text("{{ 'errror.select_one_param'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+    			
+				if($('#relation_source').val() == -1) {
+    				$('#error').text("{{ 'errror.select_one_comparator'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+    			
+    			if($('#value_source').val() == "") {
+    				$('#error').text("{{ 'errror.fill_source_value'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+
+    			if($('#buildings_target').val() == -1 && $('#floors_target').val() == -1 && 
+						$('#roomTypes_target').val() == -1 && $('#rooms_target').val() == -1 && 
+						$('#categories_target').val() == -1 && $('#families_target').val() == -1 && 
+						$('#devices_target').val() == -1) 
+				{
+    				$('#error').text("{{ 'errror.select_one_target'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+    			
+    			if($('#actions_target').val() == -1) {
+    				$('#error').text("{{ 'errror.select_one_action'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+    			}
+
+    			var isEmpty = false;
+    			$('#divParameters input[type=text]').each(function () {
+        			
+        			if($(this).val() == "") {
+        				isEmpty = true;
+        				return false;
+        			}
+				});
+
+    			if(isEmpty) {
+    				$('#error').text("{{ 'error.fill_target_param'|trans }}");
+    				$('#error').attr('style', 'display:block;');
+    				return false;
+        		}
+
+    			
+			});
+			
+			$('#buildings_source, #floors_source, #roomTypes_source, #rooms_source, #categories_source, #families_source').on('change', function() {
+				window.setTimeout( function() { getActionsDevices('source', 0); }, 8000 ); //DEV
+				//window.setTimeout( function() { getActionsDevices('source', 0); }, 500 ); //PROD
+			});
+
+			$('#buildings_target, #floors_target, #roomTypes_target, #rooms_target, #categories_target, #families_target').on('change', function() {
+				window.setTimeout( function() { getActionsDevices('target', 1); }, 8000 ); //DEV
+				//window.setTimeout( function() { getActionsDevices('target', 1); }, 500 ); //PROD
+				$('#divParameters').empty();
+			});
+
+			$('#devices_source').on('change', function() {
+				updateSelect('devicesList=' + $(this).val() + '&kind=0', $('#events_source'), '{{ path("getActionsForDevices") }}');
+			});
+
+			$('#devices_target').on('change', function() {
+				updateSelect('devicesList=' + $(this).val() + '&kind=1', $('#actions_target'), '{{ path("getActionsForDevices") }}');
+				$('#divParameters').empty();
+			});
+
+			$('#events_source').on('change', function() {
+				updateSelect('default=1&actionId=' + $(this).val(), $('#parameters_source'), '{{ path("getParametersForAction") }}');
+			});
+
+			$('#actions_target').on('change', function() {
+
+				var div = $('#divParameters');
+				div.empty();
+				$.ajax({
+	                url: '{{ path("getParametersForAction") }}',
+	                data: 'actionId=' + $(this).val(),
+	                dataType: 'json',
+	                success: function(json) {
+	                    $.each(json, function(index, value) {
+	                    	var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv_' + index);
+
+	                    	newTextBoxDiv.after().html('<label style="width:130px; display:inline-block;">'+ value + ' : </label>' +
+	                    		      '<input type="text" name="textboxTarget_' + index + 
+	                    		      '" id="textboxTarget_' + index + '" value="" placeholder="' + value + '">');
+
+	                    	newTextBoxDiv.appendTo(div);
+	                    });
+	                }
+	            });
+
+			});
+			
+			function getActionsDevices(id, kind) {
+				var device = "";
+				
+				$('#devices_' + id + ' option').each(function() {
+					device += $(this).val() + ",";
+				});
+
+				device = device.substr(0, device.length -1);
+				device = device.replace("-1", "");
+				device = device.substr(0, device.length -1);
+
+				var data = 'devicesList=' + device  + '&kind=' + kind;
+
+				if(kind == 0) {
+					updateSelect(data, $('#events_' + id), '{{ path("getActionsForDevices") }}');
+				}
+				else if(kind == 1) {
+					updateSelect(data, $('#actions_' + id), '{{ path("getActionsForDevices") }}');
+				}
+			}
+
+			function updateSelect(data, dest, url) {
+	            $.ajax({
+	                url: url,
+	                data: data,
+	                dataType: 'json',
+	                success: function(json) {
+	                	dest.empty();
+	                    $.each(json, function(index, value) {
+	                    	var selected = "";
+		                    if(index == -1)
+			                    selected = "selected='selected'";
+	                        dest.append('<option ' + selected + 'value="'+ index +'">'+ value +'</option>');
+	                    });
+	                }
+	            });
+			}
+			
+		});
+	</script>
+	
+{% endblock %}

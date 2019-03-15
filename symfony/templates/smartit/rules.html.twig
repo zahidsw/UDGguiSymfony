@@ -1,0 +1,126 @@
+{% extends "iot6SmartItBundle::layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.smartIt.rulesManager'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<br/>
+	
+	<a class="subtitle2" href="{{ path('iot6_SmartItBundle_RulesManager_Add') }}">[{{ 'msg.new_rule'|trans }}]</a>
+	
+	<br/><br/>
+	
+	{% for flashMessage in app.session.flashbag.get('ko') %}
+	    <div class="messageKo">{{ flashMessage }}</div>
+	{% endfor %}
+	
+	{% for flashMessage in app.session.flashbag.get('ok') %}
+	    <div class="messageOk">{{ flashMessage }}</div>
+	{% endfor %}
+	
+	<h1>{{ 'msg.rules_actives'|trans }}</h1>
+	
+	<br/>
+	
+	<div id='zebraTableDiv'>
+		<table style="width: 100%;">
+			{% for rule in activesRules %}
+				<tr>
+					<td style="width: 30px; text-align: center;">
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_ActDesact', { 'id': rule.id }) }}">
+							<img alt="{{ 'msg.deactivate'|trans }}" src="{{ asset('assets/images/interface/icons/actif.png') }}" />
+						</a>
+					</td>
+					<td style="width: 30px; text-align: center;">
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_Edit', { 'id': rule.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width: 30px; text-align: center;">
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_Delete', { 'id': rule.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'ask.sur_delete'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_Edit', { 'id': rule.id }) }}">
+							{{ rule.name }}
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbRulesActives,
+				'nbItemPerPage': nbActivesProPage,
+				'route': 'iot6_SmartItBundle_RulesManager',
+				'nbPagesDisplayed': 15,
+				'currentPage': pageActive,
+				'arg': 'pageActive'
+				}
+			)) 
+		%}
+		
+		<br/><br/><br/>
+		<h1>{{ 'msg.rules_inactives'|trans }}</h1>
+		<br/>
+		
+		<table style="width: 100%;">
+			{% for rule in inactivesRules%}
+				<tr>
+					<td style="width: 30px; text-align: center;">
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_ActDesact', { 'id': rule.id }) }}">
+							<img alt="{{ 'msg.activate'|trans }}" src="{{ asset('assets/images/interface/icons/inactif.png') }}" />
+						</a>
+					</td>
+					<td style="width: 30px; text-align: center;">
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_Edit', { 'id': rule.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
+						</a>
+					</td>
+					<td style="width: 30px; text-align: center;">
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_Delete', { 'id': rule.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'ask.sur_delete'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_SmartItBundle_RulesManager_Edit', { 'id': rule.id }) }}">
+							{{ rule.name }}
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbRulesInactives,
+				'nbItemPerPage': nbInactivesProPage,
+				'route': 'iot6_SmartItBundle_RulesManager',
+				'nbPagesDisplayed': 15,
+				'currentPage': pageInactive,
+				'arg': 'pageInactive'
+				}
+			)) 
+		%}
+		
+		
+	</div>
+	
+{% endblock %}

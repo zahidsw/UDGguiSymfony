@@ -1,0 +1,26 @@
+{% extends "Interact/layoutInteract.html.twig" %}
+
+{% block title %}
+        {{ parent() }} - {{ 'subMenu.interact.mapList'|trans }}
+{% endblock %}
+
+{% block head %}
+        {{ parent() }}
+{% endblock %}
+
+{% block body %}
+        {{ parent() }}
+
+        <h1>{{ 'subMenu.interact.mapList'|trans }}</h1>
+
+        <br/>
+
+        {{
+                render(controller("App\\Controller\\MapController:loadMap",
+                        {       '_locale':      app.request.locale,
+                                'devices':      devices
+                        }
+                ))
+		}}
+
+{% endblock %}
