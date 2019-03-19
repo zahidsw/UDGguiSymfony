@@ -402,7 +402,7 @@ iot6_AlertBundle:
     
 iot6_AlertBundle_ShowEdit:
     path:  /{_locale}/alert/show/{id}
-    controller: App\Controller\Alert:alertShowEdit
+    controller: App\Controller\AlertController:alertShowEdit
     requirements:
         id: \d+
 

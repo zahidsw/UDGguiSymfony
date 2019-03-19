@@ -56,7 +56,7 @@ class AlertController extends AbstractController
 	    				->getParamValue('alertsNbRecords', $user, $em_gui);
 	}
 	
-    public function alertShowEditAction(Request $request,Alerts $alert)
+    public function alertShowEdit(Request $request,Alerts $alert)
     {
 
     	if ($request->getMethod() == 'POST')
@@ -79,7 +79,7 @@ class AlertController extends AbstractController
     	
     	$data["alert"] = $alert;
     	
-    	return $this->render('iot6AlertBundle:Alert:alertShow.html.twig', $data);
+    	return $this->render('alert/alertShow.html.twig', $data);
     }
 	
 }

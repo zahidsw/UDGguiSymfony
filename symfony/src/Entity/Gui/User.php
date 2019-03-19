@@ -13,6 +13,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends BaseUser
 {
+    	
+	/**
+	 * Constructor
+	 */
+    public function __construct()
+    {
+    	parent::__construct();
+    	$this->locked = false;
+        $this->routes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->expired = false;
+        $this->credentialsExpired = false;
+    }
+    
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="integer")
@@ -51,22 +64,6 @@ class User extends BaseUser
     protected $credentialsExpireAt;
 
 
-
-
-
-
-	
-	/**
-	 * Constructor
-	 */
-    public function __construct()
-    {
-    	parent::__construct();
-    	$this->locked = false;
-        $this->routes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->expired = false;
-        $this->credentialsExpired = false;
-    }
     
     /**
      * Get id
