@@ -827,5 +827,7 @@ iot6_ConfigBundle_Devices_groups_Delete:
         id: \d+    
 
 
+fiware_login:
+    path: /login/check-fiware
 
-
+   

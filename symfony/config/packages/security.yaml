@@ -18,33 +18,56 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
             
-        main_login:
-            pattern:   ^/(fr|en|zh)/login$
-            anonymous: true
+        # main_login:
+        #     pattern:   ^/(fr|en|zh)/login$
+        #     anonymous: true
             
-        main:
-            pattern: ^/
-            form_login:
-                login_path: /en/login
-                provider: fos_userbundle
-                csrf_token_generator: security.csrf.token_manager
-                check_path: fos_user_security_check
-                default_target_path: iot6_HomeBundle
-            logout:
-                path:   fos_user_security_logout
-                target: fos_user_security_login
-            anonymous:    true
+        # main:
+        #     pattern: ^/
+        #     form_login:
+        #         login_path: /en/login
+        #         provider: fos_userbundle
+        #         csrf_token_generator: security.csrf.token_manager
+        #         check_path: fos_user_security_check
+        #         default_target_path: iot6_HomeBundle
+        #     logout:
+        #         path:   fos_user_security_logout
+        #         target: fos_user_security_login
+        #     anonymous:    true
+
+        secured_area:
+            anonymous: ~
+            oauth:
+                resource_owners:
+                    fiware:        "/login/check-fiware"
+                login_path:        /login
+                use_forward:       false
+                failure_path:      /login
+                
+
+                oauth_user_provider:
+                    service: my.oauth_aware.user_provider.service
             
                 
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/(fr|en|zh)/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
-        - { path: ^/, role: ROLE_USER }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+       
 
     access_denied_url: /logina
+            
+                
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    # access_control:
+    #     - { path: ^/(fr|en|zh)/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #     - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #     - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #     - { path: ^/admin/, role: ROLE_ADMIN }
+    #     - { path: ^/, role: ROLE_USER }
+    #     #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+
+    # access_denied_url: /logina
