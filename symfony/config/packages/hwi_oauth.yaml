@@ -9,6 +9,13 @@ httplug:
 hwi_oauth:
     # list of names of the firewalls in which this bundle is active, this setting MUST be set
     firewall_names: [secured_area]
+
+    fosub:
+        username_iterations: 30
+    # Define in which columns of the fos_user table will be stored
+    # the access token of every resource_owner
+        properties:
+            fiware: fiware_id
     
     # an optional setting to configure a query string parameter which can be used to redirect
     # the user after authentication, e.g. /connect/facebook?_destination=/my/destination will
@@ -35,4 +42,5 @@ hwi_oauth:
             client_secret:       55b40701-74c4-4b96-927c-c3b7d6d69f4d
             options:
                 csrf: true
+                use_bearer_authorization: false
             

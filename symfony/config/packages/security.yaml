@@ -37,6 +37,18 @@ security:
 
         secured_area:
             anonymous: ~
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                # csrf_provider: form.csrf_provider
+                login_path: /login
+                # check_path: /login_check
+                csrf_token_generator: security.csrf.token_manager
+                check_path: fos_user_security_check
+                default_target_path: iot6_HomeBundle
+           
+
+
             oauth:
                 resource_owners:
                     fiware:        "/login/check-fiware"
@@ -46,9 +58,16 @@ security:
                 
 
                 oauth_user_provider:
-                    service: my.oauth_aware.user_provider.service
+                    service: App\Security\FOSUBUserProvider
             
-                
+            logout:
+                path:   fos_user_security_logout
+                target: fos_user_security_login
+            anonymous:    true
+
+        login:
+            pattern:  ^/login$
+            security: false
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

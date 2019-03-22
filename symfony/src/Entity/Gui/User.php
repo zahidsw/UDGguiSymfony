@@ -63,7 +63,32 @@ class User extends BaseUser
 	 */
     protected $credentialsExpireAt;
 
+    /** @ORM\Column(name="fiware_id", type="string", length=255, nullable=true) */
+    protected $fiware_id;
 
+    /** @ORM\Column(name="fiware_access_token", type="string", length=255, nullable=true) */
+    protected $fiware_access_token;
+
+
+    public function setFiwareId($fiwareId) {
+        $this->fiware_id = $fiwareId;
+
+        return $this;
+    }
+
+    public function getFiwareId() {
+        return $this->fiware_id;
+    }
+
+    public function setFiwareAccessToken($fiwareAccessToken) {
+        $this->fiware_access_token = $fiwareAccessToken;
+
+        return $this;
+    }
+
+    public function getFiwareAccessToken() {
+        return $this->fiware_access_token;
+    }
     
     /**
      * Get id

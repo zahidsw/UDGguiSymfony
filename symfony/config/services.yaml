@@ -39,12 +39,8 @@ services:
 
     FOS\UserBundle\Doctrine\UserManager: '@fos_user.user_manager.default'
 
-    my.oauth_aware.user_provider.service:
-        class: HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider
-        arguments:
-            - '@fos_user.user_manager'
-            - ['test']
-
+    App\Security\FOSUBUserProvider:
+        arguments: ['@fos_user.user_manager',{fiware: fiware_id}] 
 
 
     
