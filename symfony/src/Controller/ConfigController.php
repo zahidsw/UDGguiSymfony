@@ -40,6 +40,7 @@ use FOS\UserBundle\Doctrine\UserManager;
 
 
 
+
 class ConfigController extends AbstractController
 {
 	private $translator;
@@ -1203,7 +1204,7 @@ class ConfigController extends AbstractController
 	
 	public function users()
 	{
-		$userManager = $this->container->get('fos_user.user_manager');
+		$userManager = $this->userManager;
 			
 		$users = $userManager->findUsers();
 		
@@ -1231,7 +1232,7 @@ class ConfigController extends AbstractController
 		return $this->redirect($referer);
 	}
 	
-	public function usersAdd()
+	public function usersAdd(Request $request)
 	{
 		$error = null;
 		
@@ -1247,8 +1248,6 @@ class ConfigController extends AbstractController
 			}
 		}
 		
-		
-		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST')
 		{
 			if($request->get('send'))
@@ -1370,15 +1369,15 @@ class ConfigController extends AbstractController
 		return $this->render('config/usersEdit.html.twig', $data);
 	}
 	
-	public function usersDelete(User $user)
+	public function usersDelete(User $user, Request $request)
 	{
-		$userManager = $this->get('fos_user.user_manager');
+		$userManager = $this->userManager;
 		
 		$userManager->deleteUser($user);
 		
 		$this->setMessage('ok', 'conf.ok.deleted_user');
 		
-    	$referer = $this->getRequest()->headers->get('referer');
+    	$referer = $request->headers->get('referer');
     	
     	return $this->redirect($referer);
 	}

@@ -172,19 +172,19 @@ div.clear {
     
 #submenu a {
 	text-decoration: none;
-	color: #fff;
+	color: black;
 }
 
 #submenu a:hover {
 	text-decoration: underline;
 }
 #submenu a.selected {
-  color: yellow;
+  color: red;
 }
 
 /*----------------- Sub Menu 2 design --------------------- */
 .subtitle2 {
-	color: white !important;
+	color: black !important;
 }
 
 /*---------------- Formulaires ------------*/
@@ -535,7 +535,7 @@ div.scenarios {
 	text-decoration: none !important;
 }
 
-/*---------------- Tableau centré ---------*/
+/*---------------- Tableau centrï¿½ ---------*/
 
 .centerTab {
 	text-align: center;

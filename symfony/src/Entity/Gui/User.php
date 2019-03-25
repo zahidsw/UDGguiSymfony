@@ -5,11 +5,28 @@ namespace App\Entity\Gui;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Table(name="user")
  * @ORM\Entity
  * 
+ *
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride(name="salt",
+ *          column=@ORM\Column(
+ *              name     = "salt",
+ *              nullable = true
+ *            
+ *          )
+ *      ),
+ *       @ORM\AttributeOverride(name="password",
+ *          column=@ORM\Column(
+ *              name     = "password",
+ *              nullable = true
+ *            
+ *          )
+ *      )
+ * 
+ * })
  */
 class User extends BaseUser
 {

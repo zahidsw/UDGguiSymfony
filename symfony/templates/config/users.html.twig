@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.accessAndSecurity'|trans }} - {{ 'conf.subMenu.users'|trans }}
@@ -15,7 +15,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:accessSecurityMenus.html.twig' %}
+	{% include 'config/accessSecurityMenus.html.twig' %}
 	
 	<br/><br/>
 	
@@ -23,7 +23,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	{% include 'config/msg.html.twig' %}
 	
 	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Add') }}">[{{ 'conf.user_add'|trans }}]</a>
 	
@@ -43,13 +43,13 @@
 					{% if user.enabled %}
 						<td style="width: 30px; text-align: center;">
 							<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_ActDesact', { 'id': user.id }) }}">
-								<img alt="{{ 'conf.deactivate'|trans }}" src="{{ asset('images/interface/icons/actif.png') }}" />
+								<img alt="{{ 'conf.deactivate'|trans }}" src="{{ asset('assets/images/interface/icons/actif.png') }}" />
 							</a>
 						</td>
 					{% else %}
 						<td style="width: 30px; text-align: center;">
 							<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_ActDesact', { 'id': user.id }) }}">
-								<img alt="{{ 'conf.activate'|trans }}" src="{{ asset('images/interface/icons/inactif.png') }}" />
+								<img alt="{{ 'conf.activate'|trans }}" src="{{ asset('assets/images/interface/icons/inactif.png') }}" />
 							</a>
 						</td>
 					{% endif %}
@@ -57,13 +57,13 @@
 					
 					<td style="width:30px; text-align:center;">
 						<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Edit', { 'id': user.id }) }}">
-							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+							<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
 						</a>
 					</td>
 					
 					<td style="width:30px; text-align:center;">
 						<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Delete', { 'id': user.id }) }}">
-							<img src="{{ asset('images/interface/icons/delete.png') }}"
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
 								onclick="return(confirm('{{ 'conf.ask.delete_user'|trans }}'));" />
 						</a>
 					</td>
