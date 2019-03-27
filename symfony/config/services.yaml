@@ -42,6 +42,8 @@ services:
     App\Security\FOSUBUserProvider:
         arguments: ['@fos_user.user_manager',{fiware: fiware_id}] 
 
+    Http\Client\Common\HttpMethodsClient: '@httplug.client.app.http_methods'
+
 
     
 

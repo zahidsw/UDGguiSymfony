@@ -38,6 +38,7 @@ class FOSUBUserProvider extends BaseClass {
     }
 
     public function loadUserByOAuthUserResponse(UserResponseInterface $response) {
+
         $data = $response->getData();
         $username = $response->getUsername();
         // TO DO need to be managed unauthorized users in fiware application

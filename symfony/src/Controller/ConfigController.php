@@ -37,6 +37,7 @@ use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use FOS\UserBundle\Doctrine\UserManager;
+use App\Service\KeyRockAPI;
 
 
 
@@ -1232,8 +1233,15 @@ class ConfigController extends AbstractController
 		return $this->redirect($referer);
 	}
 	
-	public function usersAdd(Request $request)
+
+	public function externalApi(){
+		
+		$client = new \GuzzleHttp\Client(['base_uri' => 'http://my.api.url/']);
+
+	}
+	public function usersAdd(Request $request, KeyRockAPI $keyRockAPI)
 	{
+		dump($keyRockAPI->assignRole('2c87dae1-8c6c-48e5-a319-ba35388df068','2b704846-4831-406d-b092-93164100812b','purchaser'));
 		$error = null;
 		
 		
@@ -1252,16 +1260,16 @@ class ConfigController extends AbstractController
 		{
 			if($request->get('send'))
 			{
-				$username	= $this->getRequest()->request->get('username');
-				$email		= $this->getRequest()->request->get('email');
-				$isActive	= $this->getRequest()->request->get('isActive');
-				$pass 		= $this->getRequest()->request->get('pass');
-				$conf 		= $this->getRequest()->request->get('conf');
-				$roles 		= $this->getRequest()->request->get('roles');
+				$username	= $request->get('username');
+				$email		= $request->get('email');
+				$isActive	= $request->get('isActive');
+				$pass 		= $request->get('pass');
+				$conf 		= $request->get('conf');
+				$roles 		= $request->get('roles');
 				
 				// identical pwd
 				if($pass == $conf) {
-					$userManager = $this->get('fos_user.user_manager');
+					$userManager = $this->userManager;
 					
 					$user = $userManager->createUser();
 					
