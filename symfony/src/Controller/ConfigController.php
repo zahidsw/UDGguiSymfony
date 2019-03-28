@@ -1241,10 +1241,7 @@ class ConfigController extends AbstractController
 	}
 	public function usersAdd(Request $request, KeyRockAPI $keyRockAPI)
 	{
-		dump($keyRockAPI->assignRole('2c87dae1-8c6c-48e5-a319-ba35388df068','2b704846-4831-406d-b092-93164100812b','purchaser'));
-		$error = null;
-		
-		
+				
 		$em_gui = $this->getDoctrine()->getManager("gui");
 		$roles = $em_gui->getRepository('App\Entity\Gui\Role')->findAll();
 		
@@ -1266,33 +1263,59 @@ class ConfigController extends AbstractController
 				$pass 		= $request->get('pass');
 				$conf 		= $request->get('conf');
 				$roles 		= $request->get('roles');
-				
+
+				dd($roles );
+
 				// identical pwd
-				if($pass == $conf) {
-					$userManager = $this->userManager;
-					
-					$user = $userManager->createUser();
-					
-					$user->setUsername($username);
-					$user->setEmail($email);
-					$user->setEnabled( (!is_null($isActive)) ? true : false );
-					$user->setPlainPassword($pass);
-					
-					foreach ($roles as $roleId) {
-						$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-						$user->addRole($role->getName());
+				if($pass == $conf) 
+				{
+					$keyRockAPI->setAuthToken('275e4067-5f87-4b55-a3c2-15a9b1e86eb6');// to get for the current user
+					$keyRockAPI->setApplicationId('2c87dae1-8c6c-48e5-a319-ba35388df068'); // to get from configuration
+					$response = $keyRockAPI->registerUser($username,$email,$pass);
+					$statusCodeRegister = $response->getStatusCode();
+
+					if($statusCodeRegister == "201")
+					{
+						$user = (string)$response->getBody();
+						$user =json_decode($user,true);
+						$roleId = $keyRockAPI->getRoleId('user');
+
+						if($roleId != false)
+						{
+							$response = $keyRockAPI->assignRole($user['user']['id'],$roleId);
+							$statusCodeAssignRole = $response->getStatusCode();
+
+							if($statusCodeAssignRole == '201')
+							{
+								$userManager = $this->userManager;
+								$user = $userManager->createUser();
+								$user->setUsername($username);
+								$user->setEmail($email);
+								$user->setEnabled( (!is_null($isActive)) ? true : false );
+		
+								foreach ($roles as $roleId) {
+									$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
+									$user->addRole($role->getName());
+								}
+								$userManager->updateUser($user);
+								$this->setMessage('ok', 'conf.ok.added_user');
+								return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
+							}
+						}
 					}
-					
-					$userManager->updateUser($user);
-					
-					$this->setMessage('ok', 'conf.ok.added_user');
-					
-					return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
+
+					if($statusCodeRegister != '201' || $roleId == false || $statusCodeAssignRole != '201')
+					{
+						$this->setMessage('ko', 'Somenthing went wrong. Try later!');
+						$referer = $request->headers->get('referer');
+						return $this->redirect($referer);
+					}
 				}
-				else {
+				else 
+				{
 					$this->setMessage('ko', 'conf.ko.not_identical_pwd');
 					
-					$referer = $this->getRequest()->headers->get('referer');
+					$referer = $request->headers->get('referer');
 					return $this->redirect($referer);
 				}
 			}

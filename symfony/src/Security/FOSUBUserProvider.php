@@ -40,23 +40,19 @@ class FOSUBUserProvider extends BaseClass {
     public function loadUserByOAuthUserResponse(UserResponseInterface $response) {
 
         $data = $response->getData();
-        $username = $response->getUsername();
+        $fiware_id = $response->getUsername();
         // TO DO need to be managed unauthorized users in fiware application
-        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $username));
+        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $fiware_id));
+        
         //when the user is new in the gui interface
         if (null === $user) {
+            $user = $this->userManager->findUserBy(array('email'=>$response->getEmail()));
             $service = $response->getResourceOwner()->getName();
             $setter = 'set'.ucfirst($service);
             $setter_id = $setter.'Id';
             $setter_token = $setter.'AccessToken';
-            // create new user here
-            $user = $this->userManager->createUser();
-            $user->$setter_id($username);
+            $user->$setter_id($fiware_id);
             $user->$setter_token($response->getAccessToken());
-            //I have set all requested data with the user's username
-            $user->setUsername($response->getEmail());
-            $user->setEmail($response->getEmail());
-            $user->setEnabled(true);
             $this->userManager->updateUser($user);
             return $user;
         }
