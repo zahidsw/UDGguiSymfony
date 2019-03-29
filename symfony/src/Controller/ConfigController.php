@@ -48,11 +48,13 @@ class ConfigController extends AbstractController
 	private $encoderFactory;
 	private $userManager;
 
-    public function __construct(DataCollectorTranslator $translator, EncoderFactory $encoderFactory, UserManager $userManager)
+    public function __construct(DataCollectorTranslator $translator, EncoderFactory $encoderFactory, UserManager $userManager,KeyRockAPI $keyRockAPI)
     {
 		$this->translator = $translator;
 		$this->encoderFactory = $encoderFactory;
 		$this->userManager = $userManager;
+		$keyRockAPI->setAuthToken('275e4067-5f87-4b55-a3c2-15a9b1e86eb6');// to get for the current user
+		$keyRockAPI->setApplicationId('2c87dae1-8c6c-48e5-a319-ba35388df068'); // to get from configuration
 	}
 
     public function config()
@@ -1234,11 +1236,6 @@ class ConfigController extends AbstractController
 	}
 	
 
-	public function externalApi(){
-		
-		$client = new \GuzzleHttp\Client(['base_uri' => 'http://my.api.url/']);
-
-	}
 	public function usersAdd(Request $request, KeyRockAPI $keyRockAPI)
 	{
 				
@@ -1247,8 +1244,10 @@ class ConfigController extends AbstractController
 		
 		$roleSources = array();
 		
-		for($i=count($roles)-1; $i>0; $i--) {
-			if($roles[$i]->getId() != 1) {
+		for($i=count($roles)-1; $i>0; $i--) 
+		{
+			if($roles[$i]->getId() != 1) 
+			{
 				array_unshift($roleSources, array_pop($roles));
 			}
 		}
@@ -1264,13 +1263,11 @@ class ConfigController extends AbstractController
 				$conf 		= $request->get('conf');
 				$roles 		= $request->get('roles');
 
-				dd($roles );
-
+				
 				// identical pwd
 				if($pass == $conf) 
 				{
-					$keyRockAPI->setAuthToken('275e4067-5f87-4b55-a3c2-15a9b1e86eb6');// to get for the current user
-					$keyRockAPI->setApplicationId('2c87dae1-8c6c-48e5-a319-ba35388df068'); // to get from configuration
+					
 					$response = $keyRockAPI->registerUser($username,$email,$pass);
 					$statusCodeRegister = $response->getStatusCode();
 
@@ -1282,7 +1279,8 @@ class ConfigController extends AbstractController
 
 						if($roleId != false)
 						{
-							$response = $keyRockAPI->assignRole($user['user']['id'],$roleId);
+							$userFiwareId = $user['user']['id'];
+							$response = $keyRockAPI->assignRole($userFiwareId,$roleId);
 							$statusCodeAssignRole = $response->getStatusCode();
 
 							if($statusCodeAssignRole == '201')
@@ -1292,6 +1290,7 @@ class ConfigController extends AbstractController
 								$user->setUsername($username);
 								$user->setEmail($email);
 								$user->setEnabled( (!is_null($isActive)) ? true : false );
+								$user->setFiwareId($userFiwareId);
 		
 								foreach ($roles as $roleId) {
 									$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
@@ -1400,16 +1399,21 @@ class ConfigController extends AbstractController
 		return $this->render('config/usersEdit.html.twig', $data);
 	}
 	
-	public function usersDelete(User $user, Request $request)
+	public function usersDelete(User $user, Request $request,KeyRockAPI $keyRockAPI)
 	{
 		$userManager = $this->userManager;
+		$response = $keyRockAPI->deleteUser($user->getFiwareId());
+		$statusCodeDeleteUser = $response->getStatusCode();
 		
+		if( $statusCodeDeleteUser != '204')
+		{
+			$this->setMessage('ko', 'Somenthing went wrong, try later!');
+			$referer = $request->headers->get('referer');
+    		return $this->redirect($referer);
+		}
 		$userManager->deleteUser($user);
-		
 		$this->setMessage('ok', 'conf.ok.deleted_user');
-		
     	$referer = $request->headers->get('referer');
-    	
     	return $this->redirect($referer);
 	}
 	

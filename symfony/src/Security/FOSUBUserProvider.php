@@ -46,6 +46,8 @@ class FOSUBUserProvider extends BaseClass {
         
         //when the user is new in the gui interface
         if (null === $user) {
+
+            
             $user = $this->userManager->findUserBy(array('email'=>$response->getEmail()));
             $service = $response->getResourceOwner()->getName();
             $setter = 'set'.ucfirst($service);

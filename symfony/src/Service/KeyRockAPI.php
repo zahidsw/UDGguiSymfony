@@ -68,6 +68,15 @@ class KeyRockAPI
         return $response;
     }
 
+    public function deleteUser(String $userId):object
+    {
+        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('DELETE', $this->baseUrl . '/v1/users/' . $userId, $headers);
+        $response = $this->httpMethodsClient->sendRequest($request);
+
+        return $response;
+    }
+
     public function assignRole(String $userId, String $roleId):object
     {
        
