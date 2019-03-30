@@ -26,8 +26,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Controller\SecurityController:
-        decorates: fos_user.security.controller
+    # App\Controller\SecurityController:
+    #     decorates: fos_user.security.controller
 
     SunCat\MobileDetectBundle\DeviceDetector\MobileDetector: '@mobile_detect.mobile_detector.default'
 
@@ -37,10 +37,10 @@ services:
 
     Symfony\Component\Security\Core\Encoder\EncoderFactory: '@security.encoder_factory.generic'
 
-    FOS\UserBundle\Doctrine\UserManager: '@fos_user.user_manager.default'
+    # FOS\UserBundle\Doctrine\UserManager: '@fos_user.user_manager.default'
 
-    App\Security\FOSUBUserProvider:
-        arguments: ['@fos_user.user_manager',{fiware: fiware_id}] 
+    # App\Security\FOSUBUserProvider:
+    #     arguments: ['@fos_user.user_manager',{fiware: fiware_id}] 
 
     Http\Client\Common\HttpMethodsClient: '@httplug.client.app.http_methods'
 

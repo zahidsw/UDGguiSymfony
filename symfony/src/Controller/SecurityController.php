@@ -2,33 +2,23 @@
 
 namespace App\Controller;
 
-use FOS\UserBundle\Controller\SecurityController as BaseController;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends BaseController
+class SecurityController extends AbstractController
 {
-    protected function renderLogin(array $data)
+    /**
+     * @Route("/login", name="app_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $template = sprintf('FOSUserBundle:Security:login.html.%s', 'twig');
-        
-        
-        // Images Controller
-        $imgPath = "assets/images/site/loginImages/";
-        $handle  = opendir($imgPath);
-        
-        //On parcoure chaque �l�ment du dossier
-        while ($file = readdir($handle))
-        {
-        	//Si les fichiers sont des images
-        	if(preg_match ("!(\.jpg|\.jpeg|\.gif|\.bmp|\.png)$!i", $file))
-        	{
-        		$listFile[] = $file;
-        	}
-        }
-        
-        shuffle($listFile);
-        $data["images"] = $listFile;
-        $data["imagePath"] = $imgPath;
-        
-        return $this->container->get('templating')->renderResponse($template, $data);
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 }

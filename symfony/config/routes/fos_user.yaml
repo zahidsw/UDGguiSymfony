@@ -1,7 +1,0 @@
-fos_user:
-    prefix: /{_locale}/
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
-#js routing bundle
-fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

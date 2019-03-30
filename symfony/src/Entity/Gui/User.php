@@ -2,119 +2,139 @@
 
 namespace App\Entity\Gui;
 
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
- * @ORM\Entity
- * 
- *
- * @ORM\AttributeOverrides({
- *      @ORM\AttributeOverride(name="salt",
- *          column=@ORM\Column(
- *              name     = "salt",
- *              nullable = true
- *            
- *          )
- *      ),
- *       @ORM\AttributeOverride(name="password",
- *          column=@ORM\Column(
- *              name     = "password",
- *              nullable = true
- *            
- *          )
- *      )
- * 
- * })
  */
-class User extends BaseUser
+class User implements UserInterface
 {
-    	
-	/**
-	 * Constructor
-	 */
-    public function __construct()
-    {
-    	parent::__construct();
-    	$this->locked = false;
-        $this->routes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->expired = false;
-        $this->credentialsExpired = false;
-    }
-    
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(type="integer")
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	protected $id;
-	
-	/**
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $email;
+
+     /**
+     * @ORM\Column(type="string")
+     */
+    private $userName;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
 	 * @ORM\ManyToMany(targetEntity="App\Entity\Gui\Route", cascade={"persist"})
 	 */
     private $routes;
-    
-    /**
-	 *
-	 *
-	 * @ORM\Column(name="locked", type="boolean")
-	 */
-    protected $locked;
 
     /**
-	 *
-	 * @ORM\Column(name="expired", type="boolean")
-	 */
-    protected $expired;
-
-    /**
-	 *
-	 * @ORM\Column(name="credentials_expired", type="boolean")
-	 */
-    protected $credentialsExpired;
-
-    /**
-	 *
-	 * @ORM\Column(name="credentials_expire_at", type="datetime")
-	 */
-    protected $credentialsExpireAt;
-
-    /** @ORM\Column(name="fiware_id", type="string", length=255, nullable=true) */
-    protected $fiware_id;
-
-    /** @ORM\Column(name="fiware_access_token", type="string", length=255, nullable=true) */
-    protected $fiware_access_token;
-
-
-    public function setFiwareId($fiwareId) {
-        $this->fiware_id = $fiwareId;
-
-        return $this;
-    }
-
-    public function getFiwareId() {
-        return $this->fiware_id;
-    }
-
-    public function setFiwareAccessToken($fiwareAccessToken) {
-        $this->fiware_access_token = $fiwareAccessToken;
-
-        return $this;
-    }
-
-    public function getFiwareAccessToken() {
-        return $this->fiware_access_token;
-    }
-    
-    /**
-     * Get id
-     *
-     * @return integer 
+     * @var \DateTime|null
      */
-    public function getId()
+    protected $lastLogin;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+
+
+
+    public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function setUserName(string $userName): self
+    {
+        $this->userName = $userName;
+
+        return $this;
+    }
+    
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword()
+    {
+        // not needed for apps that do not check user passwords
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed for apps that do not check user passwords
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     /**
@@ -149,77 +169,75 @@ class User extends BaseUser
     {
         return $this->routes;
     }
-    
-    public static function cmp_username(User $a, User $b)
+
+     /**
+     * {@inheritdoc}
+     */
+    public function serialize()
     {
-    	if ($a->getUsername() == $b->getUsername()) {
-    		return 0;
-    	}
-    	return ($a->getUsername() < $b->getUsername()) ? -1 : 1;
+        return serialize(array(
+            $this->password,
+            $this->salt,
+            $this->usernameCanonical,
+            $this->username,
+            $this->enabled,
+            $this->id,
+            $this->email,
+            $this->emailCanonical,
+        ));
     }
-
-    public function setLocked($boolean)
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized)
     {
-        $this->locked = $boolean;
-
-        return $this;
-    }
-
-    public function isAccountNonLocked()
-    {
-        return !$this->locked;
-    }
-
-    public function isLocked()
-    {
-        return !$this->isAccountNonLocked();
+        $data = unserialize($serialized);
+        if (13 === count($data)) {
+            // Unserializing a User object from 1.3.x
+            unset($data[4], $data[5], $data[6], $data[9], $data[10]);
+            $data = array_values($data);
+        } elseif (11 === count($data)) {
+            // Unserializing a User from a dev version somewhere between 2.0-alpha3 and 2.0-beta1
+            unset($data[4], $data[7], $data[8]);
+            $data = array_values($data);
+        }
+        list(
+            $this->password,
+            $this->salt,
+            $this->usernameCanonical,
+            $this->username,
+            $this->enabled,
+            $this->id,
+            $this->email,
+            $this->emailCanonical
+        ) = $data;
     }
 
     /**
-     * Sets this user to expired.
+     * Gets the last login time.
      *
-     * @param Boolean $boolean
-     *
-     * @return User
+     * @return \DateTime|null
      */
-    public function setExpired($boolean)
+    public function getLastLogin()
     {
-        $this->expired = (Boolean) $boolean;
+        return $this->lastLogin;
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setEnabled($boolean)
+    {
+        $this->enabled = (bool) $boolean;
         return $this;
     }
 
-    public function isExpired()
+    public function isEnabled()
     {
-        return !$this->isAccountNonExpired();
+        return $this->enabled;
     }
 
-    public function isCredentialsNonExpired()
-    {
-        if (true === $this->credentialsExpired) {
-            return false;
-        }
-
-        if (null !== $this->credentialsExpireAt && $this->credentialsExpireAt->getTimestamp() < time()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isCredentialsExpired()
-    {
-        return !$this->isCredentialsNonExpired();
-    }
-
-    public function setCredentialsExpired($boolean)
-    {
-        $this->credentialsExpired = $boolean;
-
-        return $this;
-    }
-
-
+  
 
 
 }

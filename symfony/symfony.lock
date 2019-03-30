@@ -86,21 +86,6 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
-    "friendsofsymfony/jsrouting-bundle": {
-        "version": "2.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "2.3",
-            "ref": "a9f2e49180f75cdc71ae279a929c4b2e0638de84"
-        },
-        "files": [
-            "config/routes/fos_js_routing.yaml"
-        ]
-    },
-    "friendsofsymfony/user-bundle": {
-        "version": "v2.1.2"
-    },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
     },
@@ -109,19 +94,6 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.5.2"
-    },
-    "hwi/oauth-bundle": {
-        "version": "0.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "0.6",
-            "ref": "20cacc9b2da49d96ea55c8a8dd31324c5be88bc9"
-        },
-        "files": [
-            "config/packages/hwi_oauth.yaml",
-            "config/routes/hwi_oauth_routing.yaml"
-        ]
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
@@ -137,9 +109,6 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
-    },
-    "php-http/cache-plugin": {
-        "version": "1.6.0"
     },
     "php-http/client-common": {
         "version": "1.9.1"
@@ -445,7 +414,7 @@
         }
     },
     "symfony/templating": {
-        "version": "v4.2.3"
+        "version": "v4.2.4"
     },
     "symfony/test-pack": {
         "version": "v1.0.5"
@@ -515,9 +484,6 @@
     },
     "webmozart/assert": {
         "version": "1.4.0"
-    },
-    "willdurand/jsonp-callback-validator": {
-        "version": "v1.1.0"
     },
     "zendframework/zend-code": {
         "version": "3.3.1"

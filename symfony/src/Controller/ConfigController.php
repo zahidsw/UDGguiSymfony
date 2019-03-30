@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use FOS\UserBundle\Doctrine\UserManager;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Service\KeyRockAPI;
 
 
@@ -46,13 +46,12 @@ class ConfigController extends AbstractController
 {
 	private $translator;
 	private $encoderFactory;
-	private $userManager;
+	
 
-    public function __construct(DataCollectorTranslator $translator, EncoderFactory $encoderFactory, UserManager $userManager,KeyRockAPI $keyRockAPI)
+    public function __construct(DataCollectorTranslator $translator, EncoderFactory $encoderFactory,KeyRockAPI $keyRockAPI)
     {
 		$this->translator = $translator;
 		$this->encoderFactory = $encoderFactory;
-		$this->userManager = $userManager;
 		$keyRockAPI->setAuthToken('275e4067-5f87-4b55-a3c2-15a9b1e86eb6');// to get for the current user
 		$keyRockAPI->setApplicationId('2c87dae1-8c6c-48e5-a319-ba35388df068'); // to get from configuration
 	}
@@ -1207,12 +1206,10 @@ class ConfigController extends AbstractController
 	
 	public function users()
 	{
-		$userManager = $this->userManager;
-			
-		$users = $userManager->findUsers();
 		
-		usort($users, array("App\Entity\Gui\User", "cmp_username"));
-			
+		$em_gui = $this->getDoctrine()->getManager("gui");
+		$users = $em_gui->getRepository("App\Entity\Gui\User")->findAll();	
+		// usort($users, array("App\Entity\Gui\User", "cmp_username"));			
 		$data["users"] = $users;
 		
 		return $this->render('config/users.html.twig', $data);
@@ -1285,18 +1282,20 @@ class ConfigController extends AbstractController
 
 							if($statusCodeAssignRole == '201')
 							{
-								$userManager = $this->userManager;
-								$user = $userManager->createUser();
-								$user->setUsername($username);
+								$entityManager = $this->getDoctrine()->getManager("gui");
+								$user = new User();
+								$user->setUserName($email);
 								$user->setEmail($email);
 								$user->setEnabled( (!is_null($isActive)) ? true : false );
-								$user->setFiwareId($userFiwareId);
+								//$user->setFiwareId($userFiwareId);
 		
 								foreach ($roles as $roleId) {
 									$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-									$user->addRole($role->getName());
+									//$user->setRoles($role->getName());
 								}
-								$userManager->updateUser($user);
+								
+								$entityManager->persist($user);
+								$entityManager->flush();
 								$this->setMessage('ok', 'conf.ok.added_user');
 								return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
 							}

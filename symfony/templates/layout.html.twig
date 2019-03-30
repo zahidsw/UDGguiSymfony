@@ -8,9 +8,6 @@
 		<link rel="shortcut icon" href="{{ asset('favicon.png') }}">
 		<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('assets/css/main.css') }}">
 		
-		<script src="{{ asset('assets/bundles/fosjsrouting/js/router.js') }}"></script>
-		<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 		
 		<style>
@@ -30,7 +27,7 @@
 			
 				<div id="login">
 					{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-						<br/><br/>{{ 'login.connectedAs'|trans }} {{ app.user.username }} - <a href="{{ path('fos_user_security_logout') }}">{{ 'login.logout'|trans }}</a>
+						<br/><br/>{{ 'login.connectedAs'|trans }} {{ app.user.username }} - <a href="{{ path('app_login') }}">{{ 'login.logout'|trans }}</a>
 					{% endif %}
 				</div>
 			

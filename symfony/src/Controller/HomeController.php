@@ -28,8 +28,6 @@ class HomeController extends AbstractController
     	//phpinfo();
     	$em_gui = $this->getDoctrine()->getManager("gui");
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
-		//var_dump($this->container->get('security.token_storage')->getToken()->getUser());die;
-		//var_dump($user = $this->getUser());die;
     	$idUser = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
     	$currentUser = $em_gui->getRepository('App\Entity\Gui\User')->find($idUser);
 

@@ -1,92 +1,63 @@
-
-
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
-
-    role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+        # Our user class and the algorithm we'll use to encode passwords
+        # https://symfony.com/doc/current/security.html#c-encoding-the-user-s-password
+        App\Entity\User: bcrypt
 
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+        # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+        # In this example, users are stored via Doctrine in the database
+        # To see the users at src/App/DataFixtures/ORM/LoadFixtures.php
+        # To load users from somewhere else: https://symfony.com/doc/current/security/custom_provider.html
+        # database_users:
+        #     entity: { class: App\Entity\User, property: username }
+        app_user_provider:
+            entity:
+                class: App\Entity\Gui\User
+                property: email
 
+    # https://symfony.com/doc/current/security.html#initial-security-yml-setup-authentication
     firewalls:
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-            
-        # main_login:
-        #     pattern:   ^/(fr|en|zh)/login$
-        #     anonymous: true
-            
-        # main:
-        #     pattern: ^/
-        #     form_login:
-        #         login_path: /en/login
-        #         provider: fos_userbundle
-        #         csrf_token_generator: security.csrf.token_manager
-        #         check_path: fos_user_security_check
-        #         default_target_path: iot6_HomeBundle
-        #     logout:
-        #         path:   fos_user_security_logout
-        #         target: fos_user_security_login
-        #     anonymous:    true
 
-        secured_area:
-            anonymous: ~
+        main:
+            # this firewall applies to all URLs
             pattern: ^/
+
+            # but the firewall does not require login on every page
+            # denying access is done in access_control or in your controllers
+            anonymous: true
+
+            # This allows the user to login by submitting a username and password
+            # Reference: https://symfony.com/doc/current/security/form_login_setup.html
             form_login:
-                provider: fos_userbundle
-                # csrf_provider: form.csrf_provider
-                login_path: /login
-                # check_path: /login_check
+                # The route name that the login form submits to
+                check_path: security_login
+                # The name of the route where the login form lives
+                # When the user tries to access a protected page, they are redirected here
+                login_path: security_login
+                # Secure the login form against CSRF
+                # Reference: https://symfony.com/doc/current/security/csrf_in_login_form.html
                 csrf_token_generator: security.csrf.token_manager
-                check_path: fos_user_security_check
-                default_target_path: iot6_HomeBundle
-           
+                # The page users are redirect to when there is no previous page stored in the
+                # session (for example when the users access directly to the login page).
+                default_target_path: blog_index
+            guard:
+                authenticators:
+                    - App\Security\AppCustomAuthenticator
 
-
-            oauth:
-                resource_owners:
-                    fiware:        "/login/check-fiware"
-                login_path:        /login
-                use_forward:       false
-                failure_path:      /login
-                
-
-                oauth_user_provider:
-                    service: App\Security\FOSUBUserProvider
-            
             logout:
-                path:   fos_user_security_logout
-                target: fos_user_security_login
-            anonymous:    true
+                # The route name the user can go to in order to logout
+                path: security_logout
+                # The name of the route to redirect to after logging out
+                target: homepage
 
-        login:
-            pattern:  ^/login$
-            security: false
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-       
+        # this is a catch-all for the admin area
+        # additional security lives in the controllers
+        # - { path: '^/(%app_locales%)/admin', roles: ROLE_ADMIN }
 
-    access_denied_url: /logina
-            
-                
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    # access_control:
-    #     - { path: ^/(fr|en|zh)/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    #     - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    #     - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    #     - { path: ^/admin/, role: ROLE_ADMIN }
-    #     - { path: ^/, role: ROLE_USER }
-    #     #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-
-    # access_denied_url: /logina
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
