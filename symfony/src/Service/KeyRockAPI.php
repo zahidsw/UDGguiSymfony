@@ -55,6 +55,11 @@ class KeyRockAPI
         $request = $this->messageFactory->createRequest('POST', $this->baseUrl . '/v1/users', $headers, json_encode($body));
         $response = $this->httpMethodsClient->sendRequest($request);
 
+        if($response->getStatusCode() != "201"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
         return $response;
     }
 
@@ -65,6 +70,11 @@ class KeyRockAPI
         $request = $this->messageFactory->createRequest('GET', $this->baseUrl . '/v1/users', $headers);
         $response = $this->httpMethodsClient->sendRequest($request);
 
+        if($response->getStatusCode() != "200"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
         return $response;
     }
 
@@ -74,39 +84,81 @@ class KeyRockAPI
         $request = $this->messageFactory->createRequest('DELETE', $this->baseUrl . '/v1/users/' . $userId, $headers);
         $response = $this->httpMethodsClient->sendRequest($request);
 
+        if($response->getStatusCode() != "204"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
         return $response;
     }
 
-    public function assignRole(String $userId, String $roleId):object
+    
+
+    public function createToken(String $email, String $password):object
     {
-       
-        $url = $this->baseUrl . '/v1/applications/' . $this->applicationId . '/users/' . $userId . '/roles/' . $roleId;
+        $body  = array (
+                'name' => $email,
+                'password' => $password
+        );
+           
+        $headers = ['Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('POST', $this->baseUrl . '/v1/auth/tokens/', $headers, json_encode($body));
+        $response = $this->httpMethodsClient->sendRequest($request);
+
+        if($response->getStatusCode() != "201"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
+        return $response;
+    }
+
+    public function getOrganizations():object
+    {
+        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('GET', $this->baseUrl . '/v1/organizations', $headers);
+        $response = $this->httpMethodsClient->sendRequest($request);
+
+        if($response->getStatusCode() != "201"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
+        return $response;
+    }
+
+    public function addUserToOrganization(String $userId, String $organizationId, String $roleId)
+    {
+        // v1/organizations/organization_id/users/user_id/organization_roles/organization_role_id
+
+        $url = $this->baseUrl . '/v1/organizations/' . $organizationId . '/users/' . $userId . '/organization_roles/' . $roleId;
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
         $request = $this->messageFactory->createRequest('POST', $url, $headers);
         $response = $this->httpMethodsClient->sendRequest($request);
+
+        if($response->getStatusCode() != "201"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
         
         return $response;
     }
 
-    public function getRoleId(String $roleName): String
+    public function removeUserFromOrganization(String $userId, String $organizationId, String $roleId): object
     {
-        
-        $url = $this->baseUrl . '/v1/applications/' . $this->applicationId .'/roles';
+        //v1/organizations/organization_id/users/user_id/organization_roles/organization_role_id
+        $url = $this->baseUrl . '/v1/organizations/' . $organizationId . '/users/' . $userId . '/organization_roles/' . $roleId;
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
-        $request = $this->messageFactory->createRequest('GET', $url, $headers);
+        $request = $this->messageFactory->createRequest('DELETE', $url, $headers);
         $response = $this->httpMethodsClient->sendRequest($request);
 
-        $roles = (string)$response->getBody();
-        $roles = json_decode($roles,TRUE);
-
-        foreach($roles['roles'] as $key=>$role){
-            if(strtolower($role['name']) == strtolower($roleName)) return $role['id'];
+        if($response->getStatusCode() != "204"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
         }
-        
-        return false;
+
+        return $response;
     }
-
-
 
 
 }

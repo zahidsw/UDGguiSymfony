@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    keyrock.app.id: '%env(KEYROCK_APP_ID)%'
+    keyrock.admin.user: '%env(KEYROCK_ADMIN_USER)%'
+    keyrock.admin.password: '%env(KEYROCK_ADMIN_PASSWORD)%'
 
 services:
     # default configuration for services in *this* file
@@ -43,6 +46,8 @@ services:
     #     arguments: ['@fos_user.user_manager',{fiware: fiware_id}] 
 
     Http\Client\Common\HttpMethodsClient: '@httplug.client.app.http_methods'
+
+    
 
 
     

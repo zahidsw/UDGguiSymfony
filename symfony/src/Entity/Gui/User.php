@@ -48,7 +48,39 @@ class User implements UserInterface
      */
     protected $enabled;
 
+     /**
+     * @ORM\Column(type="string")
+     */
+    private $subjectToken;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $keyrockId;
+
+    public function getKeyrockId(): ?String
+    {
+        return $this->keyrockId;
+    }
+
+    public function setKeyrockId(String $keyrockId): self
+    {
+        $this->keyrockId = $keyrockId;
+
+        return $this;
+    }
+
+    public function getSubjectToken(): ?String
+    {
+        return $this->subjectToken;
+    }
+
+    public function setSubjectToken(String $subjectToken): self
+    {
+        $this->subjectToken = $subjectToken;
+
+        return $this;
+    }
 
 
     public function getId(): ?int
@@ -237,6 +269,11 @@ class User implements UserInterface
         return $this->enabled;
     }
 
+    
+   public function __toString()
+   {
+      return strval( $this->getId() );
+   }
   
 
 

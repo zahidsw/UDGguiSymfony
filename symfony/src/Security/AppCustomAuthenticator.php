@@ -17,6 +17,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use App\Service\KeyRockAPI;
 
 class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
 {
@@ -25,13 +26,15 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
     private $entityManager;
     private $urlGenerator;
     private $csrfTokenManager;
+    private $keyRockAPI;
     
 
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager)
+    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager,KeyRockAPI $keyRockAPI)
     {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
+        $this->keyRockAPI = $keyRockAPI;
     }
 
     public function supports(Request $request)
@@ -62,15 +65,9 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();
         }
-        /**this line must be used because in registration I store user email */
+        
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
         
-        /**only for testing */
-        // $user = new User();
-        // $user->setId(100);
-        // $user->setEmail('as@mail.com');
-        // $user->setEmail('as@mail.com');
-
         if (!$user) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
@@ -83,19 +80,23 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
     {
         // Check the user's password or other credentials and return true or false
         // If there are no credentials to check, you can just return true
+        try {
+            $response = $this->keyRockAPI->createToken($credentials['email'],$credentials['password']);
+        } catch (\Exception $e){
+             throw new CustomUserMessageAuthenticationException($e->getMessage());
+        }
+
+        $headers = $response->getHeaders();
+        $user->setSubjectToken($headers['X-Subject-Token'][0]);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush($user);
+
         return true;
-        throw new \Exception('TODO: check the credentials inside '.__FILE__);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         return null;
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            return new RedirectResponse($targetPath);
-        }
-
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()
