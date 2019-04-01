@@ -92,6 +92,21 @@ class KeyRockAPI
         return $response;
     }
 
+    public function updateUser(String $userId): object
+    {
+        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('PATCH', $this->baseUrl . '/v1/users/' . $userId, $headers);
+        $response = $this->httpMethodsClient->sendRequest($request);
+        dd($response);
+
+        if($response->getStatusCode() != "204"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
+        return $response;
+    }
+
     
 
     public function createToken(String $email, String $password):object

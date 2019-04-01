@@ -1365,8 +1365,31 @@ class ConfigController extends AbstractController
 		}
 	}
 
+	public function userUdgGuiExists(String $email)
+	{
+		$em_gui = $this->getDoctrine()->getManager("gui");
+		$user = $em_gui->getRepository('App\Entity\Gui\User')->findOneBy(['email' => $email]);
+
+		return $user;
+	}
+
 	public function usersAdd(Request $request)
 	{
+		$em_gui = $this->getDoctrine()->getManager("gui");
+		$roles = $em_gui->getRepository('App\Entity\Gui\Role')->findAll();
+	
+		
+		$roleSources = array();
+		
+		for($i=count($roles)-1; $i>0; $i--) 
+		{
+			if($roles[$i]->getId() != 1) 
+			{
+				array_unshift($roleSources, array_pop($roles));
+			}
+		}
+
+		
 		if ($request->getMethod() == 'POST' && $request->get('send'))
 		{
 			$username	= $request->get('username');
@@ -1391,7 +1414,8 @@ class ConfigController extends AbstractController
 			try {
 
 				$keyrockUser = $this->userKeyRockExists($email);
-				if(!$keyrockUser){
+				if(!$keyrockUser)
+				{
 					//impersonate admin user in order to create a new user
 					$response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
 					$headers = $response->getHeaders();
@@ -1401,7 +1425,8 @@ class ConfigController extends AbstractController
 					$newUser = (string)$response->getBody();
 					$newUser =json_decode($newUser,true);
 					$newUserKeyrockId = $newUser['user']['id'];
-				} else {
+				} else 
+				{
 					$newUserKeyrockId = $keyrockUser['id'];
 				}
 				
@@ -1417,23 +1442,48 @@ class ConfigController extends AbstractController
 			
 				foreach($organizations['organizations'] as $organization)
 				{
-						if($organization['Organization']['name'] == $cityAdministred){
+						if($organization['Organization']['name'] == $cityAdministred)
+						{
 							$organizationId = $organization['Organization']['id'];
 						}
 				}
 
-				$newUserRole = 'member'; // to get from dropdown menu for roles
+				$newUserRole = 'member';
+
+				foreach ($roles as $roleId) 
+				{
+					$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
+					if($role->getName() == "ROLE_CITY_ADMIN")
+					{
+						$newUserRole = 'owner';
+					}
+				}
+
+				 // to get from dropdown menu for roles
 				$this->keyRockAPI->addUserToOrganization($newUserKeyrockId, $organizationId, $newUserRole);
 
-				// create the user in udg gui db
-				$entityManager = $this->getDoctrine()->getManager("gui");
-				$user = new User();
-				$user->setUserName($email);
-				$user->setEmail($email);
-				$user->setEnabled( (!is_null($isActive)) ? true : false );
-				$user->setKeyrockId($newUserKeyrockId);
-				$entityManager->persist($user);
-				$entityManager->flush();
+
+				$userUdg = $this->userUdgGuiExists($email);
+				if(!$userUdg)
+				{
+					// create the user in udg gui db
+					$entityManager = $this->getDoctrine()->getManager("gui");
+					$user = new User();
+					$user->setUserName($email);
+					$user->setEmail($email);
+					$user->setEnabled( (!is_null($isActive)) ? true : false );
+					$user->setKeyrockId($newUserKeyrockId);
+					foreach ($roles as $roleId) 
+					{
+						$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
+						$user->addRole($role->getName());
+					}
+	
+					$entityManager->persist($user);
+					$entityManager->flush();
+
+				} 
+
 				$this->setMessage('ok', 'conf.ok.added_user');
 				return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
 
@@ -1442,40 +1492,26 @@ class ConfigController extends AbstractController
 				$referer = $request->headers->get('referer');
 				return $this->redirect($referer);
 			}
-
-
-
 		}
 
-		$em_gui = $this->getDoctrine()->getManager("gui");
-		$roles = $em_gui->getRepository('App\Entity\Gui\Role')->findAll();
 		
-		$roleSources = array();
-		
-		for($i=count($roles)-1; $i>0; $i--) 
-		{
-			if($roles[$i]->getId() != 1) 
-			{
-				array_unshift($roleSources, array_pop($roles));
-			}
-		}
-
-
 		$data['rolesSource'] = $roleSources;
 		$data['rolesDestination'] = $roles;
 		
 		return $this->render('config/usersAdd.html.twig', $data);
 
+	}
+	
+	public function usersEdit(User $user,Request $request)
+	{
+
+		// $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
+		// $headers = $response->getHeaders();
+		// $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
+		// $this->keyRockAPI->updateUser($user->getKeyrockId());
 
 
 		
-
-
-
-	}
-	
-	public function usersEdit(User $user)
-	{
 		$error = null;
 		
 		$em_gui = $this->getDoctrine()->getManager("gui");
@@ -1492,7 +1528,6 @@ class ConfigController extends AbstractController
 				}
 		}
 		
-		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST')
 		{
 			if($request->get('send'))
@@ -1505,16 +1540,23 @@ class ConfigController extends AbstractController
 				$roles 		= $this->getRequest()->request->get('roles');
 		
 				// identical pwd
-				if($pass == $conf) {
+				if($pass == $conf) 
+				{
 					$userManager = $this->get('fos_user.user_manager');
 					
 					$user->setUsername($username);
 					$user->setEmail($email);
 					$user->setEnabled( (!is_null($isActive)) ? true : false );
+
+					$response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
+					$headers = $response->getHeaders();
+					$this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
+
+					$this->keyRockAPI->updateUser($user->getKeyrockId(),$username,$email,$pass);
 					
-					if($pass != 'password') {
-						$user->setPlainPassword($pass);
-					}
+					// if($pass != 'password') {
+					// 	$user->setPlainPassword($pass);
+					// }
 					
 					$roleNames = array();
 					

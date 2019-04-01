@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.accessAndSecurity'|trans }} - {{ 'conf.user_edit'|trans }}
@@ -40,7 +40,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:accessSecurityMenus.html.twig' %}
+	{% include 'config/accessSecurityMenus.html.twig' %}
 	
 	<br/><br/>
 	
@@ -48,7 +48,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	{% include 'config/msg.html.twig' %}
 	
 	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Edit', { id: user.id } ) }}" }}>
 		<table>
