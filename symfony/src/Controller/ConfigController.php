@@ -1147,7 +1147,7 @@ class ConfigController extends AbstractController
 		$user = $this->container->get('security.token_storage')->getToken()->getUser();
 		$form = $this->createForm(ProfilUserType::class, $user);
 		$error = null;
-		
+		// dd($request->get('oldPass'));
 		if ($request->getMethod() == 'POST')
 		{
 			if($request->get('editProfil'))
@@ -1156,6 +1156,14 @@ class ConfigController extends AbstractController
 				
 				if ($form->isValid())
 				{
+
+					// $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
+					// $headers = $response->getHeaders();
+					// $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
+					// $this->keyRockAPI->updateUser($user->getKeyrockId(),$username,$email,$pass);
+
+
+
 					$em_gui = $this->getDoctrine()->getManager("gui");
 					$em_gui->persist($user);
 					$em_gui->flush();
@@ -1206,10 +1214,11 @@ class ConfigController extends AbstractController
 	
 	public function users()
 	{
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		$city = $user->getCity();
+		$users = $city->getUsers();
+		$users = $users->getValues();
 		
-		$em_gui = $this->getDoctrine()->getManager("gui");
-		$users = $em_gui->getRepository("App\Entity\Gui\User")->findAll();	
-		// usort($users, array("App\Entity\Gui\User", "cmp_username"));			
 		$data["users"] = $users;
 		
 		return $this->render('config/users.html.twig', $data);
@@ -1232,114 +1241,6 @@ class ConfigController extends AbstractController
 		return $this->redirect($referer);
 	}
 	
-
-	public function usersAddOld(Request $request)
-	{
-		$this->keyRockAPI->setApplicationId($this->getParameter('keyrock.app.id'));	
-		//$user = $this->container->get('security.token_storage')->getToken()->getUser();
-
-		$response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-
-		$statusCode = $response->getStatusCode();
-
-		if($statusCode == "201"){
-			$headers = $response->getHeaders();
-        	
-		} // to do else but need to be replaced with try and catch
-
-
-
-		$this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);	
-		
-		$em_gui = $this->getDoctrine()->getManager("gui");
-		$roles = $em_gui->getRepository('App\Entity\Gui\Role')->findAll();
-		
-		$roleSources = array();
-		
-		for($i=count($roles)-1; $i>0; $i--) 
-		{
-			if($roles[$i]->getId() != 1) 
-			{
-				array_unshift($roleSources, array_pop($roles));
-			}
-		}
-		
-		if ($request->getMethod() == 'POST')
-		{
-			if($request->get('send'))
-			{
-				$username	= $request->get('username');
-				$email		= $request->get('email');
-				$isActive	= $request->get('isActive');
-				$pass 		= $request->get('pass');
-				$conf 		= $request->get('conf');
-				$roles 		= $request->get('roles');
-
-				
-				// identical pwd
-				if($pass == $conf) 
-				{
-					
-					$response = $this->keyRockAPI->registerUser($username,$email,$pass);
-					dd($response);
-					$statusCodeRegister = $response->getStatusCode();
-
-					if($statusCodeRegister == "201")
-					{
-						$user = (string)$response->getBody();
-						$user =json_decode($user,true);
-						$roleId = $this->keyRockAPI->getRoleId('user');
-
-						if($roleId != false)
-						{
-							$userFiwareId = $user['user']['id'];
-							$response = $this->keyRockAPI->assignRole($userFiwareId,$roleId);
-							$statusCodeAssignRole = $response->getStatusCode();
-
-							if($statusCodeAssignRole == '201')
-							{
-								$entityManager = $this->getDoctrine()->getManager("gui");
-								$user = new User();
-								$user->setUserName($email);
-								$user->setEmail($email);
-								$user->setEnabled( (!is_null($isActive)) ? true : false );
-								//$user->setFiwareId($userFiwareId);
-		
-								foreach ($roles as $roleId) {
-									$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-									//$user->setRoles($role->getName());
-								}
-								
-								$entityManager->persist($user);
-								$entityManager->flush();
-								$this->setMessage('ok', 'conf.ok.added_user');
-								return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
-							}
-						}
-					}
-
-					if($statusCodeRegister != '201' || $roleId == false || $statusCodeAssignRole != '201')
-					{
-						$this->setMessage('ko', 'Somenthing went wrong. Try later!');
-						$referer = $request->headers->get('referer');
-						return $this->redirect($referer);
-					}
-				}
-				else 
-				{
-					$this->setMessage('ko', 'conf.ko.not_identical_pwd');
-					
-					$referer = $request->headers->get('referer');
-					return $this->redirect($referer);
-				}
-			}
-		}
-		
-		$data['rolesSource'] = $roleSources;
-		$data['rolesDestination'] = $roles;
-		
-		return $this->render('config/usersAdd.html.twig', $data);
-	}
 
 	public function userKeyRockExists(String $email)
 	{
@@ -1375,6 +1276,8 @@ class ConfigController extends AbstractController
 
 	public function usersAdd(Request $request)
 	{
+
+		
 		$em_gui = $this->getDoctrine()->getManager("gui");
 		$roles = $em_gui->getRepository('App\Entity\Gui\Role')->findAll();
 	
@@ -1433,7 +1336,8 @@ class ConfigController extends AbstractController
 				
 				// impersonate the logged user (city admin only allowed in this action)
 				$user = $this->container->get('security.token_storage')->getToken()->getUser();
-				$cityAdministred = 'Bern'; // to get from db name or id
+				$city = $user->getCity();
+				$user = $this->container->get('security.token_storage')->getToken()->getUser();
 				$this->keyRockAPI->setAuthToken($user->getSubjectToken());
 				$response = $this->keyRockAPI->getOrganizations();
 				$organizations = (string)$response->getBody();
@@ -1442,7 +1346,7 @@ class ConfigController extends AbstractController
 			
 				foreach($organizations['organizations'] as $organization)
 				{
-						if($organization['Organization']['name'] == $cityAdministred)
+						if($organization['Organization']['name'] == $city->getName())
 						{
 							$organizationId = $organization['Organization']['id'];
 						}
@@ -1459,7 +1363,7 @@ class ConfigController extends AbstractController
 					}
 				}
 
-				 // to get from dropdown menu for roles
+				
 				$this->keyRockAPI->addUserToOrganization($newUserKeyrockId, $organizationId, $newUserRole);
 
 
@@ -1473,6 +1377,7 @@ class ConfigController extends AbstractController
 					$user->setEmail($email);
 					$user->setEnabled( (!is_null($isActive)) ? true : false );
 					$user->setKeyrockId($newUserKeyrockId);
+					$user->setCity($city);
 					foreach ($roles as $roleId) 
 					{
 						$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
@@ -1505,13 +1410,6 @@ class ConfigController extends AbstractController
 	public function usersEdit(User $user,Request $request)
 	{
 
-		// $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-		// $headers = $response->getHeaders();
-		// $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
-		// $this->keyRockAPI->updateUser($user->getKeyrockId());
-
-
-		
 		$error = null;
 		
 		$em_gui = $this->getDoctrine()->getManager("gui");
@@ -1532,50 +1430,81 @@ class ConfigController extends AbstractController
 		{
 			if($request->get('send'))
 			{
-				$username	= $this->getRequest()->request->get('username');
-				$email		= $this->getRequest()->request->get('email');
-				$isActive	= $this->getRequest()->request->get('isActive');
-				$pass 		= $this->getRequest()->request->get('pass');
-				$conf 		= $this->getRequest()->request->get('conf');
-				$roles 		= $this->getRequest()->request->get('roles');
+				$username	= $request->get('username');
+				$email		= $request->get('email');
+				$isActive	= $request->get('isActive');
+				$pass 		= $request->get('pass');
+				$conf 		= $request->get('conf');
+				$roles 		= $request->get('roles');
 		
 				// identical pwd
 				if($pass == $conf) 
 				{
-					$userManager = $this->get('fos_user.user_manager');
-					
-					$user->setUsername($username);
-					$user->setEmail($email);
-					$user->setEnabled( (!is_null($isActive)) ? true : false );
+					try {
 
-					$response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-					$headers = $response->getHeaders();
-					$this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
+						$response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
+						$headers = $response->getHeaders();
+						$this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
+						$this->keyRockAPI->updateUser($user->getKeyrockId(),$username,$email,$pass);
 
-					$this->keyRockAPI->updateUser($user->getKeyrockId(),$username,$email,$pass);
+						// impersonate the logged user (city admin only allowed in this action)
+						$userLogged = $this->container->get('security.token_storage')->getToken()->getUser();
+						$city = $userLogged->getCity();
+						$this->keyRockAPI->setAuthToken($userLogged->getSubjectToken());
+						$response = $this->keyRockAPI->getOrganizations();
+						$organizations = (string)$response->getBody();
+						$organizations =json_decode($organizations,true);
+						
 					
-					// if($pass != 'password') {
-					// 	$user->setPlainPassword($pass);
-					// }
-					
-					$roleNames = array();
-					
-					foreach ($roles as $roleId) {
-						$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-						array_push($roleNames, $role->getName());
+						foreach($organizations['organizations'] as $organization)
+						{
+								if($organization['Organization']['name'] == $city->getName())
+								{
+									$organizationId = $organization['Organization']['id'];
+								}
+						}
+
+						$newUserRole = 'member';
+
+						foreach ($roles as $roleId) 
+						{
+							$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
+							if($role->getName() == "ROLE_CITY_ADMIN")
+							{
+								$newUserRole = 'owner';
+							}
+						}
+						
+						$this->keyRockAPI->addUserToOrganization($user->getKeyrockId(), $organizationId, $newUserRole);
+						$entityManager = $this->getDoctrine()->getManager("gui");
+						$user->setUsername($username);
+						$user->setEmail($email);
+						$user->setEnabled( (!is_null($isActive)) ? true : false );
+						$user->resetRole();
+
+						foreach ($roles as $roleId) 
+						{
+							$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
+							$user->addRole($role->getName());
+						}
+						
+						$entityManager->persist($user);
+						$entityManager->flush();
+						
+						$this->setMessage('ok', 'conf.ok.edited_user');
+							
+						return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
+
+					} catch (\Exception $e)
+					{
+						$this->setMessage('ko', $e->getMessage());
+						$referer = $request->headers->get('referer');
+						return $this->redirect($referer);
 					}
-					
-					$user->setRoles($roleNames);
-						
-					$userManager->updateUser($user);
-					
-					$this->setMessage('ok', 'conf.ok.edited_user');
-						
-					return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
+
 				}
 				else {
 					$this->setMessage('ko', 'conf.ko.not_identical_pwd');
-					
 					$referer = $this->getRequest()->headers->get('referer');
 					return $this->redirect($referer);
 				}
@@ -1594,22 +1523,33 @@ class ConfigController extends AbstractController
 		try {
 			// impersonate the logged user (city admin only allowed in this action)
 			$userLogged = $this->container->get('security.token_storage')->getToken()->getUser();
-			$cityAdministred = 'Bern'; // to get from db name or id
+			$city = $userLogged->getCity();
 			$this->keyRockAPI->setAuthToken($userLogged->getSubjectToken());
 
 			$response = $this->keyRockAPI->getOrganizations();
 			$organizations = (string)$response->getBody();
 			$organizations =json_decode($organizations,true);
 			
+			
 		
 			foreach($organizations['organizations'] as $organization)
 			{
-					if($organization['Organization']['name'] == $cityAdministred){
+					if($organization['Organization']['name'] == $city->getName()){
 						$organizationId = $organization['Organization']['id'];
 					}
 			}
 
-			$userToDeleteRole = 'member'; // to get from user role
+			$roles = $user->getRoles();
+			$userToDeleteRole = 'member'; 
+
+			foreach ($roles as $role) 
+			{
+				if($role == "ROLE_CITY_ADMIN")
+				{
+					$userToDeleteRole = 'owner';
+				}
+			}
+
 			$response = $this->keyRockAPI->removeUserFromOrganization($user->getKeyrockId(),$organizationId,$userToDeleteRole);
 			$entityManager = $this->getDoctrine()->getManager("gui");
 			$entityManager->remove($user);

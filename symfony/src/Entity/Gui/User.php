@@ -58,6 +58,26 @@ class User implements UserInterface
      */
     private $keyrockId;
 
+
+     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Gui\City", inversedBy="Users")
+     */
+    private $city;
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+
+
     public function getKeyrockId(): ?String
     {
         return $this->keyrockId;
@@ -141,6 +161,12 @@ class User implements UserInterface
         array_push($this->roles,$roles);
         // $this->roles = $roles;
 
+        return $this;
+    }
+
+    public function resetRole(): self
+    {
+        $this->roles = [];
         return $this;
     }
 

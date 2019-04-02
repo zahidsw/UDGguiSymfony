@@ -92,14 +92,23 @@ class KeyRockAPI
         return $response;
     }
 
-    public function updateUser(String $userId): object
+    public function updateUser(String $userId,String $userName, String $email, String $password): object
     {
-        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
-        $request = $this->messageFactory->createRequest('PATCH', $this->baseUrl . '/v1/users/' . $userId, $headers);
-        $response = $this->httpMethodsClient->sendRequest($request);
-        dd($response);
+        $body = array (
+            'user' => 
+                array (
+                'username' => $userName,
+                'email' => $email,
+                'password' => $password
+                ),
+            );
 
-        if($response->getStatusCode() != "204"){
+            
+        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('PATCH', $this->baseUrl . '/v1/users/' . $userId, $headers, json_encode($body));
+        $response = $this->httpMethodsClient->sendRequest($request);
+        
+        if($response->getStatusCode() != "200"){
             $message = (string)$response->getBody();
             throw new \Exception($message);
         }
@@ -144,8 +153,7 @@ class KeyRockAPI
 
     public function addUserToOrganization(String $userId, String $organizationId, String $roleId)
     {
-        // v1/organizations/organization_id/users/user_id/organization_roles/organization_role_id
-
+        
         $url = $this->baseUrl . '/v1/organizations/' . $organizationId . '/users/' . $userId . '/organization_roles/' . $roleId;
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
         $request = $this->messageFactory->createRequest('POST', $url, $headers);
@@ -161,7 +169,6 @@ class KeyRockAPI
 
     public function removeUserFromOrganization(String $userId, String $organizationId, String $roleId): object
     {
-        //v1/organizations/organization_id/users/user_id/organization_roles/organization_role_id
         $url = $this->baseUrl . '/v1/organizations/' . $organizationId . '/users/' . $userId . '/organization_roles/' . $roleId;
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
         $request = $this->messageFactory->createRequest('DELETE', $url, $headers);
