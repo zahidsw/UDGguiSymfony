@@ -2,6 +2,9 @@
 
 namespace App\Entity\Gui;
 
+use App\Entity\Gui\Purchase;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -49,7 +52,7 @@ class User implements UserInterface
     protected $enabled;
 
      /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",nullable=true)
      */
     private $subjectToken;
 
@@ -63,6 +66,19 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\Gui\City", inversedBy="Users")
      */
     private $city;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Gui\Purchase", mappedBy="user")
+     */
+    private $purchases;
+
+
+ 
+    public function __construct()
+    {
+        $this->purchases = new ArrayCollection();
+    }
+
 
     public function getCity(): ?City
     {
@@ -299,6 +315,37 @@ class User implements UserInterface
    public function __toString()
    {
       return strval( $this->getId() );
+   }
+
+   /**
+    * @return Collection|Purchase[]
+    */
+   public function getPurchases(): Collection
+   {
+       return $this->purchases;
+   }
+
+   public function addPurchase(Purchase $purchase): self
+   {
+       if (!$this->purchases->contains($purchase)) {
+           $this->purchases[] = $purchase;
+           $purchase->setUser($this);
+       }
+
+       return $this;
+   }
+
+   public function removePurchase(Purchase $purchase): self
+   {
+       if ($this->purchases->contains($purchase)) {
+           $this->purchases->removeElement($purchase);
+           // set the owning side to null (unless already changed)
+           if ($purchase->getUser() === $this) {
+               $purchase->setUser(null);
+           }
+       }
+
+       return $this;
    }
   
 
