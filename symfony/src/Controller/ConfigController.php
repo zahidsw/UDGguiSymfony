@@ -1144,10 +1144,12 @@ class ConfigController extends AbstractController
 	
 	public function profil(Request $request)
 	{
+
 		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+
 		$form = $this->createForm(ProfilUserType::class, $user);
 		$error = null;
-		// dd($request->get('oldPass'));
+		
 		if ($request->getMethod() == 'POST')
 		{
 			if($request->get('editProfil'))
@@ -1209,12 +1211,14 @@ class ConfigController extends AbstractController
 		$data['form'] = $form->createView();
 		$data["user"] = $user;
 		
+	
 		return $this->render('config/profil.html.twig', $data);
 	}
 	
-	public function users()
+	public function users(Request $request)
 	{
-		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
+		
 		$city = $user->getCity();
 		$users = $city->getUsers();
 		$users = $users->getValues();
@@ -1276,8 +1280,8 @@ class ConfigController extends AbstractController
 
 	public function usersAdd(Request $request)
 	{
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-		
 		$em_gui = $this->getDoctrine()->getManager("gui");
 		$roles = $em_gui->getRepository('App\Entity\Gui\Role')->findAll();
 	
@@ -1409,6 +1413,7 @@ class ConfigController extends AbstractController
 	
 	public function usersEdit(User $user,Request $request)
 	{
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
 
 		$error = null;
 		
@@ -1520,6 +1525,8 @@ class ConfigController extends AbstractController
 	
 	public function usersDelete(User $user, Request $request)
 	{
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
+
 		try {
 			// impersonate the logged user (city admin only allowed in this action)
 			$userLogged = $this->container->get('security.token_storage')->getToken()->getUser();

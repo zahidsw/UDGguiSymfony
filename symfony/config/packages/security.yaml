@@ -37,7 +37,7 @@ security:
                 check_path: security_login
                 # The name of the route where the login form lives
                 # When the user tries to access a protected page, they are redirected here
-                login_path: security_login
+                login_path: login
                 # Secure the login form against CSRF
                 # Reference: https://symfony.com/doc/current/security/csrf_in_login_form.html
                 csrf_token_generator: security.csrf.token_manager
@@ -58,6 +58,11 @@ security:
         # this is a catch-all for the admin area
         # additional security lives in the controllers
         # - { path: '^/(%app_locales%)/admin', roles: ROLE_ADMIN }
+        - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/', roles: ROLE_USER }
+
 
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
+
+    access_denied_url: iot6_HomeBundle

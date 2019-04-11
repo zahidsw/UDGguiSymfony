@@ -311,6 +311,12 @@ getDevicesForFamily:
         _format: xml|json 
         _method: GET 
 
+# Variables
+# getVariables:
+#     pattern: /navigator/ajax/getVariables
+#     defaults: { _controller: "iot6NavigatorBundle:Navigator:getVariables", _format: json}
+#     requirements: { _format: (xml|json), _method: GET }
+
 
 #############################################################################
 
