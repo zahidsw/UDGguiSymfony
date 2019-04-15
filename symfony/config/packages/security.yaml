@@ -59,6 +59,7 @@ security:
         # additional security lives in the controllers
         # - { path: '^/(%app_locales%)/admin', roles: ROLE_ADMIN }
         - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/purchase', roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: '^/', roles: ROLE_USER }
 
 
