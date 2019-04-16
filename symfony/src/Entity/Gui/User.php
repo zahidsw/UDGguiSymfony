@@ -51,6 +51,8 @@ class User implements UserInterface
      */
     protected $enabled;
 
+
+
      /**
      * @ORM\Column(type="string",nullable=true)
      */
@@ -72,13 +74,64 @@ class User implements UserInterface
      */
     private $purchases;
 
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    protected $status;
 
- 
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     */
+    protected $accessProfile;
+
+    /**
+     * @ORM\Column(type="string",nullable=true)
+     */
+    private $clientId;
+
+
+        /**
+     * Date/Time of the last activity
+     *
+     * @var \Datetime
+     * @ORM\Column(name="last_activity_at", type="datetime", nullable=true)
+     */
+    protected $lastActivityAt;
+
     public function __construct()
     {
         $this->purchases = new ArrayCollection();
     }
 
+    /**
+     * @param \Datetime $lastActivityAt
+     */
+    public function setLastActivityAt($lastActivityAt)
+    {
+        $this->lastActivityAt = $lastActivityAt;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getLastActivityAt()
+    {
+        return $this->lastActivityAt;
+    }
+
+    /**
+     * @return Bool Whether the user is active or not
+     */
+    public function isActiveNow()
+    {
+        // Delay during wich the user will be considered as still active
+        $delay = new \DateTime('2 minutes ago');
+
+        return ( $this->getLastActivityAt() > $delay );
+    }
+
+
+ 
 
     public function getCity(): ?City
     {

@@ -8,6 +8,7 @@ parameters:
     keyrock.app.id: '%env(KEYROCK_APP_ID)%'
     keyrock.admin.user: '%env(KEYROCK_ADMIN_USER)%'
     keyrock.admin.password: '%env(KEYROCK_ADMIN_PASSWORD)%'
+    session_max_idle_time: 2400 //seconds
 
 services:
     # default configuration for services in *this* file
@@ -47,7 +48,15 @@ services:
 
     Http\Client\Common\HttpMethodsClient: '@httplug.client.app.http_methods'
 
-    
+    App.Handler.SessionIdle:
+        class: App\Security\SessionIdleHandler
+        arguments: ['%session_max_idle_time%']
+        tags: [{ name: kernel.event_listener, event: kernel.request }]
+
+    App.ActivityListener:
+        class: App\EventListener\ActivityListener
+        tags: [{ name: kernel.event_listener, event: kernel.request }]
+            
 
 
     

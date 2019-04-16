@@ -1218,6 +1218,7 @@ class ConfigController extends AbstractController
 	public function users(Request $request)
 	{
 		$this->denyAccessUnlessGranted('ROLE_ADMIN');
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
 		
 		$city = $user->getCity();
 		$users = $city->getUsers();
