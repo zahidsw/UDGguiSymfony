@@ -36,7 +36,7 @@ class Route
     /**
      * @var string
      *
-     * @ORM\Column(name="route", type="string", length=255, unique=true)
+     * @ORM\Column(name="route", type="string", length=190, unique=true)
      */
     private $route;
     
