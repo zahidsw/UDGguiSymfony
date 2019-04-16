@@ -27,7 +27,7 @@ class User implements UserInterface
     private $email;
 
      /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string",length=180)
      */
     private $userName;
 
@@ -54,12 +54,12 @@ class User implements UserInterface
 
 
      /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true, length=180)
      */
     private $subjectToken;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=180)
      */
     private $keyrockId;
 
@@ -85,7 +85,7 @@ class User implements UserInterface
     protected $accessProfile;
 
     /**
-     * @ORM\Column(type="string",nullable=true)
+     * @ORM\Column(type="string",nullable=true, length=180)
      */
     private $clientId;
 
