@@ -22,14 +22,14 @@ class Route
     /**
      * @var string
      *
-     * @ORM\Column(name="display_name", type="string", length=255)
+     * @ORM\Column(name="display_name", type="string", length=190)
      */
     private $displayName;
     
     /**
      * @var string
      *
-     * @ORM\Column(name="bundle_prefix", type="string", length=255)
+     * @ORM\Column(name="bundle_prefix", type="string", length=190)
      */
     private $bundlePrefix;
 
