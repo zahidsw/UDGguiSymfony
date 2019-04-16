@@ -24,7 +24,7 @@ class WebserviceParam
     /**
      * @var string
      *
-     * @ORM\Column(name="param", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="param", type="string", length=190, nullable=false, unique=true)
      */
     private $param;
     
