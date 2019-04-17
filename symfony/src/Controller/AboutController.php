@@ -21,7 +21,7 @@ class AboutController extends AbstractController
 	
     public function aboutPage()
     {
-    	return $this->render('About/about.html.twig');
+    	return $this->render('about/about.html.twig');
     }
     
     public function contact(Request $request)
