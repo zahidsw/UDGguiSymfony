@@ -118,7 +118,7 @@ private function getBackgroundColor()
 	
 		$request = Request::createFromGlobals()->getRequestUri();
 	
-		return $this->render('Menu/SubMenu/subMenu.html.twig',
+		return $this->render('menu/SubMenu/subMenu.html.twig',
 				array('liste_subMenu' => $listeSubMenu, 'route' => $request));
 	}
 	
