@@ -32,9 +32,9 @@ class User implements UserInterface
     private $userName;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="string",length=180)
      */
-    private $roles = [];
+    private $roles;
 
     /**
 	 * @ORM\ManyToMany(targetEntity="App\Entity\Gui\Route", cascade={"persist"})
@@ -219,16 +219,16 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+       
+        $roles = explode(',', $roles);
 
-        return array_unique($roles);
+        return $roles;
     }
 
     public function addRole(String $roles): self
     {
-        array_push($this->roles,$roles);
-        // $this->roles = $roles;
+        
+        $this->roles = $roles;
 
         return $this;
     }

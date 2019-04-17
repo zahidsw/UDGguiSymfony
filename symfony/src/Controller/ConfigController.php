@@ -1342,7 +1342,6 @@ class ConfigController extends AbstractController
 				// impersonate the logged user (city admin only allowed in this action)
 				$user = $this->container->get('security.token_storage')->getToken()->getUser();
 				$city = $user->getCity();
-				$user = $this->container->get('security.token_storage')->getToken()->getUser();
 				$this->keyRockAPI->setAuthToken($user->getSubjectToken());
 				$response = $this->keyRockAPI->getOrganizations();
 				$organizations = (string)$response->getBody();
@@ -1362,7 +1361,7 @@ class ConfigController extends AbstractController
 				foreach ($roles as $roleId) 
 				{
 					$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-					if($role->getName() == "ROLE_CITY_ADMIN")
+					if($role->getName() == "ROLE_ADMIN")
 					{
 						$newUserRole = 'owner';
 					}
@@ -1383,11 +1382,15 @@ class ConfigController extends AbstractController
 					$user->setEnabled( (!is_null($isActive)) ? true : false );
 					$user->setKeyrockId($newUserKeyrockId);
 					$user->setCity($city);
+					$userRole = [];
 					foreach ($roles as $roleId) 
 					{
 						$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-						$user->addRole($role->getName());
+						array_push($userRole,$role->getName());
 					}
+
+					
+					$user->addRole(implode(",",$userRole));
 	
 					$entityManager->persist($user);
 					$entityManager->flush();
@@ -1475,7 +1478,7 @@ class ConfigController extends AbstractController
 						foreach ($roles as $roleId) 
 						{
 							$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-							if($role->getName() == "ROLE_CITY_ADMIN")
+							if($role->getName() == "ROLE_ADMIN")
 							{
 								$newUserRole = 'owner';
 							}
@@ -1488,12 +1491,16 @@ class ConfigController extends AbstractController
 						$user->setEnabled( (!is_null($isActive)) ? true : false );
 						$user->resetRole();
 
+						$userRole = [];
 						foreach ($roles as $roleId) 
 						{
 							$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-							$user->addRole($role->getName());
+							array_push($userRole,$role->getName());
 						}
+
 						
+						$user->addRole(implode(",",$userRole));
+
 						$entityManager->persist($user);
 						$entityManager->flush();
 						
@@ -1552,7 +1559,7 @@ class ConfigController extends AbstractController
 
 			foreach ($roles as $role) 
 			{
-				if($role == "ROLE_CITY_ADMIN")
+				if($role == "ROLE_ADMIN")
 				{
 					$userToDeleteRole = 'owner';
 				}
