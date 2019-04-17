@@ -29,13 +29,6 @@ class Route
     /**
      * @var string
      *
-     * @ORM\Column(name="bundle_prefix", type="string", length=190)
-     */
-    private $bundlePrefix;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="route", type="string", length=190)
      */
     private $route;
@@ -52,6 +45,13 @@ class Route
      * @ORM\JoinColumn(nullable=false)
      */
     private $menu;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bundle_prefix", type="string", length=190)
+     */
+    private $bundlePrefix;
 
     /**
      * Get id
