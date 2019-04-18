@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * EventHasRule
  *
  * @ORM\Table(name="event_has_rule")
+ * @ORM\Entity(repositoryClass="App\Repository\EventHasRuleRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class EventHasRule

@@ -1,4 +1,4 @@
-{% extends "iot6SmartItBundle::layout.html.twig" %}
+{% extends "smartit/layoutScenario.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.smartIt.triggers'|trans }}
@@ -98,8 +98,8 @@
 		
 		<br/>
 		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbTriggersActives,
 				'nbItemPerPage': nbActivesProPage,
@@ -109,7 +109,7 @@
 				'arg': 'pageActive'
 				}
 			)) 
-		%}
+		}}
 		
 		<br/><br/><br/>
 		<h1>{{ 'msg.trigger_inactive'|trans }}</h1>
@@ -183,8 +183,8 @@
 		
 		<br/>
 		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbTriggersInactives,
 				'nbItemPerPage': nbInactivesProPage,
@@ -194,7 +194,7 @@
 				'arg': 'pageInactive'
 				}
 			)) 
-		%}
+		}}
 		
 	</div>
 	

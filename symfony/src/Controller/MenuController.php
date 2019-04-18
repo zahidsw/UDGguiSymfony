@@ -125,7 +125,7 @@ private function getBackgroundColor()
 	public function subMenuSmartIt()
 	{
 		
-	
+		$translator = $this->translator;
 		$listeSubMenu = array(
 				array(	'name' => $translator->trans('subMenu.smartIt.scenarios'),
 						'href' => 'iot6_SmartItBundle_Scenarios'),
@@ -141,7 +141,7 @@ private function getBackgroundColor()
 	
 		$request = Request::createFromGlobals()->getRequestUri();
 	
-		return $this->render('SubMenu/subMenu.html.twig',
+		return $this->render('menu/SubMenu/subMenu.html.twig',
 				array('liste_subMenu' => $listeSubMenu, 'route' => $request));
 	}
 	

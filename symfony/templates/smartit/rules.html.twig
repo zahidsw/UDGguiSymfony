@@ -1,4 +1,4 @@
-{% extends "iot6SmartItBundle::layout.html.twig" %}
+{% extends "smartit/layoutScenario.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.smartIt.rulesManager'|trans }}
@@ -59,9 +59,8 @@
 		</table>
 		
 		<br/>
-		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbRulesActives,
 				'nbItemPerPage': nbActivesProPage,
@@ -71,7 +70,7 @@
 				'arg': 'pageActive'
 				}
 			)) 
-		%}
+		}}
 		
 		<br/><br/><br/>
 		<h1>{{ 'msg.rules_inactives'|trans }}</h1>
@@ -106,9 +105,9 @@
 		</table>
 		
 		<br/>
-		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbRulesInactives,
 				'nbItemPerPage': nbInactivesProPage,
@@ -118,7 +117,7 @@
 				'arg': 'pageInactive'
 				}
 			)) 
-		%}
+		}}
 		
 		
 	</div>

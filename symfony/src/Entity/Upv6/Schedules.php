@@ -5,10 +5,12 @@ namespace App\Entity\Upv6;
 use Doctrine\ORM\Mapping as ORM;
 use Cron\CronExpression;
 
+
 /**
  * Schedules
  *
  * @ORM\Table(name="schedules")
+ * @ORM\Entity(repositoryClass="App\Repository\SchedulesRepository")
  */
 class Schedules
 {

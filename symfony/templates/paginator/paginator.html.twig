@@ -9,10 +9,10 @@
 		<div class="paginationNav">
 		
 			<a href="{{ path(route, route_params | merge({ (arg): 1 }) ) }}">
-				<img src="{{ asset('images/interface/icons/first.png') }}" />
+				<img src="{{ asset('assets/images/interface/icons/first.png') }}" />
 			</a>
 			<a href="{{ path(route, route_params | merge({ (arg): currentPage-1 }) ) }}">
-				<img src="{{ asset('images/interface/icons/previous.png') }}" />
+				<img src="{{ asset('assets/images/interface/icons/previous.png') }}" />
 			</a>
 		</div>
 	{% endif %}
@@ -46,10 +46,10 @@
     {% if currentPage < nbPages %}
     	<div class="paginationNav">
     		<a href="{{ path(route, route_params | merge({ (arg): currentPage+1 }) ) }}">
-				<img src="{{ asset('images/interface/icons/next.png') }}" />
+				<img src="{{ asset('assets/images/interface/icons/next.png') }}" />
 			</a>
 			<a href="{{ path(route, route_params | merge({ (arg): nbPages }) ) }}">
-				<img src="{{ asset('images/interface/icons/last.png') }}" />
+				<img src="{{ asset('assets/images/interface/icons/last.png') }}" />
 			</a>
 		</div>
 	{% endif %}

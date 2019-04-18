@@ -1,4 +1,4 @@
-{% extends "iot6SmartItBundle::layout.html.twig" %}
+{% extends "smartit/layoutScenario.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'msg.rule_add'|trans }}
@@ -36,7 +36,7 @@
 	
 	<div id="error" style="color:red; text-align:center;"></div>
 	
-	<form method="post" id="monForm" action="{{ path('iot6_SmartItBundle_RulesManager_Add') }}" {{ form_enctype(form) }}>
+	{{ form_start(form, {'attr': {'id': 'monForm'},'action': path('iot6_SmartItBundle_RulesManager_Add') }) }}
 		{{ form_errors(form) }}
 		<table>
 			<tr>
@@ -45,6 +45,7 @@
 				<td>{{ form_errors(form.name) }}</td>
 			</tr>
 			<tr>
+			
 				<td>{{ form_label(form.ruleType, 'msg.type'|trans) }}</td>
 				<td>{{ form_widget(form.ruleType) }}</td>
 				<td>{{ form_errors(form.ruleType) }}</td>
@@ -83,7 +84,7 @@
 		<br/>
 		
 		<input type="submit" value="{{ 'msg.add'|trans }}" />&nbsp;<input type="button" value="{{ 'msg.cancel'|trans }}" onclick="window.location='{{ backUrl }}'" />
-	</form>
+	{{ form_end(form) }}
 	
 	<script>
 		var config = {

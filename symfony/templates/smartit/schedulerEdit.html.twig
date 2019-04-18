@@ -1,4 +1,4 @@
-{% extends "iot6SmartItBundle::layout.html.twig" %}
+{% extends "smartit/layoutScenario.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'msg.edit_scheduler'|trans }}
@@ -80,8 +80,9 @@
 	<br/><br/>
 	
 	{% set cronTab = form.vars.value.scheduleCron | split(' ') %}
-	
-	<form method="post" id="monForm" action="{{ path('iot6_SmartItBundle_Scheduler_Edit', {'id': schedule.id  } ) }}" {{ form_enctype(form) }}>
+
+	{{ form_start(form, {'attr': {'id': 'monForm'},'action': path('iot6_SmartItBundle_Scheduler_Edit', { 'id': schedule.id}) }) }}
+
 		{{ form_errors(form) }}
 		<table style="width:100%;">
 			<thead>
@@ -268,6 +269,6 @@
 		<br/>
 		
 		<input type="submit" value="{{ 'msg.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'msg.cancel'|trans }}" onclick="window.location='{{ backUrl }}'" />
-	</form>
+	{{ form_end(form) }}
 	
 {% endblock %}

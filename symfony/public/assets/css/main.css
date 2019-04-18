@@ -70,8 +70,8 @@ img {
 /***** Liens *****/
 
 #bg_content a {
-	color: #000;
-	text-decoration: none;
+	color: #000!important;
+	text-decoration: none!important;
 }
 
 #bg_content a:hover {

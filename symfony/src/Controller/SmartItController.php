@@ -5,18 +5,30 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Upv6\Rules;
-use iot6\SmartItBundle\Form\RulesType;
 use App\Entity\Upv6\Schedules;
-use iot6\SmartItBundle\Form\SchedulesType;
 use App\Entity\Upv6\EventHasRule;
 use iot6\SmartItBundle\Util\UADSUtility;
 use App\Entity\Gui\ConfigParameters;
 use App\Entity\Gui\WebserviceParam;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\RulesType;
+use App\Form\SchedulesType;
+use Symfony\Component\Translation\DataCollectorTranslator;
+
+
 
 class SmartItController extends AbstractController
 {
+
+	private $translator;
+	
+
+    public function __construct(DataCollectorTranslator $translator)
+    {
+		$this->translator = $translator;
+	}
+
     public function scenarios()
     {
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
@@ -283,10 +295,10 @@ class SmartItController extends AbstractController
     	$nbInactiveRulesProPage = $em_gui	->getRepository('App\Entity\Gui\ConfigParam')
     										->getParamValue('nbInactivesRules', $user, $em_gui);
     	
-    	$activesRules = $em_upv6	->getRepository('App\Entity\Gui\Rules')
+    	$activesRules = $em_upv6	->getRepository('App\Entity\Upv6\Rules')
     								->getRules($nbActivesRulesProPage, $pageActive, true);
     	
-    	$inactivesRules = $em_upv6	->getRepository('App\Entity\Gui\Rules')
+    	$inactivesRules = $em_upv6	->getRepository('App\Entity\Upv6\Rules')
     								->getRules($nbInactiveRulesProPage, $pageInactive, false);
     	
     	$data['activesRules']		= $activesRules;
@@ -306,12 +318,12 @@ class SmartItController extends AbstractController
     public function rulesAdd(Request $request)
     {
     	$rule = new Rules();
-    	$form = $this->createForm(new RulesType(), $rule);
+    	$form = $this->createForm(RulesType::class, $rule);
     
 
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handleRequest($request);
     
     		if ($form->isValid())
     		{
@@ -322,7 +334,7 @@ class SmartItController extends AbstractController
     			$em_upv6->persist($rule);
     			$em_upv6->flush();
     			
-    			$message = $this->get('translator')->trans('msg.rule_added');
+    			$message = $this->translator->trans('msg.rule_added');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     			
     			return $this->redirect($this->generateUrl('iot6_SmartItBundle_RulesManager'));
@@ -356,12 +368,12 @@ class SmartItController extends AbstractController
     
     public function rulesEdit(Request $request,Rules $rule)
     {
-    	$form = $this->createForm(new RulesType(), $rule);
+    	$form = $this->createForm(RulesType::class, $rule);
     	 
 
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handleRequest($request);
     
     		if ($form->isValid())
     		{
@@ -371,7 +383,7 @@ class SmartItController extends AbstractController
     			$em_upv6->persist($rule);
     			$em_upv6->flush();
     			
-    			$message = $this->get('translator')->trans('msg.rule_edited');
+    			$message = $this->translator->trans('msg.rule_edited');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     			
     			return $this->redirect($request->get('backUrl'));
@@ -385,18 +397,18 @@ class SmartItController extends AbstractController
     	return $this->render('smartit/rulesEdit.html.twig', $data);
     }
     
-    public function rulesDelete(Rules $rule)
+    public function rulesDelete(Rules $rule,Request $request)
     {
     	try {
     		$em_upv6 = $this->getDoctrine()->getManager("upv6");
     		$em_upv6->remove($rule);
     		$em_upv6->flush();
     		
-    		$message = $this->get('translator')->trans('msg.rule_deleted');
+    		$message = $this->translator->trans('msg.rule_deleted');
     		$this->get('session')->getFlashBag()->add('ok', $message);
     	}
     	catch(\Exception $e) {
-    		$message = $this->get('translator')->trans('error.rule_delete');
+    		$message = $this->translator->trans('error.rule_delete');
     		$this->get('session')->getFlashBag()->add('ko', $message);
     	}
     	
@@ -410,8 +422,7 @@ class SmartItController extends AbstractController
     {
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	$em_gui = $this->getDoctrine()->getManager("gui");
-    	 
-    	$user = $this->container->get('security.context')->getToken()->getUser();
+    	$user = $this->container->get('security.token_storage')->getToken()->getUser();
     	
     	$nbRegularSchedulesProPage = $em_gui	->getRepository('App\Entity\Gui\ConfigParam')
     											->getParamValue('nbRegularSchedulers', $user, $em_gui);
@@ -467,12 +478,12 @@ class SmartItController extends AbstractController
     public function schedulesAdd(Request $request)
     {
     	$schedule = new Schedules();
-    	$form = $this->createForm(new SchedulesType(), $schedule);
+    	$form = $this->createForm(SchedulesType::class, $schedule);
     
 
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handlerequest($request);
     
     		if ($form->isValid())
     		{
@@ -497,7 +508,7 @@ class SmartItController extends AbstractController
 			    	
 			$response = WebserviceParam::file_get_contents_curl($url);
     			
-    			$message = $this->get('translator')->trans('msg.schedule_added');
+    			$message = $this->translator->trans('msg.schedule_added');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     
     			return $this->redirect($this->generateUrl('iot6_SmartItBundle_Scheduler'));
@@ -511,12 +522,12 @@ class SmartItController extends AbstractController
     
     public function schedulesEdit(Request $request,Schedules $schedule)
     {
-    	$form = $this->createForm(new SchedulesType(), $schedule);
+    	$form = $this->createForm(SchedulesType::class, $schedule);
     
 
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handlerequest($request);
     
     		if ($form->isValid())
     		{
@@ -541,7 +552,7 @@ class SmartItController extends AbstractController
 			    	
 			$response = WebserviceParam::file_get_contents_curl($url);
     			
-    			$message = $this->get('translator')->trans('msg.schedule_edited');
+    			$message = $this->translator->trans('msg.schedule_edited');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     			
     			return $this->redirect($request->get('backUrl'));
@@ -555,7 +566,7 @@ class SmartItController extends AbstractController
     	return $this->render('smartit/schedulerEdit.html.twig', $data);
     }
     
-    public function schedulesDelete(Schedules $schedule)
+    public function schedulesDelete(Schedules $schedule, Request $request)
     {
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	$em_upv6->remove($schedule);
@@ -578,7 +589,7 @@ class SmartItController extends AbstractController
 			    	
 	$response = WebserviceParam::file_get_contents_curl($url);
     	
-    	$message = $this->get('translator')->trans('msg.schedule_deleted');
+    	$message = $this->translator->trans('msg.schedule_deleted');
     	$this->get('session')->getFlashBag()->add('ok', $message);
     	
     	return $this->redirect($this->generateUrl('iot6_SmartItBundle_Scheduler'));
@@ -591,7 +602,7 @@ class SmartItController extends AbstractController
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	$em_gui = $this->getDoctrine()->getManager("gui");
     	
-    	$user = $this->container->get('security.context')->getToken()->getUser();
+    	$user = $this->container->get('security.token_storage')->getToken()->getUser();
     	
     	
     	$nbActiveTriggerProPage = $em_gui	->getRepository('App\Entity\Gui\ConfigParam')
@@ -658,23 +669,23 @@ class SmartItController extends AbstractController
     		$idRule 	= $request->get('rules');
     	
     		if($idEvent == -1 || is_null($idEvent)) {
-    			$error = $this->get('translator')->trans('error.select_one_event');
+    			$error = $this->translator->trans('error.select_one_event');
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if($idRule == -1 || is_null($idRule)) {
-    			$error = $this->get('translator')->trans('error.select_one_rule');
+    			$error = $this->translator->trans('error.select_one_rule');
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if($idBuilding == -1 && $idFloor == -1 && $idRoomType == -1 && $idRoom == -1 && $idCategory == -1 && $idFamily == -1 && $idDevice == -1 ) {
-    			$error = $this->get('translator')->trans('error.select_one_source');
+    			$error = $this->translator->trans('error.select_one_source');
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if(is_null($error))
     		{
-    			$event 		= $em_upv6->getRepository('App\Entity\Upv6\s')->find($idEvent);
+    			$event 		= $em_upv6->getRepository('App\Entity\Upv6\Actions')->find($idEvent);
     			$building 	= $em_upv6->getRepository('App\Entity\Upv6\Buildings')->find($idBuilding);
     			$floor 		= $em_upv6->getRepository('App\Entity\Upv6\Floors')->find($idFloor);
     			$roomType 	= $em_upv6->getRepository('App\Entity\Upv6\RoomTypes')->find($idRoomType);
@@ -693,7 +704,7 @@ class SmartItController extends AbstractController
     			
     			$trigger = new EventHasRule();
     			
-    			$trigger->set($event);
+    			$trigger->setAction($event);
     			$trigger->setRule($rule);
     			$trigger->setBuilding($building);
     			$trigger->setFloor($floor);
@@ -711,14 +722,14 @@ class SmartItController extends AbstractController
     			$em_upv6->persist($trigger);
     			$em_upv6->flush();
     			
-    			$message = $this->get('translator')->trans('msg.trigger_added');
+    			$message = $this->translator->trans('msg.trigger_added');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     	
     			return $this->redirect($this->generateUrl('iot6_SmartItBundle_Triggers'));
     		}	
     	}
     	 
-    	$actions = $em_upv6->getRepository('App\Entity\Upv6\s')->findBy(array(), array('internalName' => 'ASC'));
+    	$actions = $em_upv6->getRepository('App\Entity\Upv6\Actions')->findBy(array(), array('internalName' => 'ASC'));
     	$rules = $em_upv6->getRepository('App\Entity\Upv6\Rules')->findBy(array(), array('name' => 'ASC'));
     	 
     	$data["actions"] = $actions;

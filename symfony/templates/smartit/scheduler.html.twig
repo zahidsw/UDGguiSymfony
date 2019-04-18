@@ -1,4 +1,4 @@
-{% extends "iot6SmartItBundle::layout.html.twig" %}
+{% extends "smartit/layoutScenario.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.smartIt.scheduler'|trans }}
@@ -122,8 +122,8 @@
 		
 		<br/>
 		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbScheduleRegular,
 				'nbItemPerPage': nbRegularProPage,
@@ -133,7 +133,7 @@
 				'arg': 'regular'
 				}
 			)) 
-		%}
+		}}
 		
 		<br/><br/><br/>
 		<h1>{{ 'msg.actions_punctual'|trans }}</h1>
@@ -230,8 +230,8 @@
 		
 		<br/>
 		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbSchedulePunctual,
 				'nbItemPerPage': nbPunctualProPage,
@@ -241,7 +241,7 @@
 				'arg': 'punctual'
 				}
 			)) 
-		%}
+		}}
 		
 	</div>
 	

@@ -46,7 +46,7 @@ iot6_SmartItBundle_Scenarios_Execute:
     
 # Rules
 iot6_SmartItBundle_RulesManager:
-    path:  /rules/active/{pageActive/inactive/{pageInactive}
+    path:  /rules/active/{pageActive}/inactive/{pageInactive}
     controller: App\Controller\SmartItController:rules
     defaults:
         pageActive: 1
@@ -63,16 +63,17 @@ iot6_SmartItBundle_RulesManager_ActDesact:
         id: \d+
         
 iot6_SmartItBundle_RulesManager_Edit:
-    path:  /rules/edit/{id
+    path:  /rules/edit/{id}
     controller: App\Controller\SmartItController:rulesEdit
     requirements:
         id: \d+
     
 iot6_SmartItBundle_RulesManager_Delete:
-    path:  /rules/delete/{id
+    path:  /rules/delete/{id}
     controller: App\Controller\SmartItController:rulesDelete
     requirements:
         id: \d+
+        
         
 # Scheduler
 iot6_SmartItBundle_Scheduler:
@@ -87,26 +88,26 @@ iot6_SmartItBundle_Scheduler_Add:
     controller: App\Controller\SmartItController:schedulesAdd
 
 iot6_SmartItBundle_Scheduler_ActDesact:
-    path:  /scheduler/actDesact/{id
+    path:  /scheduler/actDesact/{id}
     controller: App\Controller\SmartItController:scheduleActDesact
     requirements:
         id: \d+
 
 iot6_SmartItBundle_Scheduler_Edit:
-    path:  /scheduler/edit/{id
+    path:  /scheduler/edit/{id}
     controller: App\Controller\SmartItController:schedulesEdit
     requirements:
         id: \d+
     
 iot6_SmartItBundle_Scheduler_Delete:
-    path:  /scheduler/delete/{id
+    path:  /scheduler/delete/{id}
     controller: App\Controller\SmartItController:schedulesDelete
     requirements:
         id: \d+
         
 # Triggers
 iot6_SmartItBundle_Triggers:
-    path:  /triggers/active/{pageActive/inactive/{pageInactive
+    path:  /triggers/active/{pageActive}/inactive/{pageInactive}
     controller: App\Controller\SmartItController:triggers 
     defaults:
         pageActive: 1
@@ -117,19 +118,19 @@ iot6_SmartItBundle_Triggers_Add:
     controller: App\Controller\SmartItController:triggersAdd
 
 iot6_SmartItBundle_Triggers_ActDesact:
-    path:  /triggers/actDesact/{id
+    path:  /triggers/actDesact/{id}
     controller: App\Controller\SmartItController:triggersActDesact
     requirements:
         id: \d+
 
 iot6_SmartItBundle_Triggers_Edit:
-    path:  /triggers/edit/{id
+    path:  /triggers/edit/{id}
     controller: App\Controller\SmartItController:triggersEdit
     requirements:
         id: \d+
     
 iot6_SmartItBundle_Triggers_Delete:
-    path:  /triggers/delete/{id
+    path:  /triggers/delete/{id}
     controller: App\Controller\SmartItController:triggersDelete" 
     requirements:
         id: \d+
