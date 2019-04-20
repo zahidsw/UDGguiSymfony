@@ -1,4 +1,4 @@
-{% extends "iot6SmartItBundle::layout.html.twig" %}
+{% extends "smartit/layoutScenario.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.smartIt.ifThisThenThat'|trans }}
@@ -34,13 +34,13 @@
 		
 		<div class="sub_content">
 		
-			{% 
-				render(controller("iot6NavigatorBundle:Navigator:loadNavigator", 
+			{{
+				render(controller("App\\Controller\\NavigatorController:loadNavigator", 
 								{ 	'_locale': 	app.request.locale, 
 									'prefix': 	'_source',
 									'displayDevices':	1  } 
 				)) 
-			%}
+			}}
 			
 		</div>
 		
@@ -77,13 +77,13 @@
 		
 		<div class="sub_content">
 		
-			{% 
-				render(controller("iot6NavigatorBundle:Navigator:loadNavigator", 
+			{{
+				render(controller("App\\Controller\\NavigatorController:loadNavigator", 
 								{ 	'_locale': 	app.request.locale, 
 									'prefix': 	'_target',
 									'displayDevices':	1  } 
 				)) 
-			%}
+			}}
 			
 		</div>
 		

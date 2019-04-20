@@ -131,25 +131,25 @@ iot6_SmartItBundle_Triggers_Edit:
     
 iot6_SmartItBundle_Triggers_Delete:
     path:  /triggers/delete/{id}
-    controller: App\Controller\SmartItController:triggersDelete" 
+    controller: App\Controller\SmartItController:triggersDelete
     requirements:
         id: \d+
         
 # If This Then That
 iot6_SmartItBundle_Ittt:
     path:  /ittt
-    controller: App\Controller\SmartItController:ittt"  
+    controller: App\Controller\SmartItController:ittt
     
 getActionsForDevices:
     path: /ittt/ajax/getActionsForDevices
-    controller: App\Controller\SmartItController:getActionsForDevices
+    controller: App\Controller\SmartItController:getsForDevices
     requirements: 
         _format: xml|json
         _method: GET 
     
 getParametersForAction:
     path: /ittt/ajax/getParametersForAction
-    controller: App\Controller\SmartItController:getParametersForAction
+    controller: App\Controller\SmartItController:getParametersFor
     requirements: 
         _format: xml|json
         _method: GET 

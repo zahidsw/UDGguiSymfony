@@ -94,12 +94,12 @@ class SmartItController extends AbstractController
     			$device_target 		= $request->get('devices_target');
     			
     			$action_target 		= $request->get('actions_target');
-    			$action = $em_upv6->getRepository('iot6InteractBundle:s')->findOneById($action_target);
+    			$action = $em_upv6->getRepository('App\Entity\Upv6\Actions')->findOneById($action_target);
     			if(!is_null($action)) {
     				$parameters = $action->getParameters();
     			}
     			
-    			$trsl = $this->get('translator');
+    			$trsl = $this->translator;
     			
     			// Check required fields
     			if($building_source == -1 && $floor_source == -1 && $roomType_source == -1 && $room_source == -1 && 
@@ -228,7 +228,7 @@ class SmartItController extends AbstractController
     			
     			// Rule creation
     			$newRule = new Rules();
-    			$newRule->set($em_upv6->getRepository('iot6InteractBundle:s')->findOneById($action_target));
+    			$newRule->setAction($em_upv6->getRepository('App\Entity\Upv6\Actions')->findOneById($action_target));
     			$newRule->setName($action->getInternalName());
     			$newRule->setIsActive(true);
     			$newRule->setRuleType(1);
@@ -237,7 +237,7 @@ class SmartItController extends AbstractController
     			
     			// Event Has Rule creation
     			$newEventHasRule = new EventHasRule();
-    			$newEventHasRule->set($em_upv6->getRepository('iot6InteractBundle:s')->findOneById($event_source));
+    			$newEventHasRule->setAction($em_upv6->getRepository('App\Entity\Upv6\Actions')->findOneById($event_source));
     			$newEventHasRule->setRule($newRule);
     			$newEventHasRule->setOverride(false);
     			$newEventHasRule->setForced(false);
@@ -271,7 +271,7 @@ class SmartItController extends AbstractController
     			$em_upv6->persist($newEventHasRule);
     			$em_upv6->flush();
     			
-    			$message = $this->get('translator')->trans('msg.ittt_added');
+    			$message = $this->translator->trans('msg.ittt_added');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     	
     			return $this->redirect($this->generateUrl('iot6_SmartItBundle_Ittt'));
@@ -654,7 +654,7 @@ class SmartItController extends AbstractController
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	 
     	$error = null;
-    	 
+    	$message = "";
 
     	if ($request->getMethod() == 'POST')
     	{
@@ -760,23 +760,23 @@ class SmartItController extends AbstractController
     		$idRule 	= $request->get('rules');
     		
     		if($idEvent == -1 || is_null($idEvent)) {
-    			$error = $this->get('translator')->trans('error.select_one_event');
+    			$error = $this->translator->trans('error.select_one_event');
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if($idRule == -1 || is_null($idRule)) {
-    			$error = $this->get('translator')->trans('error.select_one_rule');
+    			$error = $this->translator->trans('error.select_one_rule');
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if($idBuilding == -1 && $idFloor == -1 && $idRoomType == -1 && $idRoom == -1 && $idCategory == -1 && $idFamily == -1 && $idDevice == -1 ) {
-    			$error = $this->get('translator')->trans('error.select_one_source');
+    			$error = $this->translator->trans('error.select_one_source');
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     		
     		if(is_null($error))
     		{
-	    		$event 		= $em_upv6->getRepository('App\Entity\Upv6\s')->find($idEvent);
+	    		$event 		= $em_upv6->getRepository('App\Entity\Upv6\Actions')->find($idEvent);
 	    		$building 	= $em_upv6->getRepository('App\Entity\Upv6\Buildings')->find($idBuilding);
 	    		$floor 		= $em_upv6->getRepository('App\Entity\Upv6\Floors')->find($idFloor);
 	    		$roomType 	= $em_upv6->getRepository('App\Entity\Upv6\RoomTypes')->find($idRoomType);
@@ -794,7 +794,7 @@ class SmartItController extends AbstractController
 	    		$comment 		= $request->get('comments');
 	    		
 	    		if($event != null) {
-	    			$trigger->set($event);
+	    			$trigger->setAction($event);
 	    		}
 	    		if($rule != null) {
 	    			$trigger->setRule($rule);
@@ -817,14 +817,14 @@ class SmartItController extends AbstractController
 				$em_upv6->persist($trigger);
 				$em_upv6->flush();
 				
-				$message = $this->get('translator')->trans('msg.trigger_edited');
+				$message = $this->translator->trans('msg.trigger_edited');
 				$this->get('session')->getFlashBag()->add('ok', $message);
 				
 	    		return $this->redirect($this->generateUrl('iot6_SmartItBundle_Triggers'));
     		}
     	}
     	
-    	$actions = $em_upv6->getRepository('App\Entity\Upv6\s')->findBy(array(), array('internalName' => 'ASC'));
+    	$actions = $em_upv6->getRepository('App\Entity\Upv6\Actions')->findBy(array(), array('internalName' => 'ASC'));
     	$rules = $em_upv6->getRepository('App\Entity\Upv6\Rules')->findBy(array(), array('name' => 'ASC'));
     	
     	$data["actions"] = $actions;
@@ -840,7 +840,7 @@ class SmartItController extends AbstractController
     	$em_upv6->remove($eventHasRule);
     	$em_upv6->flush();
     	
-    	$message = $this->get('translator')->trans('msg.trigger_deleted');
+    	$message = $this->translator->trans('msg.trigger_deleted');
     	$this->get('session')->getFlashBag()->add('ok', $message);
     	
     	$referer = $request->headers->get('referer');
@@ -863,14 +863,14 @@ class SmartItController extends AbstractController
     		$actions = $em_upv6	->getRepository('App\Entity\Upv6\EventFilters')
     							->findEventsForDevices($devicesId, $kind);
     		
-    		$json[-1] = $this->get('translator')->trans('msg.select_event');
+    		$json[-1] = $this->translator->trans('msg.select_event');
     	}
     	// actions
     	else if($kind == 1) {
     		$actions = $em_upv6	->getRepository('App\Entity\Upv6\Devices')
-    							->findsForDevices($devicesId, $kind);
+    							->findActionsForDevices($devicesId, $kind);
     		
-    		$json[-1] = $this->get('translator')->trans('msg.select_action');
+    		$json[-1] = $this->translator->trans('msg.select_action');
     	}
     	
     	foreach ($actions as $action) {
@@ -893,7 +893,7 @@ class SmartItController extends AbstractController
     							->findBy(array('action' => $actionId), array('position' => 'ASC'));
     	
     	if($default == 1) {
-    		$json[-1] = $this->get('translator')->trans('msg.select_param');
+    		$json[-1] = $this->translator->trans('msg.select_param');
     	}
     
     	foreach ($parameters as $parameter) {
