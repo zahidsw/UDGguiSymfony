@@ -15,6 +15,6 @@ class MapController extends AbstractController
     	
     	$data["devices"] = $devices;
     	
-    	return $this->render('map/map.html.twig', $data);
+    	return $this->render('map/map1.html.twig', $data);
     }
 }

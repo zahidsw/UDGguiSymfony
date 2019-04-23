@@ -1,0 +1,24 @@
+{% extends is_mobile() ? is_tablet() ? "smartBoard.html.twig" : "mobile.html.twig" : "layout.html.twig" %}
+
+
+ 
+{% block body %}
+
+	
+ 
+
+<iframe id="map" src="https://map.cityreport.org:9443/" name="map">You need a Frames Capable browser to view this content.</iframe>   
+
+ 	<style>
+	#map {
+		height: 400px;
+	    margin-bottom: auto;
+	    margin-left: 0;
+	    margin-right: 0;
+	    width: 960px;
+	}
+</style>
+
+
+ 
+{% endblock %}

@@ -57,7 +57,7 @@ iot6_SmartItBundle_RulesManager_Add:
     controller: App\Controller\SmartItController:rulesAdd
 
 iot6_SmartItBundle_RulesManager_ActDesact:
-    path:  /rules/actDesact/{id
+    path:  /rules/actDesact/{id}
     controller: App\Controller\SmartItController:rulesActDesact
     requirements:
         id: \d+
@@ -333,9 +333,17 @@ iot6_InteractBundle_deviceShow:
     path:  /{_locale}/interact/devices/show/{id}
     controller: App\Controller\InteractController:deviceShow
 
+# iot6_InteractBundle_mapList:
+#     path:  /{_locale}/interact/mapList/{devices}
+#     controller: App\Controller\InteractController:mapList
+#     defaults:
+#         devices: null
+
+#MapController:loadMap
+
 iot6_InteractBundle_mapList:
     path:  /{_locale}/interact/mapList/{devices}
-    controller: App\Controller\InteractController:mapList
+    controller: App\Controller\MapController:loadMap
     defaults:
         devices: null
 

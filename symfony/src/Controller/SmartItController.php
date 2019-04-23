@@ -357,7 +357,7 @@ class SmartItController extends AbstractController
     	
     	$em_upv6->flush();
     	
-    	$trsl = $this->get('translator');
+    	$trsl = $this->translator;
     	
     	$message = ($rule->getIsActive()) ? $trsl->trans('msg.rule_activated') : $trsl->trans('msg.rule_deactivated');
     	$this->get('session')->getFlashBag()->add('ok', $message);
@@ -457,7 +457,7 @@ class SmartItController extends AbstractController
     	return $this->render('smartit/scheduler.html.twig', $data);
     }
     
-    public function scheduleActDesact(Schedules $schedule)
+    public function scheduleActDesact(Schedules $schedule,Request $request)
     {
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	 
@@ -466,7 +466,7 @@ class SmartItController extends AbstractController
     	 
     	$em_upv6->flush();
     	
-    	$trsl = $this->get('translator');
+    	$trsl = $this->translator;
     	
     	$message = ($schedule->getIsActive()) ? $trsl->trans('msg.schedule_activated') : $trsl->trans('msg.schedule_deactivated');
     	$this->get('session')->getFlashBag()->add('ok', $message);
@@ -640,7 +640,7 @@ class SmartItController extends AbstractController
     	
     	$em_upv6->flush();
     	
-    	$trsl = $this->get('translator');
+    	$trsl = $this->translator;
     	
     	$message = ($eventHasRule->getIsActive()) ? $trsl->trans('msg.trigger_activated') : $trsl->trans('msg.trigger_deactivated');
     	$this->get('session')->getFlashBag()->add('ok', $message);
