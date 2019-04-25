@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ConfigSet
  *
- * @ORM\Table(name="config_set")
+ * @ORM\Table(name="config_set",schema="upv6")
  * @ORM\Entity(repositoryClass="App\Repository\ConfigSetRepository")
  */
 class ConfigSet
@@ -22,12 +22,11 @@ class ConfigSet
     private $id;
 	
     /**
-     * @var \App\Entity\Upv6\UsersMiddleware
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Upv6\UsersMiddleware")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(name="user_id", type="string", length=255, nullable=false)
      */
     private $user;
+
+    private $userName;
     
     /**
      * @var string
@@ -79,6 +78,29 @@ class ConfigSet
         return $this;
     }
 
+     /**
+     * Set username
+     *
+     * @param string $name
+     * @return string
+     */
+    public function setUserName($name)
+    {
+        $this->userName = $name;
+    
+        return $this;
+    }
+
+     /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
     /**
      * Get name
      *
@@ -115,10 +137,9 @@ class ConfigSet
     /**
      * Set user
      *
-     * @param \App\Entity\Upv6\UsersMiddleware $user
-     * @return ConfigSet
+     * 
      */
-    public function setUser(\App\Entity\Upv6\UsersMiddleware $user)
+    public function setUser($user)
     {
         $this->user = $user;
     
@@ -128,7 +149,7 @@ class ConfigSet
     /**
      * Get user
      *
-     * @return \App\Entity\Upv6\UsersMiddleware 
+     * 
      */
     public function getUser()
     {

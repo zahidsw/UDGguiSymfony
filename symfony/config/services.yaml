@@ -56,6 +56,9 @@ services:
     App.ActivityListener:
         class: App\EventListener\ActivityListener
         tags: [{ name: kernel.event_listener, event: kernel.request }]
+
+    app.logout.listener:
+        class: App\EventListener\LogoutListener
             
 
 

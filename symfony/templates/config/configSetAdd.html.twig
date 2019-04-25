@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'conf.configSet_add'|trans }}
@@ -41,7 +41,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	{% include 'config/msg.html.twig' %}
 	
 	<br/>
 	
@@ -57,7 +57,7 @@
 					<select name="user" required="required">
 						<option selected="selected" value="">{{ 'conf.select'|trans }}</option>
 						{% for user in users %}
-							<option value="{{ user.id }}">{{ user.name }}</option>
+							<option value="{{ user.id }}">{{ user.userName }}</option>
 						{% endfor %}
 					</select>
 				</td>

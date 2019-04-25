@@ -90,13 +90,21 @@ class User implements UserInterface
     private $clientId;
 
 
-        /**
+    /**
      * Date/Time of the last activity
      *
      * @var \Datetime
      * @ORM\Column(name="last_activity_at", type="datetime", nullable=true)
      */
     protected $lastActivityAt;
+
+    /**
+     * Date/Time of the last manual logout
+     *
+     * @var \Datetime
+     * @ORM\Column(name="last_manual_logout_at", type="datetime", nullable=true)
+     */
+    protected $lastManualLogoutAt;
 
     public function __construct()
     {
@@ -117,6 +125,22 @@ class User implements UserInterface
     public function getLastActivityAt()
     {
         return $this->lastActivityAt;
+    }
+
+     /**
+     * @param \Datetime $lastManualLogoutAt
+     */
+    public function setLastManualLogoutAt($lastManualLogoutAt)
+    {
+        $this->lastManualLogoutAt = $lastManualLogoutAt;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getLastManualLogoutAt()
+    {
+        return $this->lastManualLogoutAt;
     }
 
     /**

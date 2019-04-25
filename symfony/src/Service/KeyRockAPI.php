@@ -167,6 +167,28 @@ class KeyRockAPI
         return $response;
     }
 
+    public function addUserToApplication(String $userId, String $applicationId, String $roleId)
+    {
+        
+        $url = $this->baseUrl . '/v1/applications/' . $applicationId . '/users/' . $userId . '/roles/' . $roleId;
+        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('POST', $url, $headers);
+        $response = $this->httpMethodsClient->sendRequest($request);
+
+        if($response->getStatusCode() != "201"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+        
+        return $response;
+    }
+
+
+
+
+
+
+
     public function removeUserFromOrganization(String $userId, String $organizationId, String $roleId): object
     {
         $url = $this->baseUrl . '/v1/organizations/' . $organizationId . '/users/' . $userId . '/organization_roles/' . $roleId;

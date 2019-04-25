@@ -77,7 +77,7 @@ iot6_SmartItBundle_RulesManager_Delete:
         
 # Scheduler
 iot6_SmartItBundle_Scheduler:
-    path:  /scheduler/regular/{regular/punctual/{punctual
+    path:  /scheduler/regular/{regular}/punctual/{punctual}
     controller: App\Controller\SmartItController:scheduler   
     defaults:
         regular: 1

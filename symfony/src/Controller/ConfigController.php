@@ -87,11 +87,12 @@ class ConfigController extends AbstractController
 	    			{
 	    				$userMenu = $em_gui->getRepository('App\Entity\Gui\UserMenu')->findOneBy(array('user' => $currentUser, 'menu' => $menu));
 	    				
-	    				if(!is_null($userMenu))//add
+	    				if(is_null($userMenu))//add
 	    				{
 	    					$userMenu = new UserMenu();
 	    					$userMenu->setUser($currentUser);
-	    					$userMenu->setMenu($menu);
+							$userMenu->setMenu($menu);
+							
 	    				}
 	    				
 	    				//edit
@@ -1588,16 +1589,26 @@ class ConfigController extends AbstractController
 	public function configSet()
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
-		$data["configSets"] = $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findActiveOrderByUser();
+		$em_gui = $this->getDoctrine()->getManager("gui");
+		$data["configSets"] =  $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findAll();
+		
+		foreach($data["configSets"] as &$conf)
+		{
+			$userId = $conf->getUser();
+			$user = $em_gui->getRepository('App\Entity\Gui\User')->findOneById($userId);
+			$conf->setUserName($user->getUsername());
+		}
 		
 		return $this->render('config/configSet.html.twig', $data);
 	}
 	
-	public function configSetAdd()
+	public function configSetAdd(Request $request)
 	{
-		$em_upv6 = $this->getDoctrine()->getManager("upv6");
+		// $this->denyAccessUnlessGranted('ROLE_ADMIN');
+		 $em_upv6 = $this->getDoctrine()->getManager("upv6");
+		$em_gui = $this->getDoctrine()->getManager("gui");
 		
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
 			if($request->get('send'))
@@ -1610,14 +1621,14 @@ class ConfigController extends AbstractController
 		
 				if(!is_null($keys) && !is_null($values)) {
 					
-					$user = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneById($idUser);
+					// $user = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneById($idUser);
 					
 					$configSet = new ConfigSet();
-					$configSet->setUser($user);
+					$configSet->setUser($idUser);
 					$configSet->setName($name);
 					
 					if(!is_null($isActive)) {
-						$activeConfigSet = $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findOneBy(array('active' => true, 'user' => $user));
+						$activeConfigSet = $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findOneBy(array('active' => true, 'user' => $idUser));
 						if(!is_null($activeConfigSet)) {
 							$activeConfigSet->setActive(false);
 						}
@@ -1649,8 +1660,16 @@ class ConfigController extends AbstractController
 				}
 			}
 		}
+		// $data["users"] = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findBy(array(), array('name' => 'ASC'));
 		
-		$data["users"] = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findBy(array(), array('name' => 'ASC'));
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		
+		$city = $user->getCity();
+		$users = $city->getUsers();
+		$users = $users->getValues();
+		
+		$data["users"] = $users;
+		
 		
 		return $this->render('config/configSetAdd.html.twig', $data);
 	}
@@ -1660,7 +1679,8 @@ class ConfigController extends AbstractController
 	 */
 	public function configSetEdit(ConfigSet $configSet,Request $request)
 	{
-		$em_upv6 = $this->getDoctrine()->getManager("upv6");
+		// $em_upv6 = $this->getDoctrine()->getManager("upv6");
+		$em_gui = $this->getDoctrine()->getManager("gui");
 	
 		
 		if ($request->getMethod() == 'POST')
@@ -1674,7 +1694,7 @@ class ConfigController extends AbstractController
 	
 				if(!is_null($keys) && !is_null($values)) {
 						
-					$user = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneById($idUser);
+					// $user = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneById($idUser);
 					
 					if($user != $configSet->getUser()) {
 						$configSet->setActive(false);
@@ -1710,7 +1730,10 @@ class ConfigController extends AbstractController
 			}
 		}
 	
-		$data["users"] = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findBy(array(), array('name' => 'ASC'));
+		// $data["users"] = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findBy(array(), array('name' => 'ASC'));
+		$data["users"] = $em_gui->getRepository('App\Entity\Gui\User')->findBy(array(), array('userName' => 'ASC'));
+
+		
 		$data["configSet"] = $configSet;
 		
 		return $this->render('config/configSetEdit.html.twig', $data);
@@ -1719,7 +1742,7 @@ class ConfigController extends AbstractController
 	/**
 	 * @ParamConverter("configSet", options={"entity_manager" = "upv6"})
 	 */
-	public function configSetAct(ConfigSet $configSet)
+	public function configSetAct(ConfigSet $configSet, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 			
@@ -1733,7 +1756,7 @@ class ConfigController extends AbstractController
 		$message = 'conf.ok.activate_configSet';
 		$this->setMessage('ok', $message);
 		
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		
 		return $this->redirect($referer);
 	}
@@ -1741,7 +1764,7 @@ class ConfigController extends AbstractController
 	/**
 	 * @ParamConverter("configSet", options={"entity_manager" = "upv6"})
 	 */
-	public function configSetDelete(ConfigSet $configSet)
+	public function configSetDelete(ConfigSet $configSet, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		
@@ -1758,7 +1781,7 @@ class ConfigController extends AbstractController
 		$message = 'conf.ok.deleted_configSet';
 		$this->setMessage('ok', $message);
 	
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 	
 		return $this->redirect($referer);
 	}
