@@ -70,7 +70,7 @@ class User implements UserInterface
     private $city;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Gui\Purchase", mappedBy="user",fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Gui\Purchase", mappedBy="user",fetch="EAGER",cascade={"remove"})
      */
     private $purchases;
 
