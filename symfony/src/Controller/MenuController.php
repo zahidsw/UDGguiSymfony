@@ -34,8 +34,7 @@ class MenuController extends Controller
 			$currentUser = $em_gui->getRepository('App\Entity\Gui\User')->find($idUser);
 			
 			$userMenus = $em_gui->getRepository('App\Entity\Gui\UserMenu')->findByUser($currentUser);
-			dump($menus);
-			dump($userMenus);
+			
 			
 			foreach ($menus as $menu) {
 				foreach($userMenus as $userMenu) {

@@ -841,7 +841,6 @@ iot6_ConfigBundle_Devices_groups_Delete:
     requirements:
         id: \d+    
 
-
 login:
     path:  /login
     controller: App\Controller\SecurityController:login
@@ -850,5 +849,7 @@ logout:
     path:  /logout
     controller: App\Controller\SecurityController:logout
      
-
+marketplace:
+    path:  /{_locale}/marketplace
+    controller: App\Controller\MarketPlaceController:list
    

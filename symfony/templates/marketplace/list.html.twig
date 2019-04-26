@@ -1,0 +1,41 @@
+{% extends "marketplace/layout.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>MarketPlace Test</h1>
+</br>
+</br>
+</br>
+    <div id="zebraTableDiv">
+		<table id="table" style="width:100%;">
+			<tr>
+				<th>{{ 'Service' }}</th>
+                <th>{{ 'Service Description' }}</th>
+                <th>{{ 'Order Number' }}</th>
+                <th>{{ 'Product Name' }}</th>
+                <th>{{ 'Product Quantity' }}</th>
+                <th>{{ 'Product Price' }}</th>
+			</tr>
+
+            {% for purchase in purchases %}
+            <tr>
+				<td style="width: 30px; text-align: center;">{{ purchase.ServiceId }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.ServiceDescription }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.OrderNumber }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.ProductName }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.ProductQuantity }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.ProductPrice }}</td>
+            </tr>
+			{% endfor %}			
+        </table>
+    </div>
+{% endblock %}

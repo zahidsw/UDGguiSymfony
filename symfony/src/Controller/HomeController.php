@@ -4,7 +4,6 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-//namespace iot6\HomeBundle\Controller;
 use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,7 +24,6 @@ class HomeController extends AbstractController
 
 	public function home(Request $request)
     {
-    	//phpinfo();
     	$em_gui = $this->getDoctrine()->getManager("gui");
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	$idUser = $this->container->get('security.token_storage')->getToken()->getUser()->getId();

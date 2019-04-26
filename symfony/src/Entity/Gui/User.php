@@ -70,7 +70,7 @@ class User implements UserInterface
     private $city;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Gui\Purchase", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Gui\Purchase", mappedBy="user",fetch="EAGER")
      */
     private $purchases;
 
