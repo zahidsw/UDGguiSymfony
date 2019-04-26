@@ -263,7 +263,7 @@ class Buildings
     
     protected function getUploadRootDir()
     {
-    	// On retourne le chemin relatif vers l'image pour notre code PHP
-    	return __DIR__.'/../../../../web/'.$this->getUploadDir();
+        // On retourne le chemin relatif vers l'image pour notre code PHP
+    	return __DIR__.'../../../upload/'.$this->getUploadDir();
     }
 }

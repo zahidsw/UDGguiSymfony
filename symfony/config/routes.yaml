@@ -704,7 +704,7 @@ iot6_ConfigBundle_Locations_Floors:
         idBuilding: -1
     
 iot6_ConfigBundle_Locations_Floors_Add:
-    path: /{_locale} /locations/floors/add
+    path: /{_locale}/locations/floors/add
     controller: App\Controller\ConfigController:floorsAdd
     
 iot6_ConfigBundle_Locations_Floors_Edit:

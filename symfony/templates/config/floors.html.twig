@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.subMenu.floors'|trans }}
@@ -28,7 +28,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:locationsMenus.html.twig' %}
+	{% include 'config/locationsMenus.html.twig' %}
 	
 	<br/><br/>
 	
@@ -36,7 +36,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	{% include 'config/msg.html.twig' %}
 	
 	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Locations_Floors_Add') }}">[{{ 'conf.floor_add'|trans }}]</a>
 	
@@ -68,12 +68,12 @@
 				<tr>
 					<td style="width:30px; text-align:center;">
 						<a href="{{ path('iot6_ConfigBundle_Locations_Floors_Edit', { 'id': floor.id }) }}">
-							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+							<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
 						</a>
 					</td>
 					<td style="width:30px; text-align:center;">
 						<a href="{{ path('iot6_ConfigBundle_Locations_Floors_Delete', { 'id': floor.id }) }}">
-							<img src="{{ asset('images/interface/icons/delete.png') }}"
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
 								onclick="return(confirm('{{ 'conf.ask.delete_floor'|trans }}'));" />
 						</a>
 					</td>
@@ -92,8 +92,8 @@
 		
 		<br/>
 		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbFloors,
 				'nbItemPerPage': nbProPage,
@@ -103,7 +103,7 @@
 				'arg': 'page'
 				}
 			)) 
-		%}
+		}}
 	    
 	</div>
 {% endblock %}

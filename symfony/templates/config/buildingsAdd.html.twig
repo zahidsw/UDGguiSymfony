@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.locations'|trans }} - {{ 'conf.building_add'|trans }}
@@ -15,7 +15,7 @@
 	
 	<br/><br/>
 	
-	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Locations_Buildings_Add') }}" {{ form_enctype(form) }}>
+	{{ form_start(form, {'attr': {'id': 'form'},'action': path('iot6_ConfigBundle_Locations_Buildings_Add') }) }}
 		{{ form_errors(form) }}
 		<table>
 			<tr>
@@ -55,7 +55,7 @@
 		<br/>
 		
 		<input type="submit" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Locations_Buildings') }}'" />
-	</form>
+	{{ form_end(form) }}
 	
 	
 {% endblock %}

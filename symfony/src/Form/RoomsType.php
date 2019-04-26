@@ -7,19 +7,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use iot6\SmartItBundle\Form\Type\RuleType;
 use iot6\SmartItBundle\Form\Type\Image;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class RoomsType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
-			->add('name',			'text', array('attr' => array('class' => 'long')))
-			->add('floor',			'entity', array('class' => 'iot6InteractBundle:Floors', 'property' => 'name'))
-			->add('roomType',		'entity', array('class' => 'iot6InteractBundle:RoomTypes', 'property' => 'name'))
-			->add('roomState',		'text')
-			->add('importanceLevel','text')
-			->add('energyLevel',	'text')
-			->add('espId',			'text')
+			->add('name',			TextType::class, array('attr' => array('class' => 'long')))
+			->add('floor',			EntityType::class, array('class' => 'App\Entity\Upv6\Floors', 'choice_label' => 'name'))
+			->add('roomType',		EntityType::class, array('class' => 'App\Entity\Upv6\RoomTypes', 'choice_label' => 'name'))
+			->add('roomState',		TextType::class)
+			->add('importanceLevel',TextType::class)
+			->add('energyLevel',	TextType::class)
+			->add('espId',			TextType::class)
 			;
 	}
 	

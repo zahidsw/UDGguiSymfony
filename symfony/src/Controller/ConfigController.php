@@ -243,15 +243,15 @@ class ConfigController extends AbstractController
     	return $this->render('config/buildings.html.twig', $data);
     }
     
-    public function buildingsAdd()
+    public function buildingsAdd(Request $request)
     {
     	$building = new Buildings();
-    	$form = $this->createForm(new BuildingsType(), $building);
+    	$form = $this->createForm(BuildingsType::class, $building);
     	
-    	$request = $this->getRequest();
+    	
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handleRequest($request);
     	
     		if ($form->isValid())
     		{
@@ -325,10 +325,10 @@ class ConfigController extends AbstractController
     	$nbPageDisplayed = 10;
     	$route = 'iot6_ConfigBundle_Locations_Floors';
     	 
-    	$floors = $em_upv6	->getRepository('iot6InteractBundle:Floors')
+    	$floors = $em_upv6	->getRepository('App\Entity\Upv6\Floors')
     						->getFloors($nbFloorsProPage, $page, $idBuilding);
     	
-    	$buildings =  $em_upv6	->getRepository('iot6InteractBundle:Buildings')
+    	$buildings =  $em_upv6	->getRepository('App\Entity\Upv6\Buildings')
     							->findBy(array(), array('name' => 'asc'));
     	
     	$data['floors']			= $floors;
@@ -343,15 +343,14 @@ class ConfigController extends AbstractController
     	return $this->render('config/floors.html.twig', $data);
     }
 	
-    public function floorsAdd()
+    public function floorsAdd(Request $request)
     {
     	$floor = new Floors();
-    	$form = $this->createForm(new FloorsType(), $floor);
+    	$form = $this->createForm(FloorsType::class, $floor);
     	 
-    	$request = $this->getRequest();
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handleRequest($request);
     		 
     		if ($form->isValid())
     		{
@@ -373,14 +372,14 @@ class ConfigController extends AbstractController
     	return $this->render('config/floorsAdd.html.twig', $data);
     }
     
-    public function floorsEdit(Floors $floor)
+    public function floorsEdit(Floors $floor,Request $request)
     {
-    	$form = $this->createForm(new FloorsType(), $floor);
+    	$form = $this->createForm(FloorsType::class, $floor);
     
-    	$request = $this->getRequest();
+    	
     	if ($request->getMethod() == 'POST')
     	{
-    		$form->bind($request);
+    		$form->handlerequest($request);
     		 
     		if ($form->isValid())
     		{
@@ -403,7 +402,7 @@ class ConfigController extends AbstractController
     	return $this->render('config/floorsEdit.html.twig', $data);
     }
     
-	public function floorsDelete(Floors $floor)
+	public function floorsDelete(Floors $floor,Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_upv6->remove($floor);
@@ -411,7 +410,7 @@ class ConfigController extends AbstractController
 		
 		$this->setMessage('ok', 'conf.ok.deleted_floor');
 		
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		return $this->redirect($referer);
 	}
 	
@@ -430,7 +429,7 @@ class ConfigController extends AbstractController
 		$floors =  $em_upv6	->getRepository('App\Entity\Upv6\Floors')
 							->findBy(array(), array('name' => 'asc'));
 		
-		$buildings =  $em_upv6	->getRepository('iot6InteractBundle:Buildings')
+		$buildings =  $em_upv6	->getRepository('App\Entity\Upv6\Buildings')
 								->findBy(array(), array('name' => 'asc'));
 		
 		$data['rooms']			= $rooms;
@@ -446,17 +445,16 @@ class ConfigController extends AbstractController
 		return $this->render('config/rooms.html.twig', $data);
 	}
 	
-	public function roomsAdd()
+	public function roomsAdd(Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		
 		$room = new Rooms();
-		$form = $this->createForm(new RoomsType(), $room);
+		$form = $this->createForm(RoomsType::class, $room);
 	
-		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handlerequest($request);
 			 
 			if ($form->isValid())
 			{
@@ -479,16 +477,16 @@ class ConfigController extends AbstractController
 		return $this->render('config/roomsAdd.html.twig', $data);
 	}
 	
-	public function roomsEdit(Rooms $room)
+	public function roomsEdit(Rooms $room, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		
-		$form = $this->createForm(new RoomsType(), $room);
+		$form = $this->createForm(RoomsType::class, $room);
 	
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 			 
 			if ($form->isValid())
 			{
@@ -512,7 +510,7 @@ class ConfigController extends AbstractController
 		return $this->render('config/roomsEdit.html.twig', $data);
 	}
 	
-	public function roomsDelete(Rooms $room)
+	public function roomsDelete(Rooms $room,Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_upv6->remove($room);
@@ -520,7 +518,7 @@ class ConfigController extends AbstractController
 		
 		$this->setMessage('ok', 'conf.ok.deleted_room');
 	
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		return $this->redirect($referer);
 	}
 	
@@ -547,15 +545,14 @@ class ConfigController extends AbstractController
 		return $this->render('config/roomTypes.html.twig', $data);
 	}
 	
-	public function roomTypesAdd()
+	public function roomTypesAdd(Request $request)
 	{
 		$roomType = new RoomTypes();
-		$form = $this->createForm(new RoomTypesType(), $roomType);
+		$form = $this->createForm(RoomTypesType::class, $roomType);
 		 
-		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 			 
 			if ($form->isValid())
 			{
@@ -577,14 +574,13 @@ class ConfigController extends AbstractController
 		return $this->render('config/roomTypesAdd.html.twig', $data);
 	}
 	
-	public function roomTypesEdit(RoomTypes $roomType)
+	public function roomTypesEdit(RoomTypes $roomType,Request $request)
 	{
-		$form = $this->createForm(new RoomTypesType(), $roomType);
+		$form = $this->createForm(RoomTypesType::class, $roomType);
 	
-		$request = $this->getRequest();
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 			 
 			if ($form->isValid())
 			{
@@ -607,7 +603,7 @@ class ConfigController extends AbstractController
 		return $this->render('config/roomTypesEdit.html.twig', $data);
 	}
 	
-	public function roomTypesDelete(RoomTypes $roomType)
+	public function roomTypesDelete(RoomTypes $roomType,Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_upv6->remove($roomType);
@@ -615,7 +611,7 @@ class ConfigController extends AbstractController
 		
 		$this->setMessage('ok', 'conf.ok.deleted_roomType');
 	
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		return $this->redirect($referer);
 	}
 	
@@ -656,7 +652,7 @@ class ConfigController extends AbstractController
 		// Advertise UDG for the validation
 		$em_gui = $this->getDoctrine()->getManager("gui");
     		$webserviceParam = $em_gui->getRepository('App\Entity\Gui\WebserviceParam')->findOneByParam('kernelUrl');
-    		$setting = $em_upv6->getRepository('iot6InteractBundle:Settings')->findOneById(1);
+    		$setting = $em_upv6->getRepository('App\Entity\Upv6\Settings')->findOneById(1);
     		$device_id = $device->getId();
 		$session_id = $this->getRequest()->getSession()->getId();
     		$url = WebserviceParam::validateDevice($webserviceParam->getValue(), $setting->getKernelSharedKey(), $device_id, $session_id);
@@ -714,7 +710,7 @@ class ConfigController extends AbstractController
 		$nbPageDisplayed = 10;
 		$route = 'iot6_ConfigBundle_Devices_families';
 	
-		$families = $em_upv6	->getRepository('iot6InteractBundle:Families')
+		$families = $em_upv6	->getRepository('App\Entity\Upv6\Families')
 								->getFamilies($nbFamiliesProPage, $page);
 	
 		$data['families']		= $families;
@@ -1590,15 +1586,31 @@ class ConfigController extends AbstractController
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_gui = $this->getDoctrine()->getManager("gui");
-		$data["configSets"] =  $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findAll();
+		$data["configSetsa"] =  $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findAll();
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
 		
-		foreach($data["configSets"] as &$conf)
+		$city = $user->getCity();
+		$users = $city->getUsers();
+		$users = $users->getValues();
+		
+		foreach($data["configSetsa"] as &$conf)
 		{
 			$userId = $conf->getUser();
 			$user = $em_gui->getRepository('App\Entity\Gui\User')->findOneById($userId);
 			$conf->setUserName($user->getUsername());
 		}
-		
+		$data["configSets"] = [];
+		foreach($data["configSetsa"] as &$conf)
+		{
+			foreach($users as $user)
+			{
+				if($conf->getUser() == $user->getId())
+				{
+					array_push($data["configSets"],$conf);
+				}
+			}
+		}
+
 		return $this->render('config/configSet.html.twig', $data);
 	}
 	
@@ -1679,7 +1691,7 @@ class ConfigController extends AbstractController
 	 */
 	public function configSetEdit(ConfigSet $configSet,Request $request)
 	{
-		// $em_upv6 = $this->getDoctrine()->getManager("upv6");
+		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_gui = $this->getDoctrine()->getManager("gui");
 	
 		
@@ -1694,9 +1706,11 @@ class ConfigController extends AbstractController
 	
 				if(!is_null($keys) && !is_null($values)) {
 						
-					// $user = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneById($idUser);
 					
-					if($user != $configSet->getUser()) {
+					$user = $em_gui->getRepository('App\Entity\Gui\User')->findOneById($idUser);
+					
+
+					if($user->getId() != $configSet->getUser()) {
 						$configSet->setActive(false);
 					}
 					
@@ -1732,7 +1746,13 @@ class ConfigController extends AbstractController
 	
 		// $data["users"] = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findBy(array(), array('name' => 'ASC'));
 		$data["users"] = $em_gui->getRepository('App\Entity\Gui\User')->findBy(array(), array('userName' => 'ASC'));
-
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		
+		$city = $user->getCity();
+		$users = $city->getUsers();
+		$users = $users->getValues();
+		
+		$data["users"] = $users;
 		
 		$data["configSet"] = $configSet;
 		
@@ -1745,9 +1765,15 @@ class ConfigController extends AbstractController
 	public function configSetAct(ConfigSet $configSet, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
-			
+		
 		$activeConfigSet = $em_upv6->getRepository('App\Entity\Upv6\ConfigSet')->findOneBy(array('active' => true, 'user' => $configSet->getUser()));
-		$activeConfigSet->setActive(false);
+		
+		if(!is_null($activeConfigSet))
+		{
+			$activeConfigSet->setActive(false);
+		}
+
+
 		
 		$configSet->setActive(true);
 					
