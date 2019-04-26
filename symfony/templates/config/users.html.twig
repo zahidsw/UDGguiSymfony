@@ -72,7 +72,7 @@
 							{{ user.username }}
 						</a>
 					</td>
-					<td>{{ user.lastLogin | date('d-m-Y H:i:s') }}</td>
+					<td>{{ user.lastActivityAt | date('d-m-Y H:i:s') }}</td>
 				</tr>
 			{% endfor %}
 		</table>
