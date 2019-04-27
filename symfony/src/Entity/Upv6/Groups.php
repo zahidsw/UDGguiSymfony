@@ -5,6 +5,8 @@ namespace App\Entity\Upv6;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+
+
 /**
  * Groups
  *
@@ -226,10 +228,10 @@ class Groups
     /**
      * Add entities
      *
-     * @param \App\Entity\Upv6\GroupHasEntity $entities
+     * @param \iot6\InteractBundle\Entity\GroupHasEntity $entities
      * @return Groups
      */
-    public function addEntitie(\App\Entity\Upv6\GroupHasEntity $entities)
+    public function addEntitie(\iot6\InteractBundle\Entity\GroupHasEntity $entities)
     {
         $this->entities[] = $entities;
     
@@ -239,9 +241,9 @@ class Groups
     /**
      * Remove entitie
      *
-     * @param \App\Entity\Upv6\GroupHasEntity $entities
+     * @param \iot6\InteractBundle\Entity\GroupHasEntity $entities
      */
-    public function removeEntitie(\App\Entity\Upv6\GroupHasEntity $entities)
+    public function removeEntitie(\iot6\InteractBundle\Entity\GroupHasEntity $entities)
     {
         $this->entities->removeElement($entities);
     }

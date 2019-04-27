@@ -26,7 +26,7 @@ class FloorsType extends AbstractType
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
 		$resolver->setDefaults(array(
-				'data_class' => 'iot6\InteractBundle\Entity\Floors'
+				'data_class' => 'App\Entity\Upv6\Floors'
 		));
 	}
 	

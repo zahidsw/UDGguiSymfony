@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.devices'|trans }}
@@ -15,7 +15,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:devicesMenus.html.twig' %}
+	{% include 'config/devicesMenus.html.twig' %}
 	
 	<br/><br/>
 	
@@ -23,7 +23,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	{% include 'config/msg.html.twig' %}
 	
 	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_Devices_categories_Add') }}">[{{ 'conf.category_add'|trans }}]</a>
 	
@@ -35,12 +35,12 @@
 				<tr>
 					<td style="width:30px; text-align:center;">
 						<a href="{{ path('iot6_ConfigBundle_Devices_categories_Edit', { 'id': category.id }) }}">
-							<img src="{{ asset('images/interface/icons/edit.png') }}" />
+							<img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
 						</a>
 					</td>
 					<td style="width:30px; text-align:center;">
 						<a href="{{ path('iot6_ConfigBundle_Devices_categories_Delete', { 'id': category.id }) }}">
-							<img src="{{ asset('images/interface/icons/delete.png') }}"
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
 								onclick="return(confirm('{{ 'conf.ask.delete_category'|trans }}'));" />
 						</a>
 					</td>
@@ -55,8 +55,8 @@
 		
 		<br/>
 		
-		{%
-			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+		{{
+			render(controller("App\\Controller\\PaginatorController:paginator", {
 				'_locale': app.request.locale,
 				'nbItems': nbCategories,
 				'nbItemPerPage': nbProPage,
@@ -66,7 +66,7 @@
 				'arg': 'page'
 				}
 			)) 
-		%}
+		}}
 	    
 	</div>
 {% endblock %}

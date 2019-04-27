@@ -145,4 +145,18 @@ class WebserviceParam
     	
     	return $kernelURL . '/' . $action . '?user='. $user . '&session_id=' . $session_id . '&timestamp=' . WebserviceParam::getTimeStamp() . '&token=' . WebserviceParam::getToken($key, $action);
     }
+
+    public static function validateDevice($kernelURL, $key, $device_id, $session_id)
+    {	
+    	$action = 'validateDevice';
+    	
+    	return $kernelURL . '/' . $action . '?device_id='. $device_id . '&session_id=' . $session_id . '&timestamp=' . WebserviceParam::getTimeStamp() . '&token=' . WebserviceParam::getToken($key, $action);
+    }
+
+    public static function validateRule($kernelURL, $key, $rule_id, $session_id)
+    {	
+    	$action = 'validateRule';
+    	
+    	return $kernelURL . '/' . $action . '?rule_id='. $rule_id . '&session_id=' . $session_id . '&timestamp=' . WebserviceParam::getTimeStamp() . '&token=' . WebserviceParam::getToken($key, $action);
+    }
 }

@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.devices'|trans }} - {{ 'conf.family_edit'|trans }}
@@ -14,8 +14,8 @@
 	<h1>{{ 'conf.family_edit'|trans }}</h1>
 	
 	<br/><br/>
-	
-	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_Devices_families_Edit', {'id': family.id }) }}" {{ form_enctype(form) }}>
+
+	{{ form_start(form, {'attr': {'id': 'form'},'action': path('iot6_ConfigBundle_Devices_families_Edit', { 'id': family.id }) }) }}
 		{{ form_errors(form) }}
 		<table>
 			<tr>
@@ -40,7 +40,7 @@
 		<br/>
 		
 		<input type="submit" value="{{ 'conf.edit'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_Devices_families') }}'" />
-	</form>
+	{{ form_end(form) }}
 	
 	
 {% endblock %}

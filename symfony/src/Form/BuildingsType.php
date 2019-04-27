@@ -27,7 +27,7 @@ class BuildingsType extends AbstractType
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
 		$resolver->setDefaults(array(
-				'data_class' => 'iot6\InteractBundle\Entity\Buildings'
+				'data_class' => 'App\Entity\Upv6\Buildings'
 		));
 	}
 	

@@ -641,7 +641,7 @@ class ConfigController extends AbstractController
 		return $this->render('config/devices.html.twig', $data);
 	}
 	
-	public function validate(Devices $device)
+	public function validate(Devices $device,Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		 
@@ -654,17 +654,17 @@ class ConfigController extends AbstractController
     		$webserviceParam = $em_gui->getRepository('App\Entity\Gui\WebserviceParam')->findOneByParam('kernelUrl');
     		$setting = $em_upv6->getRepository('App\Entity\Upv6\Settings')->findOneById(1);
     		$device_id = $device->getId();
-		$session_id = $this->getRequest()->getSession()->getId();
+		$session_id = $request->getSession()->getId();
     		$url = WebserviceParam::validateDevice($webserviceParam->getValue(), $setting->getKernelSharedKey(), $device_id, $session_id);
     		$response = WebserviceParam::file_get_contents_curl($url);
 			
 		$this->setMessage('ok', 'conf.ok.validated_device');
 		 
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		return $this->redirect($referer);
 	}
 	
-	public function waitingApprovalEdit(Devices $device)
+	public function waitingApprovalEdit(Devices $device,Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		
@@ -674,12 +674,12 @@ class ConfigController extends AbstractController
 		$buildings =  $em_upv6	->getRepository('App\Entity\Upv6\Buildings')
 								->findBy(array(), array('name' => 'asc'));
 		
-		$form = $this->createForm(new DevicesType(), $device);
+		$form = $this->createForm(DevicesType::class, $device);
 		
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 			 
 			if ($form->isValid())
 			{
@@ -724,15 +724,15 @@ class ConfigController extends AbstractController
 		return $this->render('config/families.html.twig', $data);
 	}
 	
-	public function familiesAdd()
+	public function familiesAdd(Request $request)
 	{
 		$family = new Families();
-		$form = $this->createForm(new FamiliesType(), $family);
+		$form = $this->createForm(FamiliesType::class, $family);
 
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 	
 			if ($form->isValid())
 			{
@@ -754,14 +754,14 @@ class ConfigController extends AbstractController
 		return $this->render('config/familiesAdd.html.twig', $data);
 	}
 	
-	public function familiesEdit(Families $family)
+	public function familiesEdit(Families $family, Request $request)
 	{
-		$form = $this->createForm(new FamiliesType(), $family);
+		$form = $this->createForm(FamiliesType::class, $family);
 
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 	
 			if ($form->isValid())
 			{
@@ -784,7 +784,7 @@ class ConfigController extends AbstractController
 		return $this->render('config/familiesEdit.html.twig', $data);
 	}
 	
-	public function familiesDelete(Families $family)
+	public function familiesDelete(Families $family, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_upv6->remove($family);
@@ -792,7 +792,7 @@ class ConfigController extends AbstractController
 		
 		$this->setMessage('ok', 'conf.ok.deleted_family');
 		
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		return $this->redirect($referer);
 	}
 	
@@ -819,15 +819,15 @@ class ConfigController extends AbstractController
 		return $this->render('config/categories.html.twig', $data);
 	}
 	
-	public function categoriesAdd()
+	public function categoriesAdd(Request $request)
 	{
 		$category = new Categories();
-		$form = $this->createForm(new CategoriesType(), $category);
+		$form = $this->createForm(CategoriesType::class, $category);
 	
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 	
 			if ($form->isValid())
 			{
@@ -849,14 +849,14 @@ class ConfigController extends AbstractController
 		return $this->render('config/categoriesAdd.html.twig', $data);
 	}
 	
-	public function categoriesEdit(Categories $category)
+	public function categoriesEdit(Categories $category, Request $request)
 	{
-		$form = $this->createForm(new CategoriesType(), $category);
+		$form = $this->createForm(CategoriesType::class, $category);
 	
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
-			$form->bind($request);
+			$form->handleRequest($request);
 	
 			if ($form->isValid())
 			{
@@ -879,7 +879,7 @@ class ConfigController extends AbstractController
 		return $this->render('config/categoriesEdit.html.twig', $data);
 	}
 	
-	public function categoriesDelete(Categories $category)
+	public function categoriesDelete(Categories $category, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		$em_upv6->remove($category);
@@ -887,7 +887,7 @@ class ConfigController extends AbstractController
 		
 		$this->setMessage('ok', 'conf.ok.deleted_category');
 	
-		$referer = $this->getRequest()->headers->get('referer');
+		$referer = $request->headers->get('referer');
 		return $this->redirect($referer);
 	}
 
