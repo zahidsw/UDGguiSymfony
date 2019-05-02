@@ -65,7 +65,7 @@ class User implements UserInterface
 
 
      /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Gui\City", inversedBy="Users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Gui\City", fetch="EAGER", inversedBy="users")
      */
     private $city;
 

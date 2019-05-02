@@ -3,6 +3,8 @@
 namespace App\Entity\Gui;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CityRepository")

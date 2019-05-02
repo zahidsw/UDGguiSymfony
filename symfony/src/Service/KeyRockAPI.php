@@ -63,7 +63,6 @@ class KeyRockAPI
         return $response;
     }
 
-
     public function getUsers():object
     {
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
@@ -76,6 +75,22 @@ class KeyRockAPI
         }
 
         return $response;
+    }
+
+    public function getUserByMail(String $mail) : array 
+    {
+        $response = $this->getUsers();
+		$users = (string)$response->getBody();
+		$users = json_decode($users,true);
+       
+		foreach($users['users'] as $user)
+		{
+			if(strtolower(trim($user['email'])) == strtolower(trim($mail)))
+			{
+				return $user;
+			}
+		}
+		return [];
     }
 
     public function deleteUser(String $userId):object
@@ -116,8 +131,6 @@ class KeyRockAPI
         return $response;
     }
 
-    
-
     public function createToken(String $email, String $password):object
     {
         $body  = array (
@@ -137,6 +150,32 @@ class KeyRockAPI
         return $response;
     }
 
+    public function createOrganization(String $name, String $description)
+    {
+        $body = array (
+            'organization' => 
+                array (
+                'name' => $name,
+                'description' => $description
+                ),
+            );
+    
+        $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
+        $request = $this->messageFactory->createRequest('POST', $this->baseUrl . '/v1/organizations', $headers, json_encode($body));
+        $response = $this->httpMethodsClient->sendRequest($request);
+
+        if($response->getStatusCode() != "201"){
+            $message = (string)$response->getBody();
+            throw new \Exception($message);
+        }
+
+        return $response;
+    }
+
+
+
+
+
     public function getOrganizations():object
     {
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
@@ -149,6 +188,23 @@ class KeyRockAPI
         }
 
         return $response;
+    }
+
+    public function getOrganizationByName(String $name) : array 
+    {
+        $response = $this->getOrganizations();
+        $organizations = (string)$response->getBody();
+        $organizations =json_decode($organizations,true);
+ 
+        foreach($organizations['organizations'] as $organization)
+        {
+            if(strtolower(trim($organization['Organization']['name'])) == strtolower(trim($name)))
+            {
+                return $organization;
+            }
+        }
+          
+        return [];
     }
 
     public function addUserToOrganization(String $userId, String $organizationId, String $roleId)
@@ -169,7 +225,6 @@ class KeyRockAPI
 
     public function addUserToApplication(String $userId, String $applicationId, String $roleId)
     {
-        
         $url = $this->baseUrl . '/v1/applications/' . $applicationId . '/users/' . $userId . '/roles/' . $roleId;
         $headers = ['X-Auth-token' => $this->authToken,'Content-Type'=>'application/json'];
         $request = $this->messageFactory->createRequest('POST', $url, $headers);
@@ -182,12 +237,6 @@ class KeyRockAPI
         
         return $response;
     }
-
-
-
-
-
-
 
     public function removeUserFromOrganization(String $userId, String $organizationId, String $roleId): object
     {
