@@ -10,6 +10,8 @@ use App\Entity\Gui\Purchase;
 use App\Entity\Gui\City;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\KeyRockAPI;
+use \Firebase\JWT\JWT;
+
 
 
  // assumption that city exists in keyrock
@@ -33,7 +35,6 @@ class PurchaseController extends AbstractController
         return $response; 
     }
 
-
     /**
      * @Route("/purchase", name="purchase",methods={"POST"})
      */
@@ -41,10 +42,14 @@ class PurchaseController extends AbstractController
     {
         try
         {
-            $data = $this->decode($request->getContent());
+            $key = "9yUCrlExdstKquikKe7hO44O1ze1wyWUIHp9ZjQY";
+            $headers = $request->headers->all();
+            $jwt = substr($headers['authorization'][0], strpos($headers['authorization'][0], 'Bearer') + 7);
+            $decoded = JWT::decode($jwt, $key, array('HS256'));
+            $data = $this->decode(json_encode($decoded), true);
+
             $data = $this->validate($data);
             
-           
             $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
             $headers = $response->getHeaders();
             $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
@@ -212,81 +217,6 @@ class PurchaseController extends AbstractController
         return $data;
     }
 
-    function createUser($city)
-    {
-        
-        $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-        $headers = $response->getHeaders();
-        $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
-
-        $response = $this->keyRockAPI->getOrganizationByName($city);
-        dd($response);
-    
-    }
-
-    function createUserOld($username,$email,$password)
-    {
-        try 
-        {
-            $this->keyRockAPI->setApplicationId($this->getParameter('keyrock.app.id'));	
-
-            $keyrockUser = $this->userKeyRockExists($email);
-            if(!$keyrockUser)
-            {
-                //impersonate admin user in order to create a new user
-                $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-                $headers = $response->getHeaders();
-                $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
-                // create the user in keyrock
-                $response = $this->keyRockAPI->registerUser($username,$email,$password);
-                $newUser = (string)$response->getBody();
-                $newUser =json_decode($newUser,true);
-                $newUserKeyrockId = $newUser['user']['id'];
-            } else 
-            {
-                $newUserKeyrockId = $keyrockUser['id'];
-            }
-    
-    
-            // should check if city from json exists in keyrock but we make assumptio exists
-            // should check if user already is in organization but we add it anyway
-            $this->keyRockAPI->addUserToOrganization($newUserKeyrockId, $organizationId, $newUserRole);
-    
-    
-            // assumption: one user to one city
-            $userUdg = $this->userUdgGuiExists($email);
-            if(!$userUdg)
-            {
-                // create the user in udg gui db
-                $entityManager = $this->getDoctrine()->getManager("gui");
-                $user = new User();
-                $user->setUserName($email);
-                $user->setEmail($email);
-                $user->setEnabled( (!is_null($isActive)) ? true : false );
-                $user->setKeyrockId($newUserKeyrockId);
-                $user->setCity($city);
-                $userRole = [];
-                foreach ($roles as $roleId) 
-                {
-                    $role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-                    array_push($userRole,$role->getName());
-                }
-    
-                
-                $user->addRole(implode(",",$userRole));
-    
-                $entityManager->persist($user);
-                $entityManager->flush();
-            }
-
-        } catch (\Exception $e)
-        {
-             echo $e->getMessage();
-        }
-        
-
-    }        
-
     public function userRegistrationKeyRock($username, $email, $password):integer
     {
          //impersonate admin user in order to create a new user
@@ -315,6 +245,54 @@ class PurchaseController extends AbstractController
         $entityManager->flush();
 
         return $user;
+    }
+
+
+    /**
+     * @Route("/enc", name="enc",methods={"POST"})
+     */
+    public function testEncrypt()
+    {
+        $key = "9yUCrlExdstKquikKe7hO44O1ze1wyWUIHp9ZjQY";
+
+        $token = array (
+        'timestamp' => 1556527564,
+        'service_id' => 'SIPM',
+        'service_description' => 'Synchronicity IoT Product Marketplace',
+        'request_url' => 'https://0.0.0.0',
+        'order_number' => '39',
+        'customer' =>
+            array (
+            'first_name' => 'John',
+            'last_name' => 'Client',
+            'email' => 'stefan@mail.com',
+            'street' => 'Buchanan St. 21',
+            'city' => 'bern',
+            'state' => 'California',
+            'zip_code' => '94147',
+            'country' => 'United States',
+            'country_code' => 'US',
+            'phone' => '',
+            ),
+        'product' =>
+            array (
+            'sku' => 'TESTPRODUCT1',
+            'name' => 'TEST PRODUCT 1',
+            'quantity' => 1,
+            'price' => 0.0,
+            'currency' => 'CHF',
+            'fields' =>
+                array (
+                'callback_url' => 'http://10.4.17.161/purchase',
+                'callback_field_1' => 'Field 1 value',
+                'callback_field_2' => 'Field 2 value',
+                ),
+            ),
+        );
+
+
+        $jwt = JWT::encode($token, $key, 'HS256');
+        dd($jwt);
     }
 
 }
