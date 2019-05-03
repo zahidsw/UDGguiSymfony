@@ -80,7 +80,7 @@ class PurchaseController extends AbstractController
             // is user in udg db
             $entityManager = $this->getDoctrine()->getManager("gui");
             $userDb = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['customer']['email']]);
-            $userDb->setKeyrockId($userKeyRock['id']);
+            
 
             if(empty($userDb))
             {
@@ -90,13 +90,12 @@ class PurchaseController extends AbstractController
 				$userDb->setEmail($data['customer']['email']);
                 $userDb->setEnabled(true);
                 $userDb->addRole("ROLE_USER,ROLE_ADMIN");
-                $userDb->setKeyrockId($userKeyRock['id']);
-				$entityManager->persist($userDb);
-				$entityManager->flush();
             }
 
-
-
+            $userDb->setKeyrockId($userKeyRock['id']);
+            $entityManager->persist($userDb);
+            $entityManager->flush();
+            
             $city = $entityManager->getRepository(City::class)->findOneBy(['name' => $data['customer']['city']]);
 
             if(empty($city))
