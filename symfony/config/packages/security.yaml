@@ -43,7 +43,7 @@ security:
                 csrf_token_generator: security.csrf.token_manager
                 # The page users are redirect to when there is no previous page stored in the
                 # session (for example when the users access directly to the login page).
-                default_target_path: blog_index
+                target_path_parameter: /en/home
             guard:
                 authenticators:
                     - App\Security\AppCustomAuthenticator
@@ -62,10 +62,11 @@ security:
         - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: '^/purchase', roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: '^/enc', roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: '^/', roles: ROLE_USER }
+        - { path: '^/front', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/', roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
 
-    access_denied_url: iot6_HomeBundle
+    # access_denied_url: iot6_HomeBundle

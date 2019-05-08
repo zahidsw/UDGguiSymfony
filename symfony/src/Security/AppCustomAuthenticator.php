@@ -96,10 +96,10 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        return new RedirectResponse('/en/home');
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
+        return new RedirectResponse('/en/home');
     }
 
     protected function getLoginUrl()

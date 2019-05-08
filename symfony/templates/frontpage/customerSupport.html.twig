@@ -1,0 +1,54 @@
+{% extends 'frontpage/layout.html.twig' %}
+
+{% block title %}Frontpage{% endblock %}
+
+{% block body %}
+<div id="submenu">
+	<a abc="/en/front/discussion" class="selected" href="/en/front/discussion">Discussion</a>
+	
+		 | 
+		
+	<a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+</div>
+
+<h1>Customer Support</h1>
+	<br/>
+    <a href="" class="subtitle2">[Dashboard]</a>
+    <a href="" class="subtitle2">[Send message to Device Gateway]</a>
+	<br/>
+    <br/>
+    <br/>	
+
+	<h1>Dashboard</h1>
+
+
+      <div id="zebraTableDiv">
+		<table id="table" style="width:100%;">
+			<tr>
+                <th>{{ 'Service Description' }}</th>
+                <th>{{ 'Users' }}</th>
+                <th>{{ 'Devices' }}</th>
+                <th>{{ 'Duration' }}</th>
+			</tr>
+
+            {% for purchase in purchases %}
+            
+            <tr>
+                <td style="width: 30px; text-align: center;">{{ purchase.ServiceDescription }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.users }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.devices }}</td>
+                <td style="width: 30px; text-align: center;">{{ purchase.duration }}</td>
+            </tr>
+			{% endfor %}			
+        </table>
+    </div>          
+
+
+
+
+
+
+
+
+    
+{% endblock %}

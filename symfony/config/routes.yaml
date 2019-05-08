@@ -12,9 +12,11 @@ iot6_HomeBundle:
     path: /{_locale}/home
     controller: App\Controller\HomeController:home
 
-home:
-    path: /
-    controller: App\Controller\HomeController:home
+# home:
+#     path: /
+#     controller: App\Controller\HomeController:home
+
+
     
 
 iot6_HomeBundle_remoteServerMsg:
@@ -466,7 +468,7 @@ iot6_location_viewer:
     controller: App\Controller\ViewerController:index
 
 iot6_location_list:
-    path:  /
+    path:  //{_locale}/viewer/list
     controller: App\Controller\ViewerController:list
 
 getLocationsAction:
@@ -852,4 +854,26 @@ logout:
 marketplace:
     path:  /{_locale}/marketplace
     controller: App\Controller\MarketPlaceController:list
+
+front:
+    path:  /
+    controller: App\Controller\FrontController:list
+
+customerSupport:
+    path:  /{_locale}/front/customer
+    controller: App\Controller\FrontController:customerSupport
+
+discussion:
+    path:  /{_locale}/front/discussion
+    controller: App\Controller\FrontController:discussion
+
+frontcontact:
+    path:  /{_locale}/front/discussion/contact
+    controller: App\Controller\FrontController:contact
+
+frontservice:
+    path:  /{_locale}/front/discussion/service
+    controller: App\Controller\FrontController:service
+
+    
    

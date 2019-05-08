@@ -28,6 +28,8 @@
 				<div id="login">
 					{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 						<br/><br/>{{ 'login.connectedAs'|trans }} {{ app.user.username }} - <a href="/logout">{{ 'login.logout'|trans }}</a>
+						{% else %}
+						<br/><br/> <a href="/login">{{ 'Login' }}</a>
 					{% endif %}
 				</div>
 			

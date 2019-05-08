@@ -265,7 +265,7 @@ class PurchaseController extends AbstractController
             array (
             'first_name' => 'John',
             'last_name' => 'Client',
-            'email' => 'stefan@mail.com',
+            'email' => 'bernadmin@mail.com',
             'street' => 'Buchanan St. 21',
             'city' => 'bern',
             'state' => 'California',
@@ -276,7 +276,7 @@ class PurchaseController extends AbstractController
             ),
         'product' =>
             array (
-            'sku' => 'TESTPRODUCT1',
+            'sku' => 'UDGBASIC',
             'name' => 'TEST PRODUCT 1',
             'quantity' => 1,
             'price' => 0.0,
