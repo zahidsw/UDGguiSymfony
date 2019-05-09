@@ -60,7 +60,9 @@ services:
     app.logout.listener:
         class: App\EventListener\LogoutListener
             
-
+    App\Controller\FrontController:
+        arguments:
+            $logger: '@monolog.logger.pop'
 
     
 

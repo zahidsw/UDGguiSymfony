@@ -875,5 +875,9 @@ frontservice:
     path:  /{_locale}/front/discussion/service
     controller: App\Controller\FrontController:service
 
+vnocreate:
+    path:  /{_locale}/createVno
+    controller: App\Controller\FrontController:createVno
+
     
    
