@@ -134,16 +134,16 @@ class FrontController extends AbstractController
             //$this->logger->info($process->getOutput());
 
 
-	    /*$process = Process::fromShellCommandline('/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json');
-
+	    $process = Process::fromShellCommandline('/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json');
+               
 	    
 	    $process->run(function ($type, $buffer) 
 	    		{
 				$this->logger->info($buffer); 
-	    });*/
+	    });
 
-	    exec('/home/mandint/slice-manager/slice-manager/slice_manager.py --pop-descriptor  /home/mandint/tmp/pop.json',$retarray);
-		$this->logger->info(serialize($retarray));
+	    /*exec('/home/mandint/slice-manager/slice_manager.py --pop-descriptor  /home/mandint/tmp/pop.json',$retarray);
+	    $this->logger->info(serialize($retarray));*/
 	
 
 
