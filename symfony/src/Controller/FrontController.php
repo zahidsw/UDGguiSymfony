@@ -108,7 +108,7 @@ class FrontController extends AbstractController
                   'longitude' => '10.203921',
                 ),
             );
-dd(json_encode($pop));
+
             $filesystem = new Filesystem();
             $this->logger->info('Creating file: /home/mandint/tmp/pop.json');
             
