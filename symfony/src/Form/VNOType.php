@@ -18,14 +18,14 @@ class VNOType extends AbstractType
 			->add('name',			   TextType::class)
 			->add('AuthorisationURL',  TextType::class)
 			->add('Tenant',	           TextType::class)
-			->add('Username',          TextType::class)
+            ->add('Username',          TextType::class)
+			->add('Password',          TextType::class)            
             ->add('Type', ChoiceType::class, [
                 'choices'  => [
                     'openstack' => 'openstack',
                 ],
             ])
             ->add('KeyPair',	       TextType::class)
-            ->add('ProjectId',	       TextType::class)
             ->add('SecurityGroups', ChoiceType::class, [// drop down multiple selection
                 'choices'  => [
                     'default' => 'default',

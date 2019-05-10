@@ -26,6 +26,8 @@
 	<h1>{{ ''|trans }}</h1>
 	
 	<br/><br/>
+
+
 	
 	{{ form_start(form, {'attr': {'id': 'form'},'action': path('vnocreate') }) }}
 		{{ form_errors(form) }}
@@ -51,6 +53,11 @@
 				<td>{{ form_errors(form.Username) }}</td>
 			</tr>
 			<tr>
+				<td>{{ form_label(form.Password, 'Password') }}</td>
+				<td>{{ form_widget(form.Password) }}</td>
+				<td>{{ form_errors(form.Password) }}</td>
+			</tr>
+			<tr>
 				<td>{{ form_label(form.Type, 'Type') }}</td>
 				<td>{{ form_widget(form.Type) }}</td>
 				<td>{{ form_errors(form.Type) }}</td>
@@ -59,11 +66,6 @@
 				<td>{{ form_label(form.KeyPair, 'KeyPair') }}</td>
 				<td>{{ form_widget(form.KeyPair) }}</td>
 				<td>{{ form_errors(form.KeyPair) }}</td>
-			</tr>
-			<tr>
-				<td>{{ form_label(form.ProjectId, 'ProjectId') }}</td>
-				<td>{{ form_widget(form.ProjectId) }}</td>
-				<td>{{ form_errors(form.ProjectId) }}</td>
 			</tr>
 			<tr>
 				<td>{{ form_label(form.SecurityGroups, 'SecurityGroups') }}</td>
@@ -80,5 +82,12 @@
 		<input type="submit" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}"  />
 	{{ form_end(form) }}
 	
+	{# read and display just one flash message type #}
+	{% for message in app.flashes('notice') %}
+		<div class="flash-notice">
+			{{ message }}
+		</div>
+	{% endfor %}
+
 	
 {% endblock %}

@@ -97,7 +97,7 @@ class FrontController extends AbstractController
                 'authUrl' => $task['AuthorisationURL'],
                 'tenant' => $task['Tenant'],
                 'username' => $task['Username'],
-                'password' => '65S8xLcC57',
+                'password' => $task['Password'],
                 'keyPair' => $task['KeyPair'],
                 'securityGroups' => $task['SecurityGroups'],
                 'type' => $task['Type'],
@@ -108,58 +108,23 @@ class FrontController extends AbstractController
                   'longitude' => '10.203921',
                 ),
             );
-
+dd(json_encode($pop));
             $filesystem = new Filesystem();
             $this->logger->info('Creating file: /home/mandint/tmp/pop.json');
             
             $filesystem->dumpFile('/home/mandint/tmp/pop.json', json_encode($pop));
-	    $this->logger->info('Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json');
-	    //$process = new Process(['sh','-c', 'slice','--version']);
-            //$process = new Process(['python /home/mandint/slice-manager/slice_manager.py', '--pop-descriptor','/home/mandint/tmp/pop.json']);
-            //$process->run();
-
-            // executes after the command finishes
-
-           /* try {
-                if (!$process->isSuccessful()) 
-                {
-                    throw new ProcessFailedException($process);
-                }
-            }
-            catch (\Exception $e) {
-                $this->logger->error($e->getMessage());
-	    }*/
-           
-            //$this->logger->info('output');
-            //$this->logger->info($process->getOutput());
-
-
-	    $process = Process::fromShellCommandline('/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json');
-               
-	    
-	    $process->run(function ($type, $buffer) 
-	    		{
-				$this->logger->info($buffer); 
-	    });
-
-	    /*exec('/home/mandint/slice-manager/slice_manager.py --pop-descriptor  /home/mandint/tmp/pop.json',$retarray);
-	    $this->logger->info(serialize($retarray));*/
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	        $this->logger->info('Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json');
+	        $process = Process::fromShellCommandline('/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json');
+            
+            $process->run(function ($type, $buffer) 
+            {
+                $this->logger->info($buffer); 
+                $this->addFlash(
+                    'notice',
+                    $buffer
+                );
+            });
+            
             return $this->redirectToRoute('vnocreate');
         }
 
