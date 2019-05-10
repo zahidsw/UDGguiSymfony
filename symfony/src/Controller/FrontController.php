@@ -110,16 +110,17 @@ class FrontController extends AbstractController
             );
 
             $filesystem = new Filesystem();
-            $this->logger->info('Creating file: /tmp/pop.json');
+            $this->logger->info('Creating file: /home/mandint/tmp/pop.json');
             
-            $filesystem->dumpFile('/tmp/pop.json', json_encode($pop));
-            $this->logger->info('Executing: slice-manager --pop-descriptor /tmp/pop.json');
-            $process = new Process(['slice-manager', '--pop-descriptor','/tmp/pop.json']);
-            $process->run();
+            $filesystem->dumpFile('/home/mandint/tmp/pop.json', json_encode($pop));
+	    $this->logger->info('Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json');
+	    //$process = new Process(['sh','-c', 'slice','--version']);
+            //$process = new Process(['python /home/mandint/slice-manager/slice_manager.py', '--pop-descriptor','/home/mandint/tmp/pop.json']);
+            //$process->run();
 
             // executes after the command finishes
 
-            try {
+           /* try {
                 if (!$process->isSuccessful()) 
                 {
                     throw new ProcessFailedException($process);
@@ -127,11 +128,38 @@ class FrontController extends AbstractController
             }
             catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
-            }
+	    }*/
            
+            //$this->logger->info('output');
+            //$this->logger->info($process->getOutput());
 
-            $this->logger->info($process->getOutput());
-            
+
+	    /*$process = Process::fromShellCommandline('/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json');
+
+	    
+	    $process->run(function ($type, $buffer) 
+	    		{
+				$this->logger->info($buffer); 
+	    });*/
+
+	    exec('/home/mandint/slice-manager/slice-manager/slice_manager.py --pop-descriptor  /home/mandint/tmp/pop.json',$retarray);
+		$this->logger->info(serialize($retarray));
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             return $this->redirectToRoute('vnocreate');
         }
 
