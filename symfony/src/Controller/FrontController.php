@@ -34,7 +34,7 @@ class FrontController extends AbstractController
 
 
     /**
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function customerSupport()
     {
