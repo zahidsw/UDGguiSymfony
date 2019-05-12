@@ -5,14 +5,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Controller\MenuController;
 use App\Entity\Gui\Route;
 use App\Entity\Gui\WebserviceParam;
 
 
-
+ /**
+	* @IsGranted("ROLE_USER")
+ */
 class HomeController extends AbstractController
 {
 	private $mb;

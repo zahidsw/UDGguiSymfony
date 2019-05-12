@@ -16,4 +16,5 @@ return [
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
     SunCat\MobileDetectBundle\MobileDetectBundle::class => ['all' => true],
     Http\HttplugBundle\HttplugBundle::class => ['all' => true],
+    FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
 ];

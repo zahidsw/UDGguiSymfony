@@ -229,6 +229,13 @@ class Devices
      * @ORM\OneToMany(targetEntity="App\Entity\Upv6\Variables", mappedBy="device")
      **/
     private $variables;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="privacy_app", type="boolean", nullable=true)
+     */
+    private $privacyApp;
     
     
     /**
@@ -1056,5 +1063,28 @@ class Devices
     public function updateLastChangeDate()
     {
     	$this->setLastChange(new \Datetime());
+    }
+
+    /**
+     * Set privacyApp
+     *
+     * @param boolean $privacyApp
+     * @return Devices
+     */
+    public function setPrivacyApp($privacyApp)
+    {
+        $this->privacyApp = $privacyApp;
+    
+        return $this;
+    }
+
+    /**
+     * Get privacyApp
+     *
+     * @return boolean 
+     */
+    public function getPrivacyApp()
+    {
+        return $this->privacyApp;
     }
 }

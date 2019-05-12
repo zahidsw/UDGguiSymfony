@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Upv6\Devices;
+use App\Entity\Upv6\UserHasDevice;
 use App\Entity\Upv6\Modules;
 use iot6\ConfigBundle\Entity\WebserviceParam;
 use iot6\InteractBundle\Form\Type\CardStateType;
@@ -14,6 +15,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+
 
 
 
@@ -42,8 +47,10 @@ class AjaxController extends AbstractController
 		$session_id = $session->getId();
 
 		// The user himself
-		$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
-		 
+		//$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
+		
+		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+
 		foreach ($listCards as $card)
 		{
 			$protocolArray = array();
@@ -172,6 +179,9 @@ class AjaxController extends AbstractController
 			->add('positionX',			TextType::class)
 			->add('positionY',			TextType::class)
 			->add('positionZ',			TextType::class)
+			->add('privacyApp', CheckboxType::class, [
+				'label'    => 'Privacy App ?',
+				'required' => false])
 			->getForm();
 		 
 		
@@ -196,6 +206,14 @@ class AjaxController extends AbstractController
 						
 						$em_upv6->persist($deviceToAdd);
 						$em_upv6->flush();
+
+						$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+						$user_has_device = new UserHasDevice();
+						$user_has_device->setUserId($user_id);
+						$user_has_device->setDeviceId($deviceToAdd->getId());
+						$em_upv6->persist($user_has_device);
+						$em_upv6->flush();
+
 	
 						$reponse = '<div class="customSuccess">'. $trsl->trans('msg.device_added') .'</div>';
 					}
@@ -225,46 +243,49 @@ class AjaxController extends AbstractController
 		return $this->render('interact/getProtocol.html.twig', $data);
 	}
 	
-	public function getDevice(Devices $device)
+	public function getDevice(Devices $device, Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 	
 		$form = $this	->createFormBuilder($device)
-						->add('ipv6address',		'text', array('attr' => array('class' => 'long')))
-						->add('physicalCode',		'text', array('attr' => array('class' => 'long')))
-						->add('assignedName',		'text', array('attr' => array('class' => 'long')))
-						->add('description',		'textarea', array('attr' => array('class' => 'long')))
-						->add('comments',			'textarea', array('attr' => array('class' => 'long')))
+						->add('ipv6address',		TextType::class, array('attr' => array('class' => 'long')))
+						->add('physicalCode',		TextType::class, array('attr' => array('class' => 'long')))
+						->add('assignedName',		TextType::class, array('attr' => array('class' => 'long')))
+						->add('description',		TextareaType::class, array('attr' => array('class' => 'long')))
+						->add('comments',			TextareaType::class, array('attr' => array('class' => 'long')))
 						//->add('detectedAt',			'datetime', array('attr' => array('class' => 'long')))
 						//->add('lastDataAt',			'datetime', array('attr' => array('class' => 'long')))
-						->add('family',				'entity', array('class' => 'iot6InteractBundle:Families', 'property' => 'internalName'))
-						->add('category',			'entity', array('class' => 'iot6InteractBundle:Categories', 'property' => 'internalName'))
-						->add('protocol',			'entity', array('class' => 'iot6InteractBundle:Protocols', 'property' => 'name'))
-						->add('module',				'entity', array('class' => 'iot6InteractBundle:Modules', 'property' => 'name'))
-						->add('card',				'entity', array('class' => 'iot6InteractBundle:Cards', 'property' => 'name'))
-						->add('model',				'entity', array('class' => 'iot6InteractBundle:Models', 'property' => 'name'))
-						->add('room',				'entity', array('class' => 'iot6InteractBundle:Rooms', 'property' => 'name'))
-						->add('positionX',			'number', array('required' => false))
-						->add('positionY',			'number', array('required' => false))
-						->add('positionZ',			'number', array('required' => false))
-						->add('longitude',			'number', array('required' => false))
-						->add('latitude',			'number', array('required' => false))
+						->add('family',				EntityType::class, array('class' => 'App\Entity\Upv6\Families', 'choice_label' => 'internalName'))
+						->add('category',			EntityType::class, array('class' => 'App\Entity\Upv6\Categories', 'choice_label' => 'internalName'))
+						->add('protocol',			EntityType::class, array('class' => 'App\Entity\Upv6\Protocols', 'choice_label' => 'name'))
+						->add('module',				EntityType::class, array('class' => 'App\Entity\Upv6\Modules', 'choice_label' => 'name'))
+						->add('card',				EntityType::class, array('class' => 'App\Entity\Upv6\Cards', 'choice_label' => 'name'))
+						->add('model',				EntityType::class, array('class' => 'App\Entity\Upv6\Models', 'choice_label' => 'name'))
+						->add('room',				EntityType::class, array('class' => 'App\Entity\Upv6\Rooms', 'choice_label' => 'name'))
+						->add('positionX',			NumberType::class, array('required' => false))
+						->add('positionY',			NumberType::class, array('required' => false))
+						->add('positionZ',			NumberType::class, array('required' => false))
+						->add('longitude',			NumberType::class, array('required' => false))
+						->add('latitude',			NumberType::class, array('required' => false))
+						->add('privacyApp', CheckboxType::class, [
+							'label'    => 'Privacy App',
+							'required' => false])
 						->getForm();
 	
-		$request = $this->getRequest();
+		
 		 
 		if ($request->getMethod() == 'POST')
 		{
 			$formFields = $request->get('form');
 			$name = $formFields['assignedName'];
 			
-			$trsl = $this->get('translator');
+			$trsl = $this->translator;
 			
 			if(isset($name))
 			{
 				if($name != '')
 				{
-					$form->bind($request);
+					$form->handleRequest($request);
 						
 					if ($form->isValid())
 					{
@@ -330,8 +351,8 @@ class AjaxController extends AbstractController
 		
 		
 		// The user himself
-		$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
-	
+		//$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
+		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 		$listUserDevices = $em_upv6->getRepository('App\Entity\Upv6\Devices')
 						->findDevicesByLocation($idBuilding, $idFloor, $idRoomyType, $idRoom, $idCategory, $idFamiliy);
 
@@ -396,8 +417,8 @@ class AjaxController extends AbstractController
 		$session_id = $session->getId();
 		
 		// The user himself
-		$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
-		
+		//$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
+		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 		$listUserDevices = $em_upv6->getRepository('App\Entity\Upv6\Devices')
 						->findDevicesByLocation($idBuilding, $idFloor, $idRoomyType, $idRoom);
 		

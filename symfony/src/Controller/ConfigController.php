@@ -38,10 +38,14 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\KeyRockAPI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
 
 
+/**
+	* @IsGranted("ROLE_USER")
+ */
 class ConfigController extends AbstractController
 {
 	private $translator;

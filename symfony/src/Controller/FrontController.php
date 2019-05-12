@@ -54,11 +54,13 @@ class FrontController extends AbstractController
                     $purchase->users = $product->getMaxUsers();
                     $purchase->devices = $product->getMaxDevices();
                     $purchase->duration = $product->getDuration();
+                    $purchase->product = $product->getSku();
                 }
             }
         }
 
         $data ['purchases'] = $purchases;
+        
 
     	return $this->render('frontpage/customerSupport.html.twig',$data);
     }

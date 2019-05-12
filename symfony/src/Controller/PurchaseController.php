@@ -42,7 +42,7 @@ class PurchaseController extends AbstractController
     {
         try
         {
-            $key = "9yUCrlExdstKquikKe7hO44O1ze1wyWUIHp9ZjQY";
+            $key = "9yUCrlExdstKquikKe7hO44O1ze1wyWUIHp9ZjQY"; // need to move in .env file
             $headers = $request->headers->all();
             $jwt = substr($headers['authorization'][0], strpos($headers['authorization'][0], 'Bearer') + 7);
             $decoded = JWT::decode($jwt, $key, array('HS256'));
@@ -59,7 +59,7 @@ class PurchaseController extends AbstractController
             if(empty($userKeyRock))
             {
                 // create keyrock user
-                $password = 'password';
+                $password = 'password'; // need to be set by the user in an email 
                 $response = $this->keyRockAPI->registerUser($data['customer']['email'],$data['customer']['email'],$password);
                 $newUser = (string)$response->getBody();
                 $newUser =json_decode($newUser,true);
@@ -265,7 +265,7 @@ class PurchaseController extends AbstractController
             array (
             'first_name' => 'John',
             'last_name' => 'Client',
-            'email' => 'bernadmin@mail.com',
+            'email' => 'villaadmin@mail.com',
             'street' => 'Buchanan St. 21',
             'city' => 'bern',
             'state' => 'California',
@@ -276,7 +276,7 @@ class PurchaseController extends AbstractController
             ),
         'product' =>
             array (
-            'sku' => 'UDGBASIC',
+            'sku' => 'udgaas-pro',
             'name' => 'TEST PRODUCT 1',
             'quantity' => 1,
             'price' => 0.0,

@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "firebase/php-jwt": "^5.0",
+        "friendsofsymfony/jsrouting-bundle": "^2.3",
         "mobiledetect/mobiledetectlib": "^2.8",
         "mtdowling/cron-expression": "^1.2",
         "php-http/guzzle6-adapter": "~1.1.1",
