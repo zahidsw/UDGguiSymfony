@@ -42,24 +42,11 @@
 		</div>
 		
         
-		<div class="blocLeft">
-            
-		</div>
-		<br/>
-        <br/>
-        <br/>
-        <br/>
         
 		<div class="blocLeft">
-			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/link.png') }}" />
-			<a href="http://udg.cityreport.org" class="title indent">{{ 'More details'|trans }}</a>
 			
-		</div>
-		
-		
-	</div>
+			
 
-	<div class="blocRight">
 			{{ form_start(form, {'attr': {'id': 'form'},'action': path('vnocreate') }) }}
 		{{ form_errors(form) }}
 		<table>
@@ -110,8 +97,16 @@
 		
 		<br/>
 		
-		<input type="submit" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}"  />
+		<input type="submit" value="{{ 'Add'|trans }}" />
 	{{ form_end(form) }}
+			
+		</div>
+		
+		
+	</div>
+
+	<div class="blocRight">
+			
 	
 	{# read and display just one flash message type #}
 	{% for message in app.flashes('notice') %}
@@ -123,8 +118,5 @@
 	
 	
 	
-	<div class="blocRight">
-		
-	</div>
 	
 {% endblock %}
