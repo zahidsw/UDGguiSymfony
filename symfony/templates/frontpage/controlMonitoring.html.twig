@@ -1,0 +1,73 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	
+{% endblock %}
+
+{% block head %}
+	
+	
+{% endblock %}
+
+{% block body %}
+
+
+
+	<div id="submenu">
+		<a abc="/" class="selected" href="/">Services</a>
+
+		 | 
+	
+	<a abc="/en/front/discussion/serviceSubscription" class="selected" href="/en/front/discussion/serviceSubscription">Discussion</a>
+	
+		 | 
+		
+	<a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+		
+
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+	
+	<div class="leftColumn">
+	
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/camera.png') }}" />
+			<a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'IoT Control and Monitoring (UDGaaS)'|trans }}</strong></a>
+			
+		</div>
+		
+        
+		<div class="blocLeft">
+            <p>IoT Lab provides you with an online platform for accessing, controlling and </p> 
+            <p>monitoring large scale IoT deployments. It enables the integration of </p>
+            <p>heterogeneous technologies, including legacy systems.</p>
+		</div>
+		<br/>
+        <br/>
+        <br/>
+        <br/>
+        
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/link.png') }}" />
+			<a href="http://udg.cityreport.org" class="title indent">{{ 'More details'|trans }}</a>
+			
+		</div>
+		
+		
+	</div>
+
+	<div class="blocRight">
+        <img class="legend" width="200px" src="{{ asset('/assets/images/front/camera.png') }}" />
+	</div>
+	
+	
+	
+	<div class="blocRight">
+		
+	</div>
+	
+{% endblock %}

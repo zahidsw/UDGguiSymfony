@@ -1,3 +1,4 @@
+
 {% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
@@ -5,16 +6,20 @@
 {% endblock %}
 
 {% block head %}
-	{{ parent() }}
+	
+	
 {% endblock %}
 
 {% block body %}
+
+
+
 	<div id="submenu">
 		<a abc="/" class="selected" href="/">Services</a>
 
 		 | 
 	
-	<a abc="/en/front/discussion" class="selected" href="/en/front/discussion">Discussion</a>
+	<a abc="/en/front/discussion/serviceSubscription" class="selected" href="/en/front/discussion/serviceSubscription">Discussion</a>
 	
 		 | 
 		
@@ -22,14 +27,40 @@
 		
 
 </div>
-	
-	<h1>{{ ''|trans }}</h1>
-	
-	<br/><br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-
 	
-	{{ form_start(form, {'attr': {'id': 'form'},'action': path('vnocreate') }) }}
+	<div class="leftColumn">
+	
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}" />
+			<a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'IoT Virtual Network'|trans }}</strong></a>
+			
+		</div>
+		
+        
+		<div class="blocLeft">
+            
+		</div>
+		<br/>
+        <br/>
+        <br/>
+        <br/>
+        
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/link.png') }}" />
+			<a href="http://udg.cityreport.org" class="title indent">{{ 'More details'|trans }}</a>
+			
+		</div>
+		
+		
+	</div>
+
+	<div class="blocRight">
+			{{ form_start(form, {'attr': {'id': 'form'},'action': path('vnocreate') }) }}
 		{{ form_errors(form) }}
 		<table>
 			<tr>
@@ -88,6 +119,12 @@
 			{{ message }}
 		</div>
 	{% endfor %}
-
+	</div>
+	
+	
+	
+	<div class="blocRight">
+		
+	</div>
 	
 {% endblock %}

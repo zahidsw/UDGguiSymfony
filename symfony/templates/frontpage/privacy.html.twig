@@ -1,0 +1,86 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	
+{% endblock %}
+
+{% block head %}
+	
+	
+{% endblock %}
+
+{% block body %}
+
+
+
+	<div id="submenu">
+		<a abc="/" class="selected" href="/">Services</a>
+
+		 | 
+	
+	<a abc="/en/front/discussion/serviceSubscription" class="selected" href="/en/front/discussion/serviceSubscription">Discussion</a>
+	
+		 | 
+		
+	<a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+		
+
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+	
+	<div class="leftColumn">
+	
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/privacy.png') }}" />
+			<a href="https://privacyapp.info/" class="title indent"><strong> {{ 'Privacy App'|trans }}</strong></a>
+			
+		</div>
+		
+        
+		<div class="blocLeft">
+           
+            <h3>Privacy App is a mobile app enabling users and cities to :</h3>
+            <br/>
+            <p>Monitor Internet of Things deployments and data protection together.</p>
+            <br/>
+            <p>Identify and share information on all communicating devices deployed</p>
+            <p>in the public space</p>
+            <br/>
+            <p>Identify and report any new deployment that they identify in their environment.</p>
+            <br/>
+            <p>It enables cities and public administrations to inform their inhabitants </p>
+            <p>and visitors about the solutions deployed in their public space.</p>
+            <br/>
+
+            <p>The application is designed to support the implementation of the </p>
+            <p>General Data Protection Regulation (GDPR) in smart cities.</p>
+		</div>
+		<br/>
+        <br/>
+        <br/>
+        <br/>
+        
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/link.png') }}" />
+			<a href="https://privacyapp.info/" class="title indent">{{ 'More details'|trans }}</a>
+			
+		</div>
+		
+		
+	</div>
+
+	<div class="blocRight">
+        <img class="legend" width="200px" src="{{ asset('/assets/images/front/privacy.png') }}" />
+	</div>
+	
+	
+	
+	<div class="blocRight">
+		
+	</div>
+	
+{% endblock %}

@@ -265,9 +265,9 @@ class PurchaseController extends AbstractController
             array (
             'first_name' => 'John',
             'last_name' => 'Client',
-            'email' => 'villaadmin@mail.com',
+            'email' => 'carougeresident@mail.com',
             'street' => 'Buchanan St. 21',
-            'city' => 'bern',
+            'city' => 'carouge',
             'state' => 'California',
             'zip_code' => '94147',
             'country' => 'United States',
@@ -276,8 +276,8 @@ class PurchaseController extends AbstractController
             ),
         'product' =>
             array (
-            'sku' => 'udgaas-pro',
-            'name' => 'TEST PRODUCT 1',
+            'sku' => 'udgaas-basic',
+            'name' => 'udgaas-basic',
             'quantity' => 1,
             'price' => 0.0,
             'currency' => 'CHF',

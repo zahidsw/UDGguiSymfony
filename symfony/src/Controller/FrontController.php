@@ -12,18 +12,22 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 
 
 class FrontController extends AbstractController
 {
     private $logger;
+    private $translator;
 
 
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger,DataCollectorTranslator $translator)
     {
         $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     public function list()
@@ -65,9 +69,53 @@ class FrontController extends AbstractController
     	return $this->render('frontpage/customerSupport.html.twig',$data);
     }
 
-    public function discussion()
+    public function serviceSubscription(Request $request)
     {
-        return $this->render('frontpage/discussion.html.twig');
+        $form = $this	->createFormBuilder()
+				    	->add('name', TextType::class, array('attr' => array('class' => 'long')))
+				    	->add('email', TextType::class, array('attr' => array('class' => 'long')))
+				    	->add('message', TextType::class, array('attr' => array('class' => 'comments')))
+				    	->getForm();
+    	
+    	
+    	if ($request->getMethod() == 'POST')
+    	{
+    		$form->handleRequest($request);
+    		
+    		if ($form->isValid())
+    		{
+    			try {
+    				$formData = $form->getData();
+    				$subject = $this->translator->trans('about.mail_subject');
+    				 
+    				$message = (new \Swift_Message())
+			    				->setSubject($subject)
+			    				->setFrom($formData['email'])
+			    				->setTo('morard.francois@gmail.com')
+			    				->setBody($formData['message']);
+    				 
+    				if(!$this->get('mailer')->send($message)) {
+    					$message = $this->translator->trans('about.error.message');
+    					$this->get('session')->getFlashBag()->add('ko', $message);
+    				}
+    				else {
+    					$message = $this->translator->trans('about.conf.message_send');
+    					$this->get('session')->getFlashBag()->add('ok', $message);
+    				}
+    			}
+    			catch(\Exception $e) {
+    				$message = $this->translator->trans('about.error.message');
+    				$this->get('session')->getFlashBag()->add('ko', $message);
+    			}
+    			
+    			
+    		}
+    	}
+    	 
+    	$data['form'] = $form->createView();
+    	
+    	
+        return $this->render('frontpage/serviceSubscription.html.twig', $data);
     }
 
     public function contact()
@@ -138,6 +186,36 @@ class FrontController extends AbstractController
     	return $this->render('frontpage/vnoAdd.html.twig', $data);
 
 
+    }
+
+    public function controlMonitoring()
+    {
+        return $this->render('frontpage/controlMonitoring.html.twig');
+    }
+
+    public function designPlan()
+    {
+        return $this->render('frontpage/designplan.html.twig');
+    }
+
+    public function integration()
+    {
+        return $this->render('frontpage/integration.html.twig');
+    }
+
+    public function fiware()
+    {
+        return $this->render('frontpage/fiware.html.twig');
+    }
+
+    public function privacy()
+    {
+        return $this->render('frontpage/privacy.html.twig');
+    }
+
+    public function registry()
+    {
+        return $this->render('frontpage/registry.html.twig');
     }
 
 

@@ -1,0 +1,73 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	
+{% endblock %}
+
+{% block head %}
+	
+	
+{% endblock %}
+
+{% block body %}
+
+
+
+	<div id="submenu">
+		<a abc="/" class="selected" href="/">Services</a>
+
+		 | 
+	
+	<a abc="/en/front/discussion/serviceSubscription" class="selected" href="/en/front/discussion/serviceSubscription">Discussion</a>
+	
+		 | 
+		
+	<a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+		
+
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+	
+	<div class="leftColumn">
+	
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/design.png') }}" />
+			<a href="https://www.iotlab.com/" class="title indent"><strong> {{ 'Designing and Planning IoT Deployments'|trans }}</strong></a>
+			
+		</div>
+		
+        
+		<div class="blocLeft">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod </p> 
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod </p>
+		</div>
+		<br/>
+        <br/>
+        <br/>
+        <br/>
+        
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/link.png') }}" />
+			<a href="https://www.iotlab.com/" class="title indent">{{ 'More details'|trans }}</a>
+			
+		</div>
+		
+		
+	</div>
+
+	<div class="blocRight">
+        <img class="legend" width="200px" src="{{ asset('/assets/images/front/design.png') }}" />
+	</div>
+	
+	
+	
+	<div class="blocRight">
+		
+	</div>
+	
+{% endblock %}

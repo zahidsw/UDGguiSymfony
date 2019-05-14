@@ -1,0 +1,76 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	
+{% endblock %}
+
+{% block head %}
+	
+	
+{% endblock %}
+
+{% block body %}
+
+
+
+	<div id="submenu">
+		<a abc="/" class="selected" href="/">Services</a>
+
+		 | 
+	
+	<a abc="/en/front/discussion/serviceSubscription" class="selected" href="/en/front/discussion/serviceSubscription">Discussion</a>
+	
+		 | 
+		
+	<a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+		
+
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+	
+	<div class="leftColumn">
+	
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/fiware.png') }}" />
+			<a href="https://www.udgalliance.org/" class="title indent"><strong> {{ 'FIWARE iHub'|trans }}</strong></a>
+			
+		</div>
+		
+        
+		<div class="blocLeft">
+           
+            <p>FIWARE iHub: A FIWARE iHub is the center for  </p> 
+            <p>the adoption of open source FIWARE platform technology</p>
+            <p>among businesses in a given region. As the Western Switzerland FIWARE iHub, </p> 
+            <p>UDG Alliance offers a number of services to companies who want to </p>
+            <p>become more competitive in the digital economy</p> 
+		</div>
+		<br/>
+        <br/>
+        <br/>
+        <br/>
+        
+		<div class="blocLeft">
+			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/front/link.png') }}" />
+			<a href="https://www.udgalliance.org/" class="title indent">{{ 'More details'|trans }}</a>
+			
+		</div>
+		
+		
+	</div>
+
+	<div class="blocRight">
+        <img class="legend" width="200px" src="{{ asset('/assets/images/front/fiware.png') }}" />
+	</div>
+	
+	
+	
+	<div class="blocRight">
+		
+	</div>
+	
+{% endblock %}

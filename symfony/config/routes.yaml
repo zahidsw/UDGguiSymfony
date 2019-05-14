@@ -869,9 +869,9 @@ customerSupport:
     path:  /{_locale}/front/customer
     controller: App\Controller\FrontController:customerSupport
 
-discussion:
-    path:  /{_locale}/front/discussion
-    controller: App\Controller\FrontController:discussion
+serviceSubscription:
+    path:  /{_locale}/front/discussion/serviceSubscription
+    controller: App\Controller\FrontController:serviceSubscription
 
 frontcontact:
     path:  /{_locale}/front/discussion/contact
@@ -884,6 +884,32 @@ frontservice:
 vnocreate:
     path:  /{_locale}/createVno
     controller: App\Controller\FrontController:createVno
+
+controlMonitoring:
+    path:  /{_locale}/controlMonitoring
+    controller: App\Controller\FrontController:controlMonitoring   
+
+designplan:
+    path:  /{_locale}/designPlan
+    controller: App\Controller\FrontController:designPlan
+
+integration:
+    path:  /{_locale}/integration
+    controller: App\Controller\FrontController:integration
+
+fiware:
+    path:  /{_locale}/fiware
+    controller: App\Controller\FrontController:fiware
+
+privacy:
+    path:  /{_locale}/privacy
+    controller: App\Controller\FrontController:privacy
+
+registry:
+    path:  /{_locale}/registry
+    controller: App\Controller\FrontController:registry
+
+    
 
     
    
