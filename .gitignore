@@ -11,10 +11,22 @@
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
-/symfony/.phpunit
+/symfony/bin/.phpunit/
 /symfony/phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/web-server-bundle ###
 /symfony/.web-server-pid
 ###< symfony/web-server-bundle ###
+
+.DS_Store
+.idea/
+symfony/.DS_Store
+symfony/symfony.lock
+symfony/composer.lock
+symfony/public/assets/.DS_Store
+symfony/src/Migrations/
+
+
+
+

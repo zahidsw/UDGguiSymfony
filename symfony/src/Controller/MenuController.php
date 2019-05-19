@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Security;
 
 
-class MenuController extends Controller
+class MenuController extends AbstractController
 {
 	private $translator;
 	private $security;

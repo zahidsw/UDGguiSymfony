@@ -20,6 +20,7 @@ services:
             - db
         extra_hosts:
             - "docker-host.localhost:127.0.0.1"
+            - "symfony.localhost:172.24.0.5"
     nginx:
         build: ./nginx
         ports:

@@ -2,27 +2,24 @@
 
 namespace App\Controller;
 
+use App\Service\UserManagement;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Gui\User;
 use App\Entity\Gui\Purchase;
-use App\Entity\Gui\City;
 use Symfony\Component\HttpFoundation\Request;
-use App\Service\KeyRockAPI;
 use \Firebase\JWT\JWT;
+use Symfony\Component\Routing\Annotation\Route;
 
 
-
- // assumption that city exists in keyrock
 class PurchaseController extends AbstractController
 {
 
-    private $keyRockAPI;
+    private $userManagement;
 
-    public function __construct(KeyRockAPI $keyRockAPI)
+    public function __construct(UserManagement $userManagement)
     {
-		$this->keyRockAPI = $keyRockAPI; 
+		$this->userManagement = $userManagement;
 	}
 
 
@@ -49,72 +46,12 @@ class PurchaseController extends AbstractController
             $data = $this->decode(json_encode($decoded), true);
 
             $data = $this->validate($data);
-            
-            $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-            $headers = $response->getHeaders();
-            $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
-
-            $userKeyRock = $this->keyRockAPI->getUserByMail($data['customer']['email']);
-            
-            if(empty($userKeyRock))
-            {
-                // create keyrock user
-                $password = 'password'; // need to be set by the user in an email 
-                $response = $this->keyRockAPI->registerUser($data['customer']['email'],$data['customer']['email'],$password);
-                $newUser = (string)$response->getBody();
-                $newUser =json_decode($newUser,true);
-                $userKeyRock = $newUser['user'];
-            }
-
-            //get organization city
-            $organization = $this->keyRockAPI->getOrganizationByName($data['customer']['city']);
-
-            if(empty($organization))
-            {
-                $response = $this->keyRockAPI->createOrganization($data['customer']['city'], 'City of ' . $data['customer']['city']);
-                $organization = (string)$response->getBody();
-                $organization = json_decode($organization,true);
-                $organization['Organization']= $organization['organization'];
-            }
-
-            $organizationId = $organization['Organization']['id'];
-            //add keyrockuser to organization
-            $this->keyRockAPI->addUserToOrganization($userKeyRock['id'], $organization['Organization']['id'], 'owner');
 
 
-            // is user in udg db
+            $user = $this->userManagement->addUser($data['customer']['email'],$data['customer']['city']);
+
             $entityManager = $this->getDoctrine()->getManager("gui");
-            $userDb = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['customer']['email']]);
-            
-
-            if(empty($userDb))
-            {
-                //create user in db
-				$userDb = new User();
-				$userDb->setUserName($data['customer']['email']);
-				$userDb->setEmail($data['customer']['email']);
-                $userDb->setEnabled(true);
-                $userDb->addRole("ROLE_USER,ROLE_ADMIN");
-            }
-
-            $userDb->setKeyrockId($userKeyRock['id']);
-            $entityManager->persist($userDb);
-            $entityManager->flush();
-            
-            $city = $entityManager->getRepository(City::class)->findOneBy(['name' => $data['customer']['city']]);
-
-            if(empty($city))
-            {
-                //create city in db
-                $city = new City();
-                $city->setName($data['customer']['city']);
-                $city->setCountry($data['customer']['country']);
-                $entityManager->persist($city);  
-            }
-
-            $userDb->setCity($city);
-            $entityManager->persist($userDb);
-            $entityManager->flush();
+            $userDb = $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
 
             $purchase = new Purchase();
             $purchase->setTimestamp($data['timestamp']);
@@ -247,52 +184,5 @@ class PurchaseController extends AbstractController
         return $user;
     }
 
-
-    /**
-     * @Route("/enc", name="enc",methods={"POST"})
-     */
-    public function testEncrypt()
-    {
-        $key = "9yUCrlExdstKquikKe7hO44O1ze1wyWUIHp9ZjQY";
-
-        $token = array (
-        'timestamp' => 1556527564,
-        'service_id' => 'SIPM',
-        'service_description' => 'Synchronicity IoT Product Marketplace',
-        'request_url' => 'https://0.0.0.0',
-        'order_number' => '39',
-        'customer' =>
-            array (
-            'first_name' => 'John',
-            'last_name' => 'Client',
-            'email' => 'carougeresident@mail.com',
-            'street' => 'Buchanan St. 21',
-            'city' => 'carouge',
-            'state' => 'California',
-            'zip_code' => '94147',
-            'country' => 'United States',
-            'country_code' => 'US',
-            'phone' => '',
-            ),
-        'product' =>
-            array (
-            'sku' => 'udgaas-basic',
-            'name' => 'udgaas-basic',
-            'quantity' => 1,
-            'price' => 0.0,
-            'currency' => 'CHF',
-            'fields' =>
-                array (
-                'callback_url' => 'http://10.4.17.161/purchase',
-                'callback_field_1' => 'Field 1 value',
-                'callback_field_2' => 'Field 2 value',
-                ),
-            ),
-        );
-
-
-        $jwt = JWT::encode($token, $key, 'HS256');
-        dd($jwt);
-    }
 
 }

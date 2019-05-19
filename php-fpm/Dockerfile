@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:latest
 
 LABEL maintainer="Vincent Composieux <vincent.composieux@gmail.com>"
 
@@ -20,6 +20,7 @@ RUN apk add --update \
     php7-openssl \
     php7-pdo \
     php7-pdo_mysql \
+    php7-pdo_sqlite \
     php7-mysqli \
     php7-xml \
     php7-zlib \
@@ -29,8 +30,12 @@ RUN apk add --update \
     php7-simplexml \
     php7-xdebug \
     php7-zip \
+    php7-xmlwriter \
+    php7-sqlite3 \
+    sqlite \
     make \
     curl
+    
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer

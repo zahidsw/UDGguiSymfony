@@ -1,0 +1,22 @@
+doctrine:
+    dbal:
+        connections:
+                test:
+                    driver: 'pdo_sqlite'
+                    url: '%env(resolve:DATABASE_URL)%'
+        
+    orm:
+        auto_generate_proxy_classes:  true # <- change to true
+        proxy_dir:            '%kernel.cache_dir%/doctrine/orm/Proxies'
+        proxy_namespace:      Proxies
+
+        entity_managers:
+            gui:
+                connection: test
+                mappings:
+                    Gui:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Gui'
+                        prefix: 'App\Entity\Gui'
+                        alias: Gui

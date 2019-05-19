@@ -3,6 +3,8 @@
 namespace App\Service;
 use Http\Message\MessageFactory;
 use Http\Client\Common\HttpMethodsClient;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+
 
 
 
@@ -13,11 +15,13 @@ class KeyRockAPI
     private $authToken;
     private $baseUrl = 'https://keyrock.cityreport.org';
     private $applicationId;
+   
 
     public function __construct(MessageFactory $messageFactory, HttpMethodsClient $httpMethodsClient)
     {
         $this->messageFactory = $messageFactory;
         $this->httpMethodsClient = $httpMethodsClient;
+
     }
 
     public function setApplicationId(String $applicationId)
@@ -200,7 +204,7 @@ class KeyRockAPI
         {
             if(strtolower(trim($organization['Organization']['name'])) == strtolower(trim($name)))
             {
-                return $organization;
+                return $organization['Organization'];
             }
         }
           
