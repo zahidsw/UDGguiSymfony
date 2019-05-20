@@ -19,12 +19,11 @@ class UserManagementIntegrationTest extends KernelTestCase
         ]);
     }
 
-
     public function testGetKeyRockUserReturnEmptyOnNotExistingUser()
     {
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-        $user = $userManager->getKeyRockUser('notexisting@mail.com');
+        $user = $userManager->getKeyRockUser('notexisting-test@mail.com');
         $this->assertEmpty($user);
     }
 
@@ -37,52 +36,41 @@ class UserManagementIntegrationTest extends KernelTestCase
         $this->assertSame('bernadmin@mail.com', $user['email']);
     }
 
-
-
     public function testGetDbUserReturnNullOnNotExistingUser()
     {
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-        $mail = 'notexistinguser@mail.com';
+        $mail = 'notexisting-test@mail.com';
         $user = $userManager->getDbUser($mail);
         $this->assertNull($user);
     }
-
-
-
-
 
     public function testUserRegistrationKeyRock()
     {
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-
-        $email = 'testkeyrockuser4@mail.com';
-        $user = 'testkeyrockuser4';
+        $email = 'user-test@mail.com';
+        $user = 'user-test';
         $password = 'password';
         $user = $userManager->userRegistrationKeyRock($user,$email,$password);
-
         $this->assertNotNull($user);
         $this->assertSame($email, $user['email']);
-
         //clean up
         $userManager->deleteUserKeyRock($user['id']);
     }
-
-
 
     public function testAddUserOnNotExistingUserInDbAndNotExistingUserInKeyRock()
     {
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-
-        $email = 'usertestIntegration3@mail.com';
-        $city = 'florence';
+        $email = 'user-test@mail.com';
+        $city = 'city-test';
         $user = $userManager->addUser($email,$city);
-
+        $em = $this->getEntityManager();
+        $userDb = $em->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
         $this->assertNotNull($user['dbUser']['id']);
         $this->assertNotNull($user['keyrockUser']['id']);
-
+        $this->assertSame($userDb->getKeyrockId(), $user['keyrockUser']['id']);
         //clean up
         $userManager->deleteUserKeyRock($user['keyrockUser']['id']);
         // delete organization todo
@@ -91,18 +79,18 @@ class UserManagementIntegrationTest extends KernelTestCase
 
     public function testAddUserOnExistingUserInDbAndNotExistingUserInKeyRock()
     {
-        $email = 'usertest666@mail.com';
+        $email = 'user-test@mail.com';
         $userTest = $this->addDbUser($email);
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-
-        $city = 'florence';
+        $city = 'city-test';
         $user = $userManager->addUser($email,$city);
-
+        $em = $this->getEntityManager();
+        $userDb = $em->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
         $this->assertNotNull($user['dbUser']['id']);
         $this->assertNotNull($user['keyrockUser']['id']);
         $this->assertSame($userTest->getId(),$user['dbUser']['id']);
-
+        $this->assertSame($userDb->getKeyrockId(), $user['keyrockUser']['id']);
         //clean up
         $userManager->deleteUserKeyRock($user['keyrockUser']['id']);
         // delete organization todo
@@ -113,19 +101,18 @@ class UserManagementIntegrationTest extends KernelTestCase
 
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-
-        $user = 'usertestintegrationAb';
-        $email = 'usertestintegrationAb@mail.com';
+        $user = 'user-test';
+        $email = 'user-test@mail.com';
         $password= 'password';
         $userTest = $userManager->userRegistrationKeyRock($user,$email,$password);
-
-        $city = 'florence';
+        $city = 'city-test';
         $user = $userManager->addUser($email,$city);
-
+        $em = $this->getEntityManager();
+        $userDb = $em->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
         $this->assertNotNull($user['dbUser']['id']);
         $this->assertNotNull($user['keyrockUser']['id']);
         $this->assertSame($userTest['id'],$user['keyrockUser']['id']);
-
+        $this->assertSame($userDb->getKeyrockId(), $user['keyrockUser']['id']);
         //clean up
         $userManager->deleteUserKeyRock($user['keyrockUser']['id']);
         // delete organization todo
@@ -137,50 +124,43 @@ class UserManagementIntegrationTest extends KernelTestCase
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
 
-        $user = 'usertestintegrationAb';
-        $email = 'usertestintegrationAb@mail.com';
+        $user = 'user-test';
+        $email = 'user-test@mail.com';
         $password= 'password';
         $userTestDb = $this->addDbUser($email);
         $userTestKeyrock = $userManager->userRegistrationKeyRock($user,$email,$password);
-
-
-        $city = 'florence';
+        $city = 'city-test';
         $user = $userManager->addUser($email,$city);
-
+        $em = $this->getEntityManager();
+        $userDb = $em->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
         $this->assertNotNull($user['dbUser']['id']);
         $this->assertNotNull($user['keyrockUser']['id']);
         $this->assertSame($userTestKeyrock['id'],$user['keyrockUser']['id']);
         $this->assertSame($userTestDb->getId(),$user['dbUser']['id']);
-
+        $this->assertSame($userDb->getKeyrockId(), $user['keyrockUser']['id']);
         //clean up
         $userManager->deleteUserKeyRock($user['keyrockUser']['id']);
         // delete organization todo
     }
-
-
 
     public function testUserRegistrationDatabase()
     {
 
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-
-        $mail = 'usertest@mail.com';
-        $keyRockId = '45091fd63a1';
-
+        $mail = 'user-test@mail.com';
+        $keyRockId = '45091fd63a1-test';
         $user = $userManager->userRegistrationDatabase($mail,$keyRockId);
         $this->assertNotNull($user);
         $this->assertSame($mail, $user->getEmail());
-
     }
 
     public function testGetDbUserReturnOnExistingUser()
     {
-        $mail = 'usertest@mail.com';
+        $mail = 'user-test@mail.com';
         $this->addDbUser($mail);
         $userManager = self::$kernel->getContainer()
             ->get('test.'. UserManagement::class);
-
         $user = $userManager->getDbUser($mail);
         $this->assertNotNull($user);
     }
@@ -214,21 +194,15 @@ class UserManagementIntegrationTest extends KernelTestCase
     {
         $em = $this->getEntityManager();
         $user = new User();
-
         $user->setUserName($email);
         $user->setEmail($email);
         $user->setEnabled(true);
         $userRole = ['ROLE_USER','ROLE_ADMIN'];
         $user->addRole(implode(",",$userRole));
-        $user->setKeyrockId('assas');
+        $user->setKeyrockId('12345-test');
         $em->persist($user);
         $em->flush();
 
         return $user;
-
-
-
     }
-
-
 }

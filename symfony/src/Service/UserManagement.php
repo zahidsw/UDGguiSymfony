@@ -66,6 +66,7 @@ class UserManagement extends AbstractController
         }
 
         $dbUser->setCity($cityDb);
+        $dbUser->setKeyrockId($keyrockUser['id']);
         $entityManager->persist($dbUser);
         $entityManager->flush();
 
