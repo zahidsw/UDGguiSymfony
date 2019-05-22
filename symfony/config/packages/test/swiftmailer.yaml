@@ -1,2 +1,8 @@
 swiftmailer:
-    disable_delivery: true
+    disable_delivery: false
+    # send all emails to a specific address
+    delivery_addresses: ['felpone84@gmail.com']
+    url: '%env(MAILER_URL)%'
+    #spool: { type: 'memory' }
+
+

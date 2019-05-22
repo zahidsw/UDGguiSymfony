@@ -71,7 +71,15 @@ class PurchaseController extends AbstractController
             $entityManager->persist($purchase);
             $entityManager->flush();
 
-            $this->sendMail('testname',$mailer);
+            //$this->sendMail('testname',$mailer);
+            $message = (new \Swift_Message('You Got Mail!'))
+                ->setFrom('demo@mandint.org')
+                ->setTo('felpone84@gmail.com')
+                ->setBody(
+                    $this->renderView('emails/registration.html.twig',['name' => 'name']), 'text/html'
+                );
+
+            $mailer->send($message);
             
 
         } catch (\Exception $e)
@@ -87,19 +95,6 @@ class PurchaseController extends AbstractController
         return $response;
     }
 
-    public function sendMail($name,$mailer)
-    {
-        $message = (new \Swift_Message('You Got Mail!'))
-            ->setFrom('demo@mandint.org')
-            ->setTo('felpone84@gmail.com')
-            ->setBody(
-                $this->renderView('emails/registration.html.twig',['name' => $name]), 'text/html'
-            );
-
-        $mailer->send($message);
-    }
-
-    
     public function validate(Array $data)
     {
 

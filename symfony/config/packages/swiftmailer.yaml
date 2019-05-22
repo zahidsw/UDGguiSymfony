@@ -1,11 +1,4 @@
 swiftmailer:
-    url: '%env(MAILER_URL)%'
-    spool: { type: 'memory' }
+    #url: '%env(MAILER_URL)%'
+    #spool: { type: 'memory' }
 
-    #url: smtp.mandint.org:25
-    #transport:  smtp
-    #encryption: ssl
-    #auth_mode:  login
-    #host:       smtp.mandint.org
-    #username:   demo@mandint.org
-    #password:   demoudg21

@@ -8,8 +8,8 @@ use App\Entity\Gui\Purchase;
 use App\Entity\Gui\User;
 use App\Service\UserManagement;
 use Firebase\JWT\JWT;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 
 
@@ -34,7 +34,7 @@ class PurchaseControllerTest extends WebTestCase
     /**
      * @dataProvider getAddSpecificationTest
      */
-    public function testAdd(String $email, String $city, String $sku, String $timestamp)
+   /* public function testAdd(String $email, String $city, String $sku, String $timestamp)
     {
         $client = new \GuzzleHttp\Client();
         $token = $this->encrypt($email, $city, $sku, $timestamp);
@@ -63,7 +63,41 @@ class PurchaseControllerTest extends WebTestCase
         $userManager->deleteUserKeyRock($keyrockId);
         $em->remove($userDb);
         $em->flush();
+    }*/
+
+    /**
+     * @dataProvider getAddSpecificationTest
+     */
+    public function testAddMail(String $email, String $city, String $sku, String $timestamp)
+    {
+        $token = $this->encrypt($email, $city, $sku, $timestamp);
+        $client = $this->makeClient();
+        $crawler = $client->request('POST', 'http://symfony.localhost/purchase', [], [], [
+            'HTTP_AUTHORIZATION' => 'Bearer ' . $token,
+            'CONTENT_TYPE' => 'application/json'
+        ]);
+
+        $this->assertStatusCode(201, $client);
+
+        $em = $this->getEntityManager('gui');
+        $userDb = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+        $cityDb = $em->getRepository(City::class)->findOneBy(['name' => $city]);
+        $purchaseDb = $em->getRepository(Purchase::class)->findOneBy(['timestamp' => $timestamp]);
+        $this->assertSame($userDb->getEmail(), $email);
+        $this->assertSame($cityDb->getName(), $city);
+        $this->assertSame($purchaseDb->getTimestamp(), $timestamp);
+        //clean up
+        $userManager = self::$kernel->getContainer()
+            ->get( UserManagement::class);
+
+        $keyrockId = $userDb->getKeyrockId();
+        $userManager->deleteUserKeyRock($keyrockId);
+        $em->remove($userDb);
+        $em->flush();
     }
+
+
+
 
 
     /**
