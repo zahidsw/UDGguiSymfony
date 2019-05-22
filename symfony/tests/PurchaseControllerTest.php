@@ -9,10 +9,12 @@ use App\Entity\Gui\User;
 use App\Service\UserManagement;
 use Firebase\JWT\JWT;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 
 
-class PurchaseControllerTest extends KernelTestCase
+
+class PurchaseControllerTest extends WebTestCase
 {
 
     public function setUp()
@@ -23,9 +25,9 @@ class PurchaseControllerTest extends KernelTestCase
     public function getAddSpecificationTest()
     {
         return [
-            ['user-test@mail.com','carouge','udgaas-basic',time()],
-            ['user-test@mail.com','carouge','udgaas-pro',time()],
-            ['user-test1@mail.com','bern','udgaas-basic',time()]
+            ['user-test1@mail.com','carouge','udgaas-basic',time()],
+            /*['user-test@mail.com','carouge','udgaas-pro',time()],
+            ['user-test1@mail.com','bern','udgaas-basic',time()]*/
         ];
     }
 
@@ -62,6 +64,7 @@ class PurchaseControllerTest extends KernelTestCase
         $em->remove($userDb);
         $em->flush();
     }
+
 
     /**
      * @param array $entities

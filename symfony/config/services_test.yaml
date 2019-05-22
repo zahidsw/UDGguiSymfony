@@ -3,3 +3,8 @@ services:
         public: true
 
     test.App\Service\UserManagement: '@App\Service\UserManagement'
+
+    test_alias.swiftmailer.mailer:
+        alias: 'swiftmailer.mailer'
+        public: true
+

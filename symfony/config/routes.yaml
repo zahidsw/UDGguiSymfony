@@ -909,6 +909,9 @@ registry:
     path:  /{_locale}/registry
     controller: App\Controller\FrontController:registry
 
+
+
+
     
 
     

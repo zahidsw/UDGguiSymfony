@@ -12,14 +12,17 @@ use \Firebase\JWT\JWT;
 use Symfony\Component\Routing\Annotation\Route;
 
 
+
 class PurchaseController extends AbstractController
 {
 
     private $userManagement;
 
+
     public function __construct(UserManagement $userManagement)
     {
 		$this->userManagement = $userManagement;
+
 	}
 
 
@@ -35,7 +38,7 @@ class PurchaseController extends AbstractController
     /**
      * @Route("/purchase", name="purchase",methods={"POST"})
      */
-    public function add(Request $request)
+    public function add(Request $request, \Swift_Mailer $mailer)
     {
         try
         {
@@ -46,7 +49,6 @@ class PurchaseController extends AbstractController
             $data = $this->decode(json_encode($decoded), true);
 
             $data = $this->validate($data);
-
 
             $user = $this->userManagement->addUser($data['customer']['email'],$data['customer']['city']);
 
@@ -68,6 +70,8 @@ class PurchaseController extends AbstractController
             $purchase->setUser($userDb);
             $entityManager->persist($purchase);
             $entityManager->flush();
+
+            $this->sendMail('testname',$mailer);
             
 
         } catch (\Exception $e)
@@ -81,6 +85,18 @@ class PurchaseController extends AbstractController
         $response = new JsonResponse($response,JsonResponse::HTTP_CREATED);
 
         return $response;
+    }
+
+    public function sendMail($name,$mailer)
+    {
+        $message = (new \Swift_Message('You Got Mail!'))
+            ->setFrom('demo@mandint.org')
+            ->setTo('felpone84@gmail.com')
+            ->setBody(
+                $this->renderView('emails/registration.html.twig',['name' => $name]), 'text/html'
+            );
+
+        $mailer->send($message);
     }
 
     
