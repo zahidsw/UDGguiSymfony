@@ -8,8 +8,8 @@ use App\Entity\Gui\Purchase;
 use App\Entity\Gui\User;
 use App\Service\UserManagement;
 use Firebase\JWT\JWT;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
 
 
 
