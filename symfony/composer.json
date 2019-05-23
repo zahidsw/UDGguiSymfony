@@ -11,6 +11,7 @@
         "mtdowling/cron-expression": "^1.2",
         "php-http/guzzle6-adapter": "~1.1.1",
         "php-http/httplug-bundle": "~1.13",
+        "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.1",
         "suncat/mobile-detect-bundle": "^1.1",
         "symfony/asset": "4.2.*",

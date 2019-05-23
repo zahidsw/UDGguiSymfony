@@ -106,6 +106,11 @@ class User implements UserInterface
      */
     protected $lastManualLogoutAt;
 
+    /**
+     * @ORM\Column(type="string",length=180, nullable=true)
+     */
+    protected $registrationToken;
+
     public function __construct()
     {
         $this->purchases = new ArrayCollection();
@@ -424,6 +429,18 @@ class User implements UserInterface
 
        return $this;
    }
+
+    public function getRegistrationToken(): ?String
+    {
+        return $this->registrationToken;
+    }
+
+    public function setRegistrationToken(String $registrationToken): self
+    {
+        $this->registrationToken = $registrationToken;
+
+        return $this;
+    }
   
 
 

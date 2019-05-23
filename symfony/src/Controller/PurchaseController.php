@@ -10,6 +10,8 @@ use App\Entity\Gui\Purchase;
 use Symfony\Component\HttpFoundation\Request;
 use \Firebase\JWT\JWT;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\SetPassword;
+
 
 
 
@@ -55,6 +57,11 @@ class PurchaseController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager("gui");
             $userDb = $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
 
+            $userRegistrationToken = $this->userManagement->generateRegistrationToken();
+            $userDb->setRegistrationToken($userRegistrationToken);
+            $entityManager->persist($userDb);
+            $entityManager->flush();
+
             $purchase = new Purchase();
             $purchase->setTimestamp($data['timestamp']);
             $purchase->setServiceId($data['service_id']);
@@ -71,12 +78,12 @@ class PurchaseController extends AbstractController
             $entityManager->persist($purchase);
             $entityManager->flush();
 
-            //$this->sendMail('testname',$mailer);
+
             $message = (new \Swift_Message('You Got Mail!'))
                 ->setFrom('demo@mandint.org')
-                ->setTo('felpone84@gmail.com')
+                ->setTo($data['customer']['email'])
                 ->setBody(
-                    $this->renderView('emails/registration.html.twig',['name' => 'name']), 'text/html'
+                    $this->renderView('emails/registration.html.twig',['name' => $data['customer']['first_name'],'token'=>$userRegistrationToken]), 'text/html'
                 );
 
             $mailer->send($message);
@@ -114,6 +121,7 @@ class PurchaseController extends AbstractController
             $data['product']['fields']['callback_url'] = $this->cleanInput($this->isEmpty($data['product']['fields']['callback_url'],'callback url'));
             $data['customer']['city'] = $this->cleanInput($this->isEmpty($data['customer']['city'],'city'));
             $data['customer']['country'] = $this->cleanInput($this->isEmpty($data['customer']['country'],'country'));
+            $data['customer']['first_name'] = $this->cleanInput($this->isEmpty($data['customer']['first_name'],'first name'));
 
         } catch (\Exception $e)
         {
@@ -165,35 +173,99 @@ class PurchaseController extends AbstractController
         return $data;
     }
 
-    public function userRegistrationKeyRock($username, $email, $password):integer
+    /**
+     *  TODO to be moved in a more approprite class
+     * @Route("/setpassword/{token}", name="setpassword")
+     */
+    public function setpassword(String $token, Request $request)
     {
-         //impersonate admin user in order to create a new user
-         $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-         $headers = $response->getHeaders();
-         $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
-         // create the user in keyrock
-         $response = $this->keyRockAPI->registerUser($username,$email,$password);
-         $newUser = (string)$response->getBody();
-         $newUser =json_decode($newUser,true);
-         $newUserKeyrockId = $newUser['user']['id'];
+
+        $form = $this->createForm(SetPassword::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+
+            $entityManager = $this->getDoctrine()->getManager("gui");
+            $userDb = $user = $entityManager->getRepository(User::class)->findOneBy(['registrationToken' => $token]);
+
+
+            $userKeyrock = $this->userManagement->getKeyRockUser($userDb->getEmail());
+
+
+            $task = $form->getData();
+
+
+            $this->userManagement->updateKeyRockUser($userKeyrock['id'], $userKeyrock['username'], $userKeyrock['email'], $task['password'] );
+
+
+
+            return $this->redirectToRoute('login');
+        }
+
+
+
+
+
+
+        $data['form'] = $form->createView();
+        $data['token'] = $token;
+
+        return $this->render('emails/setPassword.html.twig', $data);
+
+
+
     }
 
-    public function userRegistrationDatabase($keyRockId, $city): object
+    /**
+     * @Route("/enc", name="enc",methods={"POST"})
+     */
+    public function encrypt()
     {
-        $entityManager = $this->getDoctrine()->getManager("gui");
-        $user = new User();
-        $user->setUserName($email);
-        $user->setEmail($email);
-        $user->setEnabled(true);
-        $user->setKeyrockId($keyRockId);
-        $user->setCity($city);
-        $userRole = ['ROLE_USER','ROLE_ADMIN'];
-        $user->addRole(implode(",",$userRole));
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $key = "9yUCrlExdstKquikKe7hO44O1ze1wyWUIHp9ZjQY";
 
-        return $user;
+        $token = array(
+            'timestamp' => 12121212,
+            'service_id' => 'SIPM',
+            'service_description' => 'Synchronicity IoT Product Marketplace',
+            'request_url' => 'https://0.0.0.0',
+            'order_number' => '39',
+            'customer' =>
+                array(
+                    'first_name' => 'John',
+                    'last_name' => 'Client',
+                    'email' => 'smaglione@mandint.org',
+                    'street' => 'Buchanan St. 21',
+                    'city' => 'carouge',
+                    'state' => 'Country',
+                    'zip_code' => '94147',
+                    'country' => 'Country',
+                    'country_code' => 'US',
+                    'phone' => '',
+                ),
+            'product' =>
+                array(
+                    'sku' => 'udgaas-basic', //'udgaas-basic'
+                    'name' => 'udgaas-basic',
+                    'quantity' => 1,
+                    'price' => 0.0,
+                    'currency' => 'CHF',
+                    'fields' =>
+                        array(
+                            'callback_url' => 'http://10.4.17.161/purchase',
+                            'callback_field_1' => 'Field 1 value',
+                            'callback_field_2' => 'Field 2 value',
+                        ),
+                ),
+        );
+
+        $jwt = JWT::encode($token, $key, 'HS256');
+        dd($jwt);
+
     }
+
+
 
 
 }

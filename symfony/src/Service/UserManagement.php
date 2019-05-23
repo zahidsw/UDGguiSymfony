@@ -6,6 +6,8 @@ use App\Entity\Gui\City;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Gui\User;
+use Ramsey\Uuid\Uuid;
+
 
 
 
@@ -80,7 +82,28 @@ class UserManagement extends AbstractController
     }
 
 
+    public function generateRegistrationToken():String
+    {
+        $uuid4 = Uuid::uuid4();
+        $uuid4 = $uuid4->toString();
+        //toDo hash the uuid4
+        return $uuid4;
+    }
 
+
+
+    public function setPassword(User $user)
+    {
+
+
+
+
+        $user = array();
+        $user['dbUser'] = '$dbUser';
+        $user['keyrockUser'] = '$keyrockUser';
+
+        return $user;
+    }
 
     public function createOrganization(String $city)
     {
@@ -155,12 +178,16 @@ class UserManagement extends AbstractController
         return $user;
     }
 
+    public function updateKeyRockUser(String $userId,String $userName, String $email, String $password)
+    {
+        $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
+        $headers = $response->getHeaders();
+        $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
+
+        $this->keyRockAPI->updateUser($userId,$userName, $email, $password);
 
 
+    }
 
-
-
-
-   
 
 }

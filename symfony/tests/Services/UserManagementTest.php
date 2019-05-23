@@ -3,18 +3,41 @@
 // tests/Services/UserManagementTest.php
 namespace App\Tests\Services\UserManagementTest;
 
+
 use App\Service\UserManagement;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-// class UserManagementTest extends TestCase
-// {
-//     // public function testGetKeyRockUserReturnEmptyOnNotExistingUser()
-//     // {
-//     //     // pure unit test so I mock keyrockapi BUT require integration tests
-//     //     // mock keyrockapi to return empty array
-//     //     // return empty array got from keyrock
+class UserManagementTest  extends KernelTestCase
+{
+    public function setUp()
+    {
+        self::bootKernel();
 
-//     //     $this->markTestIncomplete('Test to be implemented');
+    }
+    public function testGenerateRegistrationToken()
+    {
+         $userManager = self::$kernel->getContainer()
+             ->get('test.'. UserManagement::class);
+         $uuid = $userManager->generateRegistrationToken();
+         $this->assertNotEmpty($uuid);
+    }
 
-//     // }
-// }
+   /* public function testSetPassword()
+    {
+
+
+
+
+        $userManager = self::$kernel->getContainer()
+            ->get('test.'. UserManagement::class);
+        $user = $userManager->getDbUser($mail);
+        $uuid = $userManager->setPassword($user);
+
+
+
+        $this->assertNotEmpty($uuid);
+
+
+    }*/
+ }

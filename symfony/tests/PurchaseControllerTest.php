@@ -19,13 +19,17 @@ class PurchaseControllerTest extends WebTestCase
 
     public function setUp()
     {
-        self::bootKernel(['environment'=> 'dev']);
+        self::bootKernel();
+        $this->truncateEntities([
+            User::class,
+            City::class
+        ]);
     }
 
     public function getAddSpecificationTest()
     {
         return [
-            ['user-test1@mail.com','carouge','udgaas-basic',time()],
+            ['user-test@mail.com','carouge','udgaas-basic',time()],
             /*['user-test@mail.com','carouge','udgaas-pro',time()],
             ['user-test1@mail.com','bern','udgaas-basic',time()]*/
         ];
@@ -34,41 +38,7 @@ class PurchaseControllerTest extends WebTestCase
     /**
      * @dataProvider getAddSpecificationTest
      */
-   /* public function testAdd(String $email, String $city, String $sku, String $timestamp)
-    {
-        $client = new \GuzzleHttp\Client();
-        $token = $this->encrypt($email, $city, $sku, $timestamp);
-        $headers = [
-            'Authorization' => 'Bearer ' . $token,
-            'Accept'        => 'application/json',
-        ];
-
-        $res = $client->request('POST', 'http://symfony.localhost/purchase', ['headers' => $headers, 'synchronous' => true]);
-        $this->assertEquals(201, $res->getStatusCode());
-
-        $em = $this->getEntityManager('gui');
-        $userDb = $em->getRepository(User::class)->findOneBy(['email' => $email]);
-        $cityDb = $em->getRepository(City::class)->findOneBy(['name' => $city]);
-        $purchaseDb = $em->getRepository(Purchase::class)->findOneBy(['timestamp' => $timestamp]);
-
-        $this->assertSame($userDb->getEmail(), $email);
-        $this->assertSame($cityDb->getName(), $city);
-        $this->assertSame($purchaseDb->getTimestamp(), $timestamp);
-
-        //clean up
-        $userManager = self::$kernel->getContainer()
-            ->get( UserManagement::class);
-
-        $keyrockId = $userDb->getKeyrockId();
-        $userManager->deleteUserKeyRock($keyrockId);
-        $em->remove($userDb);
-        $em->flush();
-    }*/
-
-    /**
-     * @dataProvider getAddSpecificationTest
-     */
-    public function testAddMail(String $email, String $city, String $sku, String $timestamp)
+    public function testAdd(String $email, String $city, String $sku, String $timestamp)
     {
         $token = $this->encrypt($email, $city, $sku, $timestamp);
         $client = $this->makeClient();
@@ -83,6 +53,7 @@ class PurchaseControllerTest extends WebTestCase
         $userDb = $em->getRepository(User::class)->findOneBy(['email' => $email]);
         $cityDb = $em->getRepository(City::class)->findOneBy(['name' => $city]);
         $purchaseDb = $em->getRepository(Purchase::class)->findOneBy(['timestamp' => $timestamp]);
+        $this->assertNotEmpty($userDb->getRegistrationToken(),'registration token empty');
         $this->assertSame($userDb->getEmail(), $email);
         $this->assertSame($cityDb->getName(), $city);
         $this->assertSame($purchaseDb->getTimestamp(), $timestamp);
@@ -95,10 +66,6 @@ class PurchaseControllerTest extends WebTestCase
         $em->remove($userDb);
         $em->flush();
     }
-
-
-
-
 
     /**
      * @param array $entities

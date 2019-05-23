@@ -2,11 +2,12 @@
 <h3>You did it! You registered!</h3>
 
 Hi {{ name }}! You're successfully registered.
+To complete the registration follow the link!
+</br>
 
 {# example, assuming you have a route named "login" #}
-To login, go to: <a href="{{ url('login') }}">...</a>.
+Go to: <a href="{{ url('setpassword', {token: token}) }}/">Finalize your registration!</a>.
 
 Thanks!
 
-{# Makes an absolute URL to the /images/logo.png file #}
-<img src="{{ absolute_url(asset('images/logo.png')) }}">
+
