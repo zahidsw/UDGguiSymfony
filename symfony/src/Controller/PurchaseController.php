@@ -235,7 +235,7 @@ class PurchaseController extends AbstractController
                 array(
                     'first_name' => 'John',
                     'last_name' => 'Client',
-                    'email' => 'smaglione@mandint.org',
+                    'email' => 'fsismondi@mandint.org',
                     'street' => 'Buchanan St. 21',
                     'city' => 'carouge',
                     'state' => 'Country',
