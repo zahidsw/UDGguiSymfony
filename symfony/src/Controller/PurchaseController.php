@@ -57,10 +57,20 @@ class PurchaseController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager("gui");
             $userDb = $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
 
-            $userRegistrationToken = $this->userManagement->generateRegistrationToken();
-            $userDb->setRegistrationToken($userRegistrationToken);
-            $entityManager->persist($userDb);
-            $entityManager->flush();
+            if(!$userDb->isEnabled())
+            {
+                $userRegistrationToken = $this->userManagement->generateRegistrationToken();
+                $userDb->setRegistrationToken($userRegistrationToken);
+                $entityManager->persist($userDb);
+                $entityManager->flush();
+                $message = (new \Swift_Message('UDG: you got mail!'))
+                    ->setFrom('demo@mandint.org')
+                    ->setTo($data['customer']['email'])
+                    ->setBody(
+                        $this->renderView('emails/registration.html.twig',['name' => $data['customer']['first_name'],'token'=>$userRegistrationToken]), 'text/html'
+                    );
+                $mailer->send($message);
+            }
 
             $purchase = new Purchase();
             $purchase->setTimestamp($data['timestamp']);
@@ -78,16 +88,6 @@ class PurchaseController extends AbstractController
             $entityManager->persist($purchase);
             $entityManager->flush();
 
-
-            $message = (new \Swift_Message('You Got Mail!'))
-                ->setFrom('demo@mandint.org')
-                ->setTo($data['customer']['email'])
-                ->setBody(
-                    $this->renderView('emails/registration.html.twig',['name' => $data['customer']['first_name'],'token'=>$userRegistrationToken]), 'text/html'
-                );
-
-            $mailer->send($message);
-            
 
         } catch (\Exception $e)
         {
@@ -174,48 +174,46 @@ class PurchaseController extends AbstractController
     }
 
     /**
-     *  TODO to be moved in a more approprite class
+     *
      * @Route("/setpassword/{token}", name="setpassword")
      */
     public function setpassword(String $token, Request $request)
     {
+        $entityManager = $this->getDoctrine()->getManager("gui");
+        $userDb = $entityManager->getRepository(User::class)->findOneBy(['registrationToken' => $token]);
+
+        if($userDb == NULL) return $this->render('emails/tokenExpired.html.twig');
 
         $form = $this->createForm(SetPassword::class);
-
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        try {
+            if ($form->isSubmitted() && $form->isValid())
+            {
+                $userDb = $entityManager->getRepository(User::class)->findOneBy(['registrationToken' => $token]);
+                $userKeyrock = $this->userManagement->getKeyRockUser($userDb->getEmail());
+                $task = $form->getData();
+                $this->userManagement->updateKeyRockUser($userKeyrock['id'], $userKeyrock['username'], $userKeyrock['email'], $task['password']);
+                $userDb->setRegistrationToken('');
+                $userDb->setEnabled(1);
+                $entityManager->persist($userDb);
+                $entityManager->flush();
+                $this->addFlash('success', 'Password correctly set, you can now login!');
+                return $this->redirectToRoute('login');
+            }
+        }catch(\Throwable $e){
 
-            $entityManager = $this->getDoctrine()->getManager("gui");
-            $userDb = $user = $entityManager->getRepository(User::class)->findOneBy(['registrationToken' => $token]);
-
-
-            $userKeyrock = $this->userManagement->getKeyRockUser($userDb->getEmail());
-
-
-            $task = $form->getData();
-
-
-            $this->userManagement->updateKeyRockUser($userKeyrock['id'], $userKeyrock['username'], $userKeyrock['email'], $task['password'] );
-
-
-
-            return $this->redirectToRoute('login');
+            return $this->render('emails/setPassword.html.twig', [
+                    'form' => $form->createView(), 'token' => $token
+            ]);
         }
-
-
-
-
-
 
         $data['form'] = $form->createView();
         $data['token'] = $token;
 
-        return $this->render('emails/setPassword.html.twig', $data);
-
-
-
+        return $this->render('emails/setPassword.html.twig', [
+            'form' => $form->createView(), 'token' => $token
+        ]);
     }
 
     /**
@@ -235,7 +233,7 @@ class PurchaseController extends AbstractController
                 array(
                     'first_name' => 'John',
                     'last_name' => 'Client',
-                    'email' => 'fsismondi@mandint.org',
+                    'email' => 'maglionestefanoinfo@gmail.com',
                     'street' => 'Buchanan St. 21',
                     'city' => 'carouge',
                     'state' => 'Country',
@@ -262,10 +260,5 @@ class PurchaseController extends AbstractController
 
         $jwt = JWT::encode($token, $key, 'HS256');
         dd($jwt);
-
     }
-
-
-
-
 }

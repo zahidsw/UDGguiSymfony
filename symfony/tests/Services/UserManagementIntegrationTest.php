@@ -71,6 +71,7 @@ class UserManagementIntegrationTest extends KernelTestCase
         $this->assertNotNull($user['dbUser']['id']);
         $this->assertNotNull($user['keyrockUser']['id']);
         $this->assertSame($userDb->getKeyrockId(), $user['keyrockUser']['id']);
+        $this->assertFalse($userDb->isEnabled());
         //clean up
         $userManager->deleteUserKeyRock($user['keyrockUser']['id']);
         // delete organization todo
@@ -113,6 +114,7 @@ class UserManagementIntegrationTest extends KernelTestCase
         $this->assertNotNull($user['keyrockUser']['id']);
         $this->assertSame($userTest['id'],$user['keyrockUser']['id']);
         $this->assertSame($userDb->getKeyrockId(), $user['keyrockUser']['id']);
+        $this->assertFalse($userDb->isEnabled());
         //clean up
         $userManager->deleteUserKeyRock($user['keyrockUser']['id']);
         // delete organization todo

@@ -83,7 +83,8 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator
         try {
             $response = $this->keyRockAPI->createToken($credentials['email'],$credentials['password']);
         } catch (\Exception $e){
-             throw new CustomUserMessageAuthenticationException($e->getMessage());
+            $message = json_decode($e->getMessage(),TRUE);
+             throw new CustomUserMessageAuthenticationException($message['error']['message']);
         }
 
         $headers = $response->getHeaders();

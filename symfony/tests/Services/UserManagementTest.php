@@ -23,21 +23,4 @@ class UserManagementTest  extends KernelTestCase
          $this->assertNotEmpty($uuid);
     }
 
-   /* public function testSetPassword()
-    {
-
-
-
-
-        $userManager = self::$kernel->getContainer()
-            ->get('test.'. UserManagement::class);
-        $user = $userManager->getDbUser($mail);
-        $uuid = $userManager->setPassword($user);
-
-
-
-        $this->assertNotEmpty($uuid);
-
-
-    }*/
  }
