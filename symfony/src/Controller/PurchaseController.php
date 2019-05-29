@@ -173,48 +173,6 @@ class PurchaseController extends AbstractController
         return $data;
     }
 
-    /**
-     *
-     * @Route("/setpassword/{token}", name="setpassword")
-     */
-    public function setpassword(String $token, Request $request)
-    {
-        $entityManager = $this->getDoctrine()->getManager("gui");
-        $userDb = $entityManager->getRepository(User::class)->findOneBy(['registrationToken' => $token]);
-
-        if($userDb == NULL) return $this->render('emails/tokenExpired.html.twig');
-
-        $form = $this->createForm(SetPassword::class);
-        $form->handleRequest($request);
-
-        try {
-            if ($form->isSubmitted() && $form->isValid())
-            {
-                $userDb = $entityManager->getRepository(User::class)->findOneBy(['registrationToken' => $token]);
-                $userKeyrock = $this->userManagement->getKeyRockUser($userDb->getEmail());
-                $task = $form->getData();
-                $this->userManagement->updateKeyRockUser($userKeyrock['id'], $userKeyrock['username'], $userKeyrock['email'], $task['password']);
-                $userDb->setRegistrationToken('');
-                $userDb->setEnabled(1);
-                $entityManager->persist($userDb);
-                $entityManager->flush();
-                $this->addFlash('success', 'Password correctly set, you can now login!');
-                return $this->redirectToRoute('login');
-            }
-        }catch(\Throwable $e){
-
-            return $this->render('emails/setPassword.html.twig', [
-                    'form' => $form->createView(), 'token' => $token
-            ]);
-        }
-
-        $data['form'] = $form->createView();
-        $data['token'] = $token;
-
-        return $this->render('emails/setPassword.html.twig', [
-            'form' => $form->createView(), 'token' => $token
-        ]);
-    }
 
     /**
      * @Route("/enc", name="enc",methods={"POST"})
