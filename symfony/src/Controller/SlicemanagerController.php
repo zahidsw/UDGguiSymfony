@@ -57,6 +57,7 @@ class SlicemanagerController extends AbstractController
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
+			$slice->setStatus(0);
 			$em = $this->getDoctrine()->getManager();
 			$em->persist( $slice );
 			$em->flush();
@@ -79,55 +80,50 @@ class SlicemanagerController extends AbstractController
 	/**
 	 * Displays a form to edit an existing Slicemanager entity.
 	 *
-	 * @Route("/{_locale}/{id<\d+>}/register",methods={"GET", "POST"}, name="slice_register")
+	 * @Route("/{id<\d+>}/register",methods={"GET", "POST"}, name="slice_register")
 	 */
 	public function register(Request $request, Slicemanager $slice): Response
 	{
-		$ar = Yaml::parseFile("../tosca_testing/TOSCA-Metadata/Metadata.yaml");
-		//var_dump($ar);
 
-		//var_dump($post->getFlavourkeys());
-
+		$ar = Yaml::parseFile("../tosca_file/TOSCA-Metadata/Metadata.yaml");
 		$ar["name"] = $slice->getSlicename();
 		$ar["description"] = $slice->getSlicedescription();
 		$ar["provider"] = $slice->getSlcieprovider();
-
 		$yaml = Yaml::dump($ar);
-		file_put_contents('../tosca_testing/TOSCA-Metadata/Metadata.yaml', $yaml);
+		file_put_contents('../tosca_file/TOSCA-Metadata/Metadata.yaml', $yaml);
 
-		$ar = Yaml::parseFile("../tosca_testing/Definitions/testNSDiperf.yaml");
-
+		$ar = Yaml::parseFile("../tosca_file/Definitions/IoT_slice.yaml");
 		$ar['tosca_definitions_version'] = $slice->getSlicename();
 		$ar['description'] = $slice->getSlicedescription();
 		$ar['metadata']['vendor'] = $slice->getSlcieprovider();
-		$ar['topology_template']['node_templates']['clientVNF']['properties']['vendor'] =$slice->getSlcieprovider();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['vendor'] =$slice->getSlcieprovider();
 		$i=0;
 		foreach ($slice->getFlavourkeys() as $keys)
 		{
-			var_dump($keys->getName());
-			var_dump($ar['topology_template']['node_templates']['clientVNF']['properties']['deploymentFlavour'][$i]['flavour_key']);
-			$ar['topology_template']['node_templates']['clientVNF']['properties']['deploymentFlavour'][$i]['flavour_key']= $keys->getName();
-			var_dump($ar['topology_template']['node_templates']['clientVNF']['properties']['deploymentFlavour'][$i]['flavour_key']);
+			$ar['topology_template']['node_templates']['UDGaaF']['properties']['deploymentFlavour'][$i]['flavour_key']= $keys->getName();
 			$i++;
-
 		}
 		$i=0;
 		foreach ($slice->getVirtuallink() as $keys)
 		{
-			$ar['topology_template']['node_templates']['clientVNF']['requirements'][$i]['virtualLink']=  $keys->getNeworkname();
+			var_dump($keys->getNeworkname());
+			var_dump($ar['topology_template']['node_templates']['UDGaaF']['requirements'][$i]['virtualLink']);
+			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][$i]['virtualLink']=  $keys->getNeworkname();
+
 			$i++;
 		}
+		$ar['topology_template']['node_templates']['CP_UDG']['requirements'][1]['virtualLink']=  $keys->getNeworkname();
 		$i=0;
 		foreach ($slice->getPopinstance() as $keys)
 		{
-			$ar['topology_template']['node_templates']['VDU1']['properties']['vim_instance_name'][$i]= $keys->getName();
+			$ar['topology_template']['node_templates']['VDU_UDG']['properties']['vim_instance_name'][$i]= $keys->getName();
 			$i++;
 		}
 
 		$yaml = Yaml::dump($ar);
-		file_put_contents('../tosca_testing/Definitions/testNSDiperf.yaml', $yaml);
-		$output = shell_exec('cd ../tosca_testing && zip -r iperf.csar . -x ".*" -x "*/.*"');
-		$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_testing/iperf.csar');
+		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
+		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
+		$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar');
 		$process->run( function ( $type, $buffer ) {
 			$this->logger->info( $buffer );
 			$this->addFlash(
@@ -135,7 +131,8 @@ class SlicemanagerController extends AbstractController
 				$buffer
 			);
 		} );
-		return $this->redirectToRoute('slicemanagerindex');
+
+		return $this->redirectToRoute('slice_list');
 	}
 
 	/**

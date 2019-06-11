@@ -1,0 +1,8 @@
+name: test556
+image:
+    upload: false
+    names: [Ubuntu-16.04]
+vim_types:
+    - openstack
+description: 'use for personal use'
+provider: udg

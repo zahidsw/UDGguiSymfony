@@ -155,7 +155,6 @@ class FrontController extends AbstractController {
 
 	}
 
-
 	/**
 	 * Lists all Post entities.
 	 *
@@ -195,9 +194,9 @@ class FrontController extends AbstractController {
 			)
 		);
 
-		file_put_contents( '../tosca_testing/my.json', json_encode( $aVal ) );
+		file_put_contents( '../tosca_file/my.json', json_encode( $aVal ) );
 		$this->logger->info( 'Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json' );
-		$command = '/home/mandint/slice-manager/slice_manager.py  --pop-descriptor ../tosca_testing/my.json';
+		$command = '/home/mandint/slice-manager/slice_manager.py  --pop-descriptor ../tosca_file/my.json';
 		$process = New Process($command);
 		try {
 			$process->mustRun( function ( $type, $buffer ) {
@@ -235,6 +234,7 @@ class FrontController extends AbstractController {
 		$form = $this->createForm( PopType::class, $pop );
 		$form->handleRequest( $request );
 		if ( $form->isSubmitted() && $form->isValid() ) {
+			$pop->setStatus(0);
 			$this->getDoctrine()->getManager()->flush();
 			$this->addFlash( 'success', 'pop updated successfully' );
 
@@ -359,50 +359,6 @@ class FrontController extends AbstractController {
 			'post' => $securitygroup,
 			'form' => $form->createView(),
 		] );
-
-
-		if ( $form->isSubmitted() && $form->isValid() ) {
-			$task = $form->getData();
-
-			/*      $pop = array (
-					  'name' => $task['name'],
-					  'authUrl' => $task['AuthorisationURL'],
-					  'tenant' => $task['Tenant'],
-					  'username' => $task['Username'],
-					  'password' => $task['Password'],
-					  'keyPair' => $task['KeyPair'],
-					  'securityGroups' => $task['SecurityGroups'],
-					  'type' => $task['Type'],
-					  'location' =>
-					  array (
-						'name' => 'Aarhus',
-						'latitude' => '56.162939',
-						'longitude' => '10.203921',
-					  ),
-				  );
-	  */
-			$filesystem = new Filesystem();
-			$this->logger->info( 'Creating file: /home/mandint/tmp/pop.json' );
-			$filesystem->dumpFile( '/home/mandint/tmp/pop.json', json_encode( $pop ) );
-			$this->logger->info( 'Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json' );
-			$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json' );
-
-			$process->run( function ( $type, $buffer ) {
-				$this->logger->info( $buffer );
-				$this->addFlash(
-					'notice',
-					$buffer
-				);
-			} );
-
-			return $this->redirectToRoute( 'vnocreate' );
-		}
-
-
-		$data['form'] = $form->createView();
-
-		return $this->render( 'frontpage/vnoAdd.html.twig', $data );
-
 	}
 
 	/**
