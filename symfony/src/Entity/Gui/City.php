@@ -39,7 +39,6 @@ class City
         $this->users = new ArrayCollection();
     }
 
-  
 
     public function getId(): ?int
     {

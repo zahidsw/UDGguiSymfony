@@ -1,0 +1,37 @@
+<table>
+
+    <tr>
+        <td>{{ form_label(form.slicename, 'Slice Name'|trans) }}</td>
+        <td>{{ form_widget(form.slicename) }}</td>
+        <td>{{ form_errors(form.slicename) }}</td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.slicedescription, 'Slice Description'|trans) }}</td>
+        <td>{{ form_widget(form.slicedescription) }}</td>
+        <td>{{ form_errors(form.slicedescription) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.slcieprovider, 'Slice Provider'|trans) }}</td>
+        <td>{{ form_widget(form.slcieprovider) }}</td>
+        <td>{{ form_errors(form.slcieprovider) }}</td>
+    </tr>
+
+    <tr>
+        <td>{{ form_label(form.flavourkeys, 'Slice flavour'|trans) }}</td>
+        <td>{{ form_widget(form.flavourkeys) }}</td>
+        <td>{{ form_errors(form.flavourkeys) }}</td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.virtuallink, 'Virtual network name'|trans) }}</td>
+        <td>{{ form_widget(form.virtuallink) }}</td>
+        <td>{{ form_errors(form.virtuallink) }}</td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.popinstance, 'Avaliable links') }}</td>
+        <td>{{ form_widget(form.popinstance) }}</td>
+        <td>{{ form_errors(form.popinstance) }}</td>
+    </tr>
+
+</table>

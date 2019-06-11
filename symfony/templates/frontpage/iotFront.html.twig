@@ -1,0 +1,52 @@
+{% extends 'frontpage/layout.html.twig' %}
+
+{% block title %}Frontpage{% endblock %}
+
+{% block body %}
+<div id="submenu">
+		<a abc="/" class="selected" href="/">Services</a>
+
+		 | 
+	
+	<a abc="/en/front/discussion/serviceSubscription" class="selected" href="/en/front/discussion/serviceSubscription">Discussion</a>
+	
+		 | 
+		
+	<a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+		
+
+</div>
+
+<br/>
+<br/>
+<br/>
+
+
+
+<div class="scenarios">
+
+	<a href="{{ path('pop_list')}}">
+		<div>
+			<img src="{{ asset('/assets/images/front/virtual.png') }}">
+				<br>
+				<span>POP Management</span>
+			</div>
+	</a>
+	<a href="{{ path('slice_list')}}">
+		<div>
+			<img src="{{ asset('assets/images/front/camera.png') }}">
+				<br>
+				<span>Slice Manager</span>
+			</div>
+	</a>
+	<a href="{{ path('iot_configuration')}}">
+		<div>
+			<img src="{{ asset('/assets/images/front/design.png') }}">
+				<br>
+				<span>Application Configuration</span>
+			</div>
+	</a>
+					
+</div>
+    
+{% endblock %}

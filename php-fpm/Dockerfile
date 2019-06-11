@@ -34,8 +34,18 @@ RUN apk add --update \
     php7-sqlite3 \
     sqlite \
     make \
+    python \
+    py-pip \
+    git \
     curl
+<<<<<<< HEAD
     
+
+
+RUN mkdir -p /home/mandint/slice-manager/
+RUN mkdir -p /home/mandint/tmp/
+RUN git clone https://zmuhammad:QXnHszaA-HVPwiUn2Ryu@gitlab.distantaccess.com/mandint/slice-manager.git /home/mandint/slice-manager
+RUN pip install -r /home/mandint/slice-manager/requirements.txt --no-deps
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
