@@ -51,7 +51,7 @@ class Pop
 	/**
 	 * @var Securitygroup[]|ArrayCollection
 	 *
-	 * @ORM\ManyToMany(targetEntity=App\Entity\Gui\Securitygroup", cascade={"persist"})
+	 * @ORM\ManyToMany(targetEntity="App\Entity\Gui\Securitygroup", cascade={"persist"})
 	 * @ORM\JoinTable(name="pop_securitygroup")
 	 * @ORM\OrderBy({"name": "ASC"})
 	 */
