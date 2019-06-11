@@ -191,7 +191,7 @@ class PurchaseController extends AbstractController
                 array(
                     'first_name' => 'John',
                     'last_name' => 'Client',
-                    'email' => 'maglionestefanoinfo@gmail.com',
+                    'email' => 'felpone84@gmail.com',
                     'street' => 'Buchanan St. 21',
                     'city' => 'carouge',
                     'state' => 'Country',

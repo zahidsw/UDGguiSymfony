@@ -11,6 +11,7 @@ use App\Entity\Upv6\Devices;
 use iot6\InteractBundle\Entity\Actions;
 use iot6\InteractBundle\Entity\Modules;
 use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 
@@ -120,4 +121,89 @@ class InteractController extends AbstractController
 		};
 		return strcmp($md5($obj1), $md5($obj2));
 	}
+
+	public function privileges()
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+
+        $devices = $city->getDevices();
+
+        $devices = $devices->getValues();
+        $devices_list = [];
+
+        foreach ($devices as $device)
+        {
+            array_push($devices_list,$device->getUpv6DevicesId());
+        }
+
+
+
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $devices_list]);
+
+
+        //dd($devices);
+        $data['devices'] = $devices;
+
+
+        return $this->render('interact/privileges.html.twig',$data);
+    }
+
+
+    public function privilegesUsers(Devices $device, Request $request)
+    {
+
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $users = $city->getUsers()->getValues();
+
+        $data['users'] = $users;
+
+
+
+
+
+
+
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+            ->findBy(array('deviceId' => $device->getId()));
+
+
+
+        foreach ($users as &$user)
+        {
+            foreach ($user_has_device as $has_device)
+            {
+                if($has_device->getUserId() ==  $user->getId())
+                {
+                    $user->setAccessProfile((integer)$has_device->getAccessProfile());
+                }
+            }
+        }
+
+
+        //dd($users);
+
+
+
+
+        return $this->render('interact/privilegesUsers.html.twig',$data);
+
+    }
+
+
+    public function setDeviceUserPrivileges(Request $request)
+    {
+
+        dd('ciao');
+        if($request->request->get('some_var_name')){
+            //make something curious, get some unbelieveable data
+            $arrData = ['output' => 'here the result which will appear in div'];
+            return new JsonResponse($arrData);
+        }
+
+        return $this->render('app/main/index.html.twig');
+    }
 }

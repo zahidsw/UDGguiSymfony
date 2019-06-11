@@ -38,9 +38,9 @@ class UserHasDevice
     private $deviceId;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="access_profile", type="boolean", nullable=true)
+     * @ORM\Column(name="access_profile", type="integer", nullable=true)
      */
     private $accessProfile;
 

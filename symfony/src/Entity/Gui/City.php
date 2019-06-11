@@ -2,6 +2,8 @@
 
 namespace App\Entity\Gui;
 
+use App\Entity\Gui\Device;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -34,9 +36,15 @@ class City
      */
     private $users;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Gui\Device", mappedBy="city",fetch="EAGER")
+     */
+    private $devices;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->devices = new ArrayCollection();
     }
 
   
@@ -96,6 +104,34 @@ class City
             if ($user->getCity() === $this) {
                 $user->setCity(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Device[]
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(Device $device): self
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices[] = $device;
+            $device->addCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevice(Device $device): self
+    {
+        if ($this->devices->contains($device)) {
+            $this->devices->removeElement($device);
+            $device->removeCity($this);
         }
 
         return $this;
