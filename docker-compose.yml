@@ -29,6 +29,7 @@ services:
         volumes:
             - ./logs/nginx:/var/log/nginx:cached
             - ./symfony:/var/www/symfony:cached
+
     elk:
         image: willdurand/elk
         ports:

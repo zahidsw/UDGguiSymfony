@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Gui\Flavourkeys;
+use App\Entity\Gui\Pop;
+use App\Entity\Gui\Virtuallink;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+
+
+class SlicemanagerType extends AbstractType {
+
+
+	public function buildForm( FormBuilderInterface $builder, array $options ) {
+		$builder
+			->add( 'slicename', TextType::class )
+			->add( 'slicedescription', TextType::class )
+			->add( 'slcieprovider', TextType::class )
+
+			->add( 'flavourkeys', EntityType::class, [// drop down multiple selection
+				'class'        => Flavourkeys::class,
+				'choice_label' => function ( Flavourkeys $flavourkeys ) {
+					return sprintf( $flavourkeys->getName());
+				},
+				'expanded'     => false,
+				'multiple'     => true,
+			] )
+			->add( 'virtuallink', EntityType::class, [// drop down multiple selection
+				'class'        => Virtuallink::class,
+				'choice_label' => function ( Virtuallink $virtuallink ) {
+					return sprintf( $virtuallink->getNeworkname());
+				},
+				'expanded'     => false,
+				'multiple'     => true,
+			])
+			->add( 'popinstance', EntityType::class, [// drop down multiple selection
+				'class'        => Pop::class,
+				'choice_label' => function ( Pop $popinstance ) {
+					return sprintf( $popinstance->getName());
+				},
+				'expanded'     => false,
+				'multiple'     => true,
+			] );
+
+	}
+
+
+
+}

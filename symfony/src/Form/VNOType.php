@@ -16,11 +16,11 @@ class VNOType extends AbstractType
 	{
 		$builder
 			->add('name',			   TextType::class)
-			->add('AuthorisationURL',  TextType::class)
-			->add('Tenant',	           TextType::class)
-            ->add('Username',          TextType::class)
-			->add('Password',          TextType::class)            
-            ->add('Type', ChoiceType::class, [
+			->add('auth',  TextType::class)
+			->add('tenant',	           TextType::class)
+            ->add('username',          TextType::class)
+			->add('Password',          \Symfony\Component\Form\Extension\Core\Type\PasswordType::class)
+            ->add('type', ChoiceType::class, [
                 'choices'  => [
                     'openstack' => 'openstack',
                 ],
@@ -40,8 +40,11 @@ class VNOType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
             ])
-			;
+			->add('locationname',			   TextType::class)
+			->add('latitude',  TextType::class)
+			->add('longitude',	           TextType::class)
+
+		;
 	}
-	
 	
 }
