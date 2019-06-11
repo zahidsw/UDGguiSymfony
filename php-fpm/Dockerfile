@@ -38,8 +38,7 @@ RUN apk add --update \
     py-pip \
     git \
     curl
-<<<<<<< HEAD
-    
+
 
 
 RUN mkdir -p /home/mandint/slice-manager/

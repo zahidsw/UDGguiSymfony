@@ -302,7 +302,7 @@ nav:
 menu:
     home:            'Home'
     interact:        'Interact'
-    smartIt:         'Smart it'
+    smartIt:         'Scenario'
     appsAndService:  'Apps & Services'
     alert:           'Alerts'
     data:            'Data'

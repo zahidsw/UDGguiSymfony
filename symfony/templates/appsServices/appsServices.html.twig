@@ -7,32 +7,15 @@
 {% block head %}
 	{{ parent() }}
 	
-	<script>
-		$(document).ready(function() {
-			$('#appChoice').change(function() {
-				$('#appsFrame').attr('src', $(this).val());
-			});
-		});
-	</script>
+
 	
 {% endblock %}
 
 {% block body %}
 	{{ parent() }}
 	
-	<h1>{{ 'menu.appsAndService'|trans }}</h1>
+
 	
-	<br/>
-	
-	<select id="appChoice" value="appChoice">
-		<option selected value="">{{ 'msg.select_service'|trans }}</option>
-		{% for app in apps %}
-			<option value="{{ app.url }}">{{ app.name }}</option>
-		{% endfor %}
-	</select>
-	
-	<br/><br/>
-	
-	<iframe id="appsFrame"></iframe>
+	<iframe id="appsFrame" src="https://map.cityreport.org:9443#328a7c1c8e12efc1c49a9496c6d65f7f8119465d">You need a Frames Capable browser to view this content.</iframe>
 
 {% endblock %}
