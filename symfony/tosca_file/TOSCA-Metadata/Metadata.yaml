@@ -1,8 +1,8 @@
-name: test556
+name: TEST2
 image:
     upload: false
     names: [Ubuntu-16.04]
 vim_types:
     - openstack
-description: 'use for personal use'
-provider: udg
+description: 'USE FOR PERSONAL'
+provider: mandate

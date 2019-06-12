@@ -215,11 +215,13 @@ class FrontController extends AbstractController {
 				$em->persist( $pop );
 				$em->flush();
 			}
-			return $this->redirectToRoute( 'pop_list' );
 
 		} catch (ProcessFailedException $exception) {
 			echo $exception->getMessage();
+			return $this->redirectToRoute( 'pop_list' );
 		}
+		return $this->redirectToRoute( 'pop_list' );
+
 	}
 
 
@@ -287,46 +289,8 @@ class FrontController extends AbstractController {
 		return $this->render( 'frontpage/vnoAdd.html.twig', [
 			'post' => $pop,
 			'form' => $form->createView(),
+			'return' => $request->query->get('name'),
 		] );
-		if ( $form->isSubmitted() && $form->isValid() ) {
-			$task = $form->getData();
-
-			/*      $pop = array (
-					  'name' => $task['name'],
-					  'authUrl' => $task['AuthorisationURL'],
-					  'tenant' => $task['Tenant'],
-					  'username' => $task['Username'],
-					  'password' => $task['Password'],
-					  'keyPair' => $task['KeyPair'],
-					  'securityGroups' => $task['SecurityGroups'],
-					  'type' => $task['Type'],
-					  'location' =>
-					  array (
-						'name' => 'Aarhus',
-						'latitude' => '56.162939',
-						'longitude' => '10.203921',
-					  ),
-				  );
-	  */
-			$filesystem = new Filesystem();
-			$this->logger->info( 'Creating file: /home/mandint/tmp/pop.json' );
-			$filesystem->dumpFile( '/home/mandint/tmp/pop.json', json_encode( $pop ) );
-			$this->logger->info( 'Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json' );
-			$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py  --pop-descriptor /home/mandint/tmp/pop.json' );
-
-			$process->run( function ( $type, $buffer ) {
-				$this->logger->info( $buffer );
-				$this->addFlash(
-					'notice',
-					$buffer
-				);
-			} );
-
-			return $this->redirectToRoute( 'vnocreate' );
-		}
-		$data['form'] = $form->createView();
-
-		return $this->render( 'frontpage/vnoAdd.html.twig', $data );
 	}
 
 	/**

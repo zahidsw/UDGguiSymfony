@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Gui\Flavourkeys;
 use App\Entity\Gui\Slicemanager;
+use App\Entity\Gui\Virtuallink;
+use App\Form\FlavourkeysType;
 use App\Form\SlicemanagerType;
+use App\Form\VirtuallinkType;
 use App\Repository\Gui\SlicemanagerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -123,14 +127,31 @@ class SlicemanagerController extends AbstractController
 		$yaml = Yaml::dump($ar);
 		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
 		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
-		$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar');
-		$process->run( function ( $type, $buffer ) {
-			$this->logger->info( $buffer );
-			$this->addFlash(
-				'notice',
-				$buffer
-			);
-		} );
+		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
+		//$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar');
+		$process = New Process($command);
+		try {
+			$process->mustRun( function ( $type, $buffer ) {
+				$this->logger->info( $buffer );
+				$this->addFlash(
+					'notice',
+					$buffer
+				);
+			} );
+
+			if (substr($process->getOutput(), 18, 7) =='FAILURE'){
+
+			}else{
+				$slice->setStatus(1);
+				$em = $this->getDoctrine()->getManager();
+				$em->persist( $slice );
+				$em->flush();
+			}
+
+		} catch (ProcessFailedException $exception) {
+			echo $exception->getMessage();
+			return $this->redirectToRoute( 'slice_list' );
+		}
 
 		return $this->redirectToRoute('slice_list');
 	}
@@ -198,6 +219,67 @@ class SlicemanagerController extends AbstractController
 			return $this->redirectToRoute('slice_list');
 		}
 		return $this->redirectToRoute('slice_list');
+	}
+
+	/**
+	 * Deletes a Security entity.
+	 *
+	 * @Route("/{_locale}/createflavour", methods={"GET", "POST"}, name="slicecreateflavour")
+	 */
+
+	public function createFlavour( Request $request ): Response {
+		$flavourkeys = new Flavourkeys();
+		$form = $this->createForm( FlavourkeysType::class, $flavourkeys );
+		$form->handleRequest( $request );
+
+		if ( $form->isSubmitted() && $form->isValid() ) {
+			$em = $this->getDoctrine()->getManager();
+			$em->persist( $flavourkeys );
+			$em->flush();
+
+			// Flash messages are used to notify the user about the result of the
+			// actions. They are deleted automatically from the session as soon
+			// as they are accessed.
+			// See https://symfony.com/doc/current/book/controller.html#flash-messages
+			$this->addFlash( 'success', 'Flavour key created successfully' );
+
+			return $this->redirectToRoute( 'slicecreateflavour' );
+		}
+
+		return $this->render( 'slicemanager/flavourkeysAdd.html.twig', [
+			'post' => $flavourkeys,
+			'form' => $form->createView(),
+		] );
+	}
+	/**
+	 * Deletes a links entity.
+	 *
+	 * @Route("/{_locale}/createnetworks", methods={"GET", "POST"}, name="slicecreatenetworks")
+	 */
+
+	public function createNetowrks( Request $request ): Response {
+		$virtuallink = new Virtuallink();
+		$form          = $this->createForm( VirtuallinkType::class, $virtuallink );
+		$form->handleRequest( $request );
+
+		if ( $form->isSubmitted() && $form->isValid() ) {
+			$em = $this->getDoctrine()->getManager();
+			$em->persist( $virtuallink );
+			$em->flush();
+
+			// Flash messages are used to notify the user about the result of the
+			// actions. They are deleted automatically from the session as soon
+			// as they are accessed.
+			// See https://symfony.com/doc/current/book/controller.html#flash-messages
+			$this->addFlash( 'success', 'Security group created successfully' );
+
+			return $this->redirectToRoute( 'slicecreatenetworks' );
+		}
+
+		return $this->render( 'slicemanager/virtuallinkAdd.html.twig', [
+			'post' => $virtuallink,
+			'form' => $form->createView(),
+		] );
 	}
 
 

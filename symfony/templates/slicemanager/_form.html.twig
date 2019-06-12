@@ -21,17 +21,33 @@
         <td>{{ form_label(form.flavourkeys, 'Slice flavour'|trans) }}</td>
         <td>{{ form_widget(form.flavourkeys) }}</td>
         <td>{{ form_errors(form.flavourkeys) }}</td>
+        <td>  <a href="{{ path('slicecreateflavour') }}" class="btn btn-link">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <input type="button" value="{{ 'add Flavour type'|trans }}"/>
+            </a>
+        </td>
     </tr>
     <tr>
-        <td>{{ form_label(form.virtuallink, 'Virtual network name'|trans) }}</td>
+        <td>{{ form_label(form.virtuallink, 'add network name'|trans) }}</td>
         <td>{{ form_widget(form.virtuallink) }}</td>
         <td>{{ form_errors(form.virtuallink) }}</td>
+        <td>  <a href="{{ path('slicecreatenetworks')}}" class="btn btn-link">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <input type="button" value="{{ 'add Network type'|trans }}"/>
+            </a>
+        </td>
 
     </tr>
     <tr>
         <td>{{ form_label(form.popinstance, 'Avaliable links') }}</td>
         <td>{{ form_widget(form.popinstance) }}</td>
         <td>{{ form_errors(form.popinstance) }}</td>
+        <td>  <a href="{{ url('vnocreate', {name: 'slice_new'}) }}" class="btn btn-link">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <input type="button" value="{{ 'add New Pop'|trans }}"/>
+            </a>
+        </td>
+
     </tr>
 
 </table>

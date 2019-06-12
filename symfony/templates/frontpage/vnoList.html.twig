@@ -52,15 +52,15 @@
                         <td>{{ pop.keypair }}</td>
 
                         <td style="width:30px; text-align:center;">
-                       {% if pop.status == false %}
-                           <a href="{{ path('pop_register', {id: pop.id}) }}" id="pop_register" class="btn btn-sm btn-default">
-                               <i class="fa fa-eye" aria-hidden="true"></i> <img
-                                       src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
-                           </a>
-                       {% else %}
-                           <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
-                        {% endif %}
-
+                            {% if pop.status == false %}
+                                <a href="{{ path('pop_register', {id: pop.id}) }}" id="pop_register"
+                                   class="btn btn-sm btn-default">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> <img
+                                            src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                                </a>
+                            {% else %}
+                                <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
+                            {% endif %}
                         </td>
                         <td style="width:30px; text-align:center;">
                             <a href="{{ path('pop_show', {id: pop.id}) }}" class="btn btn-sm btn-default">

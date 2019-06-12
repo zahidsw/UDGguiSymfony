@@ -1,8 +1,0 @@
-tosca_definitions_version: test1
-description: 'use for personal use'
-metadata:
-    ID: 'IOT NSDS'
-    vendor: DG
-    version: 1
-topology_template:
-    node_templates: { clientVNF: { type: openbaton.type.VNF, properties: { ID: x, vendor: DG, version: 1, type: client, deploymentFlavour: [{ flavour_key: middle }], endpoint: generic }, requirements: [{ virtualLink: public }, { vdu: VDU1 }], interfaces: { lifecycle: { INSTANTIATE: [install.sh], CONFIGURE: [server_configure.sh, server_configure_floatingIp.py] } } }, VDU1: { type: tosca.nodes.nfv.VDU, properties: { scale_in_out: 1, vim_instance_name: [client5] }, artifacts: { VDU1Image: { type: tosca.artifacts.Deployment.Image.VM, file: UDGLightPreinstalled3 } } }, CP1: { type: tosca.nodes.nfv.CP, requirements: [{ virtualBinding: VDU1 }, { virtualLink: provider-network }], properties: { scale_in_out: null } }, provider-network: { type: tosca.nodes.nfv.VL, properties: { vendor: Fokus } } }

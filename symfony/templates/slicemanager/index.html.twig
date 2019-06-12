@@ -62,10 +62,14 @@
                             {% endfor %}
                         </td>
                         <td style="width:30px; text-align:center;">
+                    {% if slice.status == false %}
                             <a href="{{ path('slice_register', {id: slice.id}) }}" class="btn btn-sm btn-default">
                                 <i class="fa fa-eye" aria-hidden="true"></i> <img
                                         src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
                             </a>
+                    {% else %}
+                        <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
+                    {% endif %}
                         </td>
                         <td style="width:30px; text-align:center;">
                             <a href="{{ path('slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">

@@ -21,6 +21,13 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Yaml\Yaml;
+use App\Entity\Gui\Securitygroup;
+use App\Form\PopType;
+use App\Form\SecuritygroupType;
+use App\Repository\Gui\PopRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IotConfigurationController extends AbstractController {
 	private $logger;
@@ -55,10 +62,10 @@ class IotConfigurationController extends AbstractController {
 	public function new( Request $request ): Response {
 		$iotconfig = new IotConfiguration();
 		$form      = $this->createForm( IotConfigurationType::class, $iotconfig );
-
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
+			$iotconfig->setStatus(0);
 			$em = $this->getDoctrine()->getManager();
 			$em->persist( $iotconfig );
 			$em->flush();
@@ -77,6 +84,59 @@ class IotConfigurationController extends AbstractController {
 			'form'  => $form->createView(),
 		] );
 	}
+
+	/**
+	 * Displays a form to edit an existing IotConfiguration entity.
+	 *
+	 * @Route("/{id<\d+>}/iotregister",methods={"GET", "POST"}, name="iot_register")
+	 */
+	public function register(Request $request, IotConfiguration $iot_configuration): Response
+	{
+		$ar = Yaml::parseFile("../tosca_file/Definitions/IoT_slice.yaml");
+
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][6]['target_temp_Sens_name']= $iot_configuration->getTargetTempSensName();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][7]['target_temp_sens_URL']= $iot_configuration->getTargetTempSensURL();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][8]['temp_threshold']= $iot_configuration->getTempThreshold();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][9]['emergency_slice_name']= $iot_configuration->getEmergencySliceName();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][10]['camera_IP']= $iot_configuration->getCameraIP();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][11]['camera_user']= $iot_configuration->getCameraUser();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][12]['camera_password']= $iot_configuration->getCameraPassword();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][13]['minimum_bandwidth']= $iot_configuration->getMinimumBandwidth();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][14]['max_bandwidth']= $iot_configuration->getMaxBandwidth();
+		$iot_configuration->setStatus(1);
+		var_dump($ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters']);
+		$yaml = Yaml::dump($ar);
+
+		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
+		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
+		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
+		$process = New Process($command);
+		try {
+			$process->mustRun( function ( $type, $buffer ) {
+				$this->logger->info( $buffer );
+				$this->addFlash(
+					'notice',
+					$buffer
+				);
+			} );
+
+			if (substr($process->getOutput(), 18, 7) =='FAILURE'){
+
+			}else{
+				$iot_configuration->setStatus(1);
+				$em = $this->getDoctrine()->getManager();
+				$em->persist( $iot_configuration );
+				$em->flush();
+			}
+
+		} catch (ProcessFailedException $exception) {
+			echo $exception->getMessage();
+			return $this->redirectToRoute( 'iot_configuration' );
+		}
+
+		return $this->redirectToRoute('iot_configuration');
+	}
+
 
 	/**
 	 * Deletes a Security entity.
@@ -153,6 +213,7 @@ class IotConfigurationController extends AbstractController {
 		$form = $this->createForm( IotConfigurationType::class, $iot );
 		$form->handleRequest( $request );
 		if ( $form->isSubmitted() && $form->isValid() ) {
+			$iot->setStatus(0);
 			$this->getDoctrine()->getManager()->flush();
 			$this->addFlash( 'success', 'Slice updated successfully' );
 
