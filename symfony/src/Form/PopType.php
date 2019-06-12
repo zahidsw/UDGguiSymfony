@@ -16,10 +16,9 @@ class PopType extends AbstractType {
 
 	public function buildForm( FormBuilderInterface $builder, array $options ) {
 		$builder
-			->add('name', TextType::class, [
+			->add( 'name', TextType::class, [
 				'help' => 'The ZIP/Postal code for your credit card\'s billing address.',
-			])
-
+			] )
 			->add( 'auth', TextType::class )
 			->add( 'tenant', TextType::class )
 			->add( 'username', TextType::class )
@@ -37,10 +36,18 @@ class PopType extends AbstractType {
 				'expanded'     => false,
 				'multiple'     => true,
 			] )
-			->add( 'keypair', TextType::class )
-			->add( 'locationname', TextType::class )
-			->add( 'latitude', TextType::class )
-			->add( 'longitude', TextType::class);
+			->add( 'keypair', TextType::class, [
+				'required' => false,
+			] )
+			->add( 'locationname', TextType::class, [
+				'required' => false,
+			] )
+			->add( 'latitude', TextType::class, [
+				'required' => false,
+			] )
+			->add( 'longitude', TextType::class, [
+				'required' => false,
+			] );
 	}
 
 }
