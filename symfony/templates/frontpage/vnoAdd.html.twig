@@ -52,12 +52,10 @@
     {% endblock %}
 
     <div class="leftColumn">
-
         <div class="blocLeft">
             <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
             <a href="http://udg.cityreport.org"
                class="title indent"><strong> {{ 'IoT Pop Creation'|trans }}</strong></a>
-
         </div>
 
         <div class="blocLeft">
@@ -67,23 +65,22 @@
             {{ include('frontpage/_form.html.twig') }}
             {{ form_rest(form) }}
             <br/>
-
             <input type="submit" value="{{ 'Add'|trans }}"/>
+            {% if return %}
+                <a href="{{ path('slice_new') }}" class="btn btn-link">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                    <input type="button" value="{{ 'Cancel'|trans }}"/>
+                </a>
+            {% else %}
+                <a href="{{ path('vnolist') }}" class="btn btn-link">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                    <input type="button" value="{{ 'Cancel'|trans }}"/>
+                </a>
+            {% endif %}
 
-            <a href="{{ path('vnolist') }}" class="btn btn-link">
-                <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" value="{{ 'Cancel'|trans }}"/>
-            </a>
-
-            {{ form_end(form) }}
-
+            {{form_end(form)}}
         </div>
-
-
     </div>
-
-
-
 
     <div class="blocRight">
 
