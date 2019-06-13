@@ -287,7 +287,7 @@ class FrontController extends AbstractController {
 		}
 
 		return $this->render( 'frontpage/vnoAdd.html.twig', [
-			'post' => $pop,
+			'pop' => $pop,
 			'form' => $form->createView(),
 			'return' => $request->query->get('name'),
 		] );
