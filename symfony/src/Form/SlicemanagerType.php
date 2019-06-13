@@ -18,9 +18,15 @@ class SlicemanagerType extends AbstractType {
 
 	public function buildForm( FormBuilderInterface $builder, array $options ) {
 		$builder
-			->add( 'slicename', TextType::class )
-			->add( 'slicedescription', TextType::class )
-			->add( 'slcieprovider', TextType::class )
+			->add( 'slicename', TextType::class ,[
+				'help' => 'please enter the slice name',
+			])
+			->add( 'slicedescription', TextType::class,[
+				'help' => 'Slice description',
+			] )
+			->add( 'slcieprovider', TextType::class, [
+			'help' => 'Provider of the slice',
+			])
 
 			->add( 'flavourkeys', EntityType::class, [// drop down multiple selection
 				'class'        => Flavourkeys::class,
@@ -29,6 +35,7 @@ class SlicemanagerType extends AbstractType {
 				},
 				'expanded'     => false,
 				'multiple'     => true,
+				'help' => 'avaliable flavour for the image ',
 			] )
 			->add( 'virtuallink', EntityType::class, [// drop down multiple selection
 				'class'        => Virtuallink::class,
@@ -37,6 +44,7 @@ class SlicemanagerType extends AbstractType {
 				},
 				'expanded'     => false,
 				'multiple'     => true,
+				'help' => 'Avaliable Network links',
 			])
 			->add( 'popinstance', EntityType::class, [// drop down multiple selection
 				'class'        => Pop::class,
@@ -45,6 +53,7 @@ class SlicemanagerType extends AbstractType {
 				},
 				'expanded'     => false,
 				'multiple'     => true,
+				'help' => 'Avaliable Point of preferneces',
 			] );
 
 	}

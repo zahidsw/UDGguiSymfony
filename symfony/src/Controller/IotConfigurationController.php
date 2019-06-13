@@ -145,6 +145,7 @@ class IotConfigurationController extends AbstractController {
 	 */
 
 	public function ajaxAction( Request $request ) {
+
 		if ( $request->isXmlHttpRequest() ) {
 			$template_ids = $request->request->get( 'template_id' );
 			//		var_dump($template_ids);
@@ -241,7 +242,7 @@ class IotConfigurationController extends AbstractController {
 		// $this->denyAccessUnlessGranted('show', $post, 'Posts can only be shown to their authors.');
 
 		return $this->render( 'iot_configuration/show.html.twig', [
-			'slice' => $iot,
+			'iotconfig' => $iot,
 		] );
 	}
 

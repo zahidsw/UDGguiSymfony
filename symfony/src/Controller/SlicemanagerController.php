@@ -20,8 +20,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-
-
 class SlicemanagerController extends AbstractController
 {
 	private $logger;
@@ -57,7 +55,6 @@ class SlicemanagerController extends AbstractController
 	{
 		$slice = new Slicemanager();
 		$form = $this->createForm( SlicemanagerType::class, $slice );
-
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
@@ -128,7 +125,6 @@ class SlicemanagerController extends AbstractController
 		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
 		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
 		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
-		//$process = Process::fromShellCommandline( '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar');
 		$process = New Process($command);
 		try {
 			$process->mustRun( function ( $type, $buffer ) {
