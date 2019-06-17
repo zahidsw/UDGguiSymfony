@@ -47,7 +47,6 @@ class City
         $this->devices = new ArrayCollection();
     }
 
-  
 
     public function getId(): ?int
     {

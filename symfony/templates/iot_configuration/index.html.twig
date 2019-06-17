@@ -1,0 +1,120 @@
+{% extends "config/layoutConfig.html.twig" %}
+
+{% block title %}
+    add value
+{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{% block body %}
+    <div id="submenu">
+        <a abc="/" class="selected" href="/">Services</a>
+
+        |
+
+        <a abc="/en/front/discussion/serviceSubscription" class="selected"
+           href="/en/front/discussion/serviceSubscription">Discussion</a>
+        |
+        <a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="leftColumn">
+        <div class="blocLeft">
+            <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
+            <a href="http://udg.cityreport.org"
+               class="title indent"><strong> {{ 'IoT Configuration List'|trans }}</strong></a>
+        </div>
+
+        <div id="zebraTableDiv">
+            <table style="width:100%">
+                <thead>
+                <tr>
+                    <th scope="col">{{ 'Temparature Sensor Name' }}</th>
+                    <th scope="col">{{ 'Temparature Sensor URL' }}</th>
+                    <th scope="col">{{ 'Threshold Value' }}</th>
+                    <th scope="col">{{ 'Emergency Slice Name' }}</th>
+                    <th scope="col">{{ 'Camera IP' }}</th>
+                    <th scope="col">{{ 'camera Port' }}</th>
+                    <th scope="col">{{ 'User' }}</th>
+                    <th scope="col">{{ 'Minimum Bandwidth' }}</th>
+                    <th scope="col">{{ 'Maximum Bandwidth' }}</th>
+                    <th scope="col">{{ 'selected Slice Name' }}</th>
+                    <th colspan="4" scope="col">{{ 'Actions' }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for iotconfig in iotconfigs %}
+                    <tr>
+                        <td>{{ iotconfig.targetTempSensName }}</td>
+                        <td>{{ iotconfig.targetTempSensURL }}</td>
+                        <td>{{ iotconfig.tempThreshold }}</td>
+                        <td>{{ iotconfig.emergencySliceName }}</td>
+                        <td>{{ iotconfig.cameraIP }}</td>
+                        <td>{{ iotconfig.cameraPort }}</td>
+                        <td>{{ iotconfig.cameraUser }}</td>
+                        <td>{{ iotconfig.minimumBandwidth }}</td>
+                        <td>{{ iotconfig.maxBandwidth }}</td>
+                        <td>{{ iotconfig.slicemanager.slicename }}</td>
+
+                        <td style="width:30px; text-align:center;">
+                    {% if iotconfig.status == false %}
+                            <a href="{{ path('iot_register', {id: iotconfig.id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-eye" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                            </a>
+                    {% else %}
+                        <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
+                    {% endif %}
+                        </td>
+
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('iot_show', {id: iotconfig.id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-edit" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/show.png') }}"/>
+                            </a>
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('iot_edit', {id: iotconfig.id}) }}" class="btn btn-sm btn-primary">
+                                <i class="fa fa-edit" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/edit.png') }}"/>
+                            </a>
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('iot_delete', { 'id': iotconfig.id }) }}">
+                                <img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+                                     onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"/>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <br/>
+        </div>
+    </div>
+    <div class="section actions">
+        <a href="{{ path('configuration_new') }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Configration'|trans }}"/>
+        </a>
+        <a href="{{ path('iot_list') }}" class="btn btn-sm btn-default">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <input type="button" value="{{ 'Cancel'|trans }}"/>
+        </a>
+    </div>
+
+    <div class="blocRight">
+        {# read and display just one flash message type #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

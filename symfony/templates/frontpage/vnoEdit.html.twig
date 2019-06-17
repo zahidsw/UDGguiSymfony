@@ -1,0 +1,77 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+
+{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{% block body %}
+
+
+
+    <div id="submenu">
+        <a abc="/" class="selected" href="/">Services</a>
+
+        |
+
+        <a abc="/en/front/discussion/serviceSubscription" class="selected"
+           href="/en/front/discussion/serviceSubscription">Discussion</a>
+
+        |
+
+        <a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+
+
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+
+    <div class="leftColumn">
+
+        <div class="blocLeft">
+            <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
+            <a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'IoT Virtual Network'|trans }}</strong></a>
+
+        </div>
+
+        <div class="blocLeft">
+
+            {{ form_start(form, {attr: attr|default({})}) }}
+            {{ form_errors(form) }}
+            {{ include('frontpage/_form.html.twig') }}
+            {{ form_rest(form) }}
+            <br/>
+            <input type="submit" value="{{ 'Updated'|trans }}"/>
+            <a href="{{ path('vnolist') }}" class="btn btn-link">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <input type="button" value="{{ 'Cancel'|trans }}"/>
+            </a>
+            {{ form_end(form) }}
+
+        </div>
+
+
+    </div>
+
+    <div class="blocRight">
+
+
+        {# read and display just one flash message type #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+
+{% endblock %}

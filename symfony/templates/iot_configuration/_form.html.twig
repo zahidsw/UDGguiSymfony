@@ -1,0 +1,145 @@
+<table>
+    <tr>
+        <td>{{ form_label(form.targetTempSensName, 'Temparature Sensor Name'|trans) }}</td>
+        <td>{{ form_widget(form.targetTempSensName) }}</td>
+        <td>
+            <small>{{ form_help(form.targetTempSensName) }}</small>
+        </td>
+        <td>{{ form_errors(form.targetTempSensName) }}</td>
+        <td class="popup" title="test"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                                            src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.targetTempSensName) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.targetTempSensURL, 'Temparature Sensor URL'|trans) }}</td>
+        <td>{{ form_widget(form.targetTempSensURL) }}</td>
+        <td>
+            <small>{{ form_help(form.targetTempSensURL, {'attr': {'style.display':none } }) }}</small>
+        </td>
+        <td>{{ form_errors(form.targetTempSensURL) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.targetTempSensURL) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.tempThreshold, 'Threshold Value'|trans) }}</td>
+        <td>{{ form_widget(form.tempThreshold) }}</td>
+        <td>
+            <small>{{ form_help(form.tempThreshold) }}</small>
+        </td>
+        <td>{{ form_errors(form.tempThreshold) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.tempThreshold) }}</span>
+        </td>
+
+    </tr>
+
+    <tr>
+        <td>{{ form_label(form.emergencySliceName, 'Emergency Slice Name'|trans) }}</td>
+        <td>{{ form_widget(form.emergencySliceName) }}</td>
+        <td>
+            <small>{{ form_help(form.emergencySliceName) }}</small>
+        </td>
+        <td>{{ form_errors(form.emergencySliceName) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.emergencySliceName) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.cameraIP, 'Camera IP'|trans) }}</td>
+        <td>{{ form_widget(form.cameraIP) }}</td>
+        <td>
+            <small>{{ form_help(form.cameraIP) }}</small>
+        </td>
+        <td>{{ form_errors(form.cameraIP) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.cameraIP) }}</span>
+        </td>
+
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.cameraPort, 'camera Port') }}</td>
+        <td>{{ form_widget(form.cameraPort) }}</td>
+        <td>
+            <small>{{ form_help(form.cameraPort) }}</small>
+        </td>
+        <td>{{ form_errors(form.cameraPort) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.cameraPort) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.cameraUser, 'User') }}</td>
+        <td>{{ form_widget(form.cameraUser) }}</td>
+        <td>
+            <small>{{ form_help(form.cameraUser) }}</small>
+        </td>
+        <td>{{ form_errors(form.cameraUser) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.cameraUser) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.cameraPassword, 'Password') }}</td>
+        <td>{{ form_widget(form.cameraPassword) }}</td>
+        <td>
+            <small>{{ form_help(form.cameraPassword) }}</small>
+        </td>
+        <td>{{ form_errors(form.cameraPassword) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.cameraPassword) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.minimumBandwidth, 'Minimum Bandwidth') }}</td>
+        <td>{{ form_widget(form.minimumBandwidth) }}</td>
+        <td>
+            <small>{{ form_help(form.minimumBandwidth) }}</small>
+        </td>
+        <td>{{ form_errors(form.minimumBandwidth) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.minimumBandwidth) }}</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.maxBandwidth, 'Maximum Bandwidth') }}</td>
+        <td>{{ form_widget(form.maxBandwidth) }}</td>
+        <td>
+            <small>{{ form_help(form.maxBandwidth) }}</small>
+        </td>
+        <td>{{ form_errors(form.maxBandwidth) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.targetTempSensURL) }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.slicemanager, 'Choose Slices') }}</td>
+        <td>{{ form_widget(form.slicemanager) }}</td>
+        <td>
+            <small>{{ form_help(form.slicemanager) }}</small>
+        </td>
+        <td>{{ form_errors(form.slicemanager) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.slicemanager) }}</span>
+        </td>
+    </tr>
+</table>

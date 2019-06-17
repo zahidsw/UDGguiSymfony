@@ -49,7 +49,18 @@
 	{{ parent() }}
 	
 	<div class="leftColumn">
-	
+
+		<div class="blocLeft">
+			<img class="legend" alt="" src="{{ asset('assets/images/interface/icons/interact.png') }}" />
+			<a href="/" class="title indent"><strong> Frontpage </strong> </a>
+		</div>
+
+		<div class="blocLeft">
+			<img class="legend" alt="" src="{{ asset('assets/images/interface/icons/interact.png') }}" />
+			<a href="{{ path('customerSupport') }}" class="title indent"><strong> Dashboard </strong> </a>
+		</div>
+
+
 		<div class="blocLeft">
 			<img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('assets/images/interface/icons/interact.png') }}" />
 			<a href="{{ path('iot6_InteractBundle_iotNavigator') }}" class="title indent"><strong>{{ 'msg.interact'|trans }}</strong> {{ 'msg.with_smart_things'|trans }}</a>
@@ -104,10 +115,7 @@
 		
 	</div>
 
-	<div class="blocRight">
-		<a href="{{ path('customerSupport') }}" class="title" id="shortcuts"><strong>{{ 'DashBoard'|trans }}</strong></a>
-	</div>
-	
+
 	<div id="remoteServerMsg" class="blocRight border">
 		<a href="{{ path('iot6_DataBundle') }}" class="title"><strong>{{ 'msg.message_remote_server'|trans }}</strong></a>
 		<img alt="{{ 'msg.loading'|trans }}..." src="{{ asset('assets/images/interface/icons/loader.gif') }}" />

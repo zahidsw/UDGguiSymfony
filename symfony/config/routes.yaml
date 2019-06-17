@@ -896,9 +896,26 @@ frontservice:
     path:  /{_locale}/front/discussion/service
     controller: App\Controller\FrontController:service
 
+vnolist:
+    path:  /{_locale}/listVno
+    controller: App\Controller\FrontController:listVno
+
+#vnoedit:
+#    path:  /{_locale}/{id<\d+>}/editVno
+#    controller: App\Controller\FrontController:editVno
+
+vnoshow:
+    path:  /{_locale}/showVno
+    controller: App\Controller\FrontController:showVno
+
 vnocreate:
     path:  /{_locale}/createVno
     controller: App\Controller\FrontController:createVno
+
+#vnodelete:
+#    path:  /{_locale}/deleteVno
+#    controller: App\Controller\FrontController:deleteVno
+
 
 controlMonitoring:
     path:  /{_locale}/controlMonitoring

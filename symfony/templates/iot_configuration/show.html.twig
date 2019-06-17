@@ -1,0 +1,87 @@
+{% extends "config/layoutConfig.html.twig" %}
+
+{% block title %}
+    add value
+{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div id="submenu">
+        <a abc="/" class="selected" href="/">Services</a>
+
+        |
+
+        <a abc="/en/front/discussion/serviceSubscription" class="selected"
+           href="/en/front/discussion/serviceSubscription">Discussion</a>
+
+        |
+
+        <a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="leftColumn">
+
+        <div class="blocLeft">
+            <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
+            <a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'IoT Virtual Network'|trans }}</strong></a>
+        </div>
+
+        <div class="blocLeft">
+
+            <h1>{{ 'IOT configuration Details'|trans }}</h1>
+            <table class="table table-striped table-middle-aligned">
+                <tbody>
+                <tr>
+                    <td>
+                        <ol>
+                            <dd><li><b>Temparature Sensor Name : </b> {{ iotconfig.targetTempSensName }}</li></dd>
+                            <dd><li><b>Temparature Sensor URL :</b> {{ iotconfig.targetTempSensURL }}</li></dd>
+                            <dd><li><b>Threshold Value	: </b>{{ iotconfig.tempThreshold }}</li></dd>
+                            <dd><li><b>Emergency Slice Name :</b>{{ iotconfig.emergencySliceName }}</li></dd>
+                            <dd><li><b>Camera Ip : </b>{{ iotconfig.cameraIP }}</li></dd>
+                            <dd><li><b>Camera Port : </b>{{ iotconfig.cameraPort }}</li></dd>
+                            <dd><li><b>User : </b>{{ iotconfig.cameraUser }}</li></dd>
+                            <dd><li><b>Minimum Bandwidth : </b>{{ iotconfig.minimumBandwidth }}</li></dd>
+                            <dd><li><b>Maximum Bandwidth : </b>{{ iotconfig.maxBandwidth }}</li></dd>
+                            <dd><li><b>Selected Slice Name :</b> {{ iotconfig.slicemanager.slicename }}</li></dd>
+                        </ol>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">
+                        <div class="item-actions">
+                            <a href="{{ path('iot_configuration') }}" class="btn btn-sm btn-primary">
+                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                <input type="button" value="{{ 'IOT Configuration List'|trans }}"/>
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="blocRight">
+        {# read and display just one flash message type #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+
+{% endblock %}

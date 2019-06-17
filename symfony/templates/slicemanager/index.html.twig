@@ -1,0 +1,118 @@
+{% extends "config/layoutConfig.html.twig" %}
+
+{% block title %}
+    add value
+{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+{% block body %}
+    <div id="submenu">
+        <a abc="/" class="selected" href="/">Services</a>
+
+        |
+
+        <a abc="/en/front/discussion/serviceSubscription" class="selected"
+           href="/en/front/discussion/serviceSubscription">Discussion</a>
+        |
+        <a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="leftColumn">
+
+        <div class="blocLeft">
+            <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
+            <a href="http://udg.cityreport.org"
+               class="title indent"><strong> {{ 'IoT Slices List'|trans }}</strong></a>
+        </div>
+
+        <div id="zebraTableDiv">
+            <table style="width:100%">
+                <thead>
+                <tr>
+                    <th scope="col">{{ 'Slice name' }}</th>
+                    <th scope="col">{{ 'Description Info' }}</th>
+                    <th scope="col">{{ 'Flavour' }}</th>
+                    <th scope="col">{{ 'Virtual network' }}</th>
+                    <th scope="col">{{ 'Links' }}</th>
+                    <th colspan="4" scope="col">{{ 'Links' }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for slice in slices %}
+                    <tr>
+                        <td>{{ slice.slicename }}</td>
+                        <td>{{ slice.slicedescription }}</td>
+                        <td>{{ slice.slcieprovider }}</td>
+                        <td>
+                            {% for sl in slice.virtuallink %}
+                                {{ sl.neworkname }}|
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for sl in slice.popinstance %}
+                                {{ sl.name }}|
+                            {% endfor %}
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                    {% if slice.status == false %}
+                            <a href="{{ path('slice_register', {id: slice.id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-eye" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                            </a>
+                    {% else %}
+                        <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
+                    {% endif %}
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-edit" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/show.png') }}"/>
+                            </a>
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('slice_edit', {id: slice.id}) }}" class="btn btn-sm btn-primary">
+                                <i class="fa fa-edit" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/edit.png') }}"/>
+                            </a>
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('slice_delete', { 'id': slice.id }) }}">
+                                <img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+                                     onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"/>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <br/>
+        </div>
+        <div class="section actions">
+            <a href="{{ path('slice_new') }}" class="btn btn-lg btn-block btn-success">
+                <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Slice'|trans }}"/>
+            </a>
+            <a href="{{ path('iot_list') }}" class="btn btn-sm btn-default">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+                <input type="button" value="{{ 'Cancel'|trans }}"/>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="blocRight">
+        {# read and display just one flash message type #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
