@@ -19,7 +19,8 @@ use Symfony\Component\Yaml\Yaml;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
+use Symfony\Component\Process\InputStream;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 class SlicemanagerController extends AbstractController
 {
 	private $logger;
@@ -59,6 +60,7 @@ class SlicemanagerController extends AbstractController
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
 			$slice->setStatus(0);
+			$slice->setSliceid("null");
 			$em = $this->getDoctrine()->getManager();
 			$em->persist( $slice );
 			$em->flush();
@@ -138,9 +140,12 @@ class SlicemanagerController extends AbstractController
 			if (substr($process->getOutput(), 18, 7) =='FAILURE'){
 
 			}else{
+				$pos=strpos($process->getOutput(), 'nsr_id:');
+				//var_dump($pos);
+				$slice->setSliceid(substr($process->getOutput(), $pos+8, 36));
 				$slice->setStatus(1);
 				$em = $this->getDoctrine()->getManager();
-				$em->persist( $slice );
+				$em->persist($slice);
 				$em->flush();
 			}
 
@@ -149,6 +154,27 @@ class SlicemanagerController extends AbstractController
 			return $this->redirectToRoute( 'slice_list' );
 		}
 
+		return $this->redirectToRoute('slice_list');
+	}
+
+	/**
+	 * Displays a form to edit an existing Slicemanager entity.
+	 *
+	 * @Route("/{id<\d+>}/status",methods={"GET", "POST"}, name="slice_status")
+	 */
+	public function status(Request $request, Slicemanager $slice): Response
+	{
+		var_dump($slice->getSliceid());
+		$command ='/home/mandint/slice-manager/slice_manager.py --get-states '. $slice->getSliceid();
+		$process = New Process($command);
+		$process->start();
+		$process->waitUntil( function ( $type, $buffer ) {
+			$this->logger->info( $buffer );
+			$this->addFlash(
+				'notice',
+				$buffer
+			);
+		} );
 		return $this->redirectToRoute('slice_list');
 	}
 
@@ -163,6 +189,7 @@ class SlicemanagerController extends AbstractController
 		$form = $this->createForm( SlicemanagerType::class, $slice );
 		$form->handleRequest( $request );
 		if ( $form->isSubmitted() && $form->isValid() ) {
+			$slice->setStatus(0);
 			$this->getDoctrine()->getManager()->flush();
 			$this->addFlash( 'success', 'Slice updated successfully' );
 			return $this->redirectToRoute( 'slice_list',  ['id' => $slice->getId()]);

@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('#div_humidity').hide();
-
     //------ ajax function called based on check box selected -------
     function ajaxCall($argument) {
         //  alert($argument);
@@ -49,4 +48,8 @@ $(document).ready(function () {
         var inputId = $(this).attr("id");
         document.getElementById(inputId).style.display = 'none';
     });
+
+
+
+
 })

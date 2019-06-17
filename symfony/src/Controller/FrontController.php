@@ -199,6 +199,7 @@ class FrontController extends AbstractController {
 		$command = '/home/mandint/slice-manager/slice_manager.py  --pop-descriptor ../tosca_file/my.json';
 		$process = New Process($command);
 		try {
+
 			$process->mustRun( function ( $type, $buffer ) {
 				$this->logger->info( $buffer );
 				$this->addFlash(
@@ -207,9 +208,12 @@ class FrontController extends AbstractController {
 				);
 			} );
 
-			if (substr($process->getOutput(), 18, 7) =='FAILURE'){
+			if (substr($process->getOutput(), 0, 7) =='FAILURE'){
+				$this->logger->info('some problem in deploying POP pleae contact administrator');
+				$this->logger->error($process->getOutput());
 
 			}else{
+
 				$pop->setStatus(1);
 				$em = $this->getDoctrine()->getManager();
 				$em->persist( $pop );
@@ -223,7 +227,6 @@ class FrontController extends AbstractController {
 		return $this->redirectToRoute( 'pop_list' );
 
 	}
-
 
 	/**
 	 * Displays a form to edit an existing Post entity.
@@ -278,6 +281,7 @@ class FrontController extends AbstractController {
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
 			$pop->setStatus(0);
+			$pop->setPopid('44EFAGVDFG');
 			$em = $this->getDoctrine()->getManager();
 			$em->persist( $pop );
 			$em->flush();

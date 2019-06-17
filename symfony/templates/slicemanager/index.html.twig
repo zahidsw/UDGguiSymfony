@@ -1,16 +1,14 @@
 {% extends "config/layoutConfig.html.twig" %}
-
 {% block title %}
     add value
 {% endblock %}
 
 {% block head %}
-
-
 {% endblock %}
 
 {% block body %}
-    <div id="submenu">
+    <div id="lds-hourglass"></div>
+<div id="submenu">
         <a abc="/" class="selected" href="/">Services</a>
 
         |
@@ -25,6 +23,10 @@
     <br/>
     <br/>
     <br/>
+
+
+
+
     <div class="leftColumn">
 
         <div class="blocLeft">
@@ -32,7 +34,6 @@
             <a href="http://udg.cityreport.org"
                class="title indent"><strong> {{ 'IoT Slices List'|trans }}</strong></a>
         </div>
-
         <div id="zebraTableDiv">
             <table style="width:100%">
                 <thead>
@@ -42,7 +43,7 @@
                     <th scope="col">{{ 'Flavour' }}</th>
                     <th scope="col">{{ 'Virtual network' }}</th>
                     <th scope="col">{{ 'Links' }}</th>
-                    <th colspan="4" scope="col">{{ 'Links' }}</th>
+                    <th colspan="5" scope="col">{{ 'Links' }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,7 @@
                         <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
                     {% endif %}
                         </td>
+
                         <td style="width:30px; text-align:center;">
                             <a href="{{ path('slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">
                                 <i class="fa fa-edit" aria-hidden="true"></i> <img
@@ -89,12 +91,22 @@
                                      onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"/>
                             </a>
                         </td>
+                    {% if slice.status == true %}
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('slice_status', { 'id': slice.id }) }}">
+                                <img src="{{ asset('assets/images/interface/icons/info_icon.png') }}"
+                                     {#onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"#}
+                                />
+                            </a>
+                        </td>
+                    {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <br/>
         </div>
+
         <div class="section actions">
             <a href="{{ path('slice_new') }}" class="btn btn-lg btn-block btn-success">
                 <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Slice'|trans }}"/>
@@ -106,7 +118,6 @@
         </div>
 
     </div>
-
     <div class="blocRight">
         {# read and display just one flash message type #}
         {% for message in app.flashes('notice') %}
@@ -115,4 +126,5 @@
             </div>
         {% endfor %}
     </div>
+
 {% endblock %}

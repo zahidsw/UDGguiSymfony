@@ -58,6 +58,4 @@ class SlicemanagerType extends AbstractType {
 
 	}
 
-
-
 }

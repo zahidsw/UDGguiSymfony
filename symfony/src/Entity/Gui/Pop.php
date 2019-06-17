@@ -88,6 +88,11 @@ class Pop
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $popid;
+
     public function __construct()
     {
         $this->securitygroups = new ArrayCollection();
@@ -195,9 +200,9 @@ class Pop
     }
 
 	public function getPassword(): ?string
-                            {
-                                return $this->password;
-                            }
+                                     {
+                                         return $this->password;
+                                     }
 
     public function setPassword(string $password): self
     {
@@ -278,6 +283,18 @@ class Pop
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPopid(): ?string
+    {
+        return $this->popid;
+    }
+
+    public function setPopid(string $popid): self
+    {
+        $this->popid = $popid;
 
         return $this;
     }
