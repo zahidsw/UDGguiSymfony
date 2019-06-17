@@ -58,6 +58,11 @@ class Slicemanager
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $sliceid;
+
     public function __construct()
     {
         $this->virtuallink = new ArrayCollection();
@@ -224,6 +229,18 @@ class Slicemanager
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getSliceid(): ?string
+    {
+        return $this->sliceid;
+    }
+
+    public function setSliceid(string $sliceid): self
+    {
+        $this->sliceid = $sliceid;
 
         return $this;
     }
