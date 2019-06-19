@@ -14,34 +14,51 @@
 
     <br/><br/>
 
+
+    <h1>Privileges for {{ device.name }}</h1>
+    <br/>
+    <br/>
+
+
+    <h1>Public privileges</h1>
+
+        <select data-device= {{ device.id }}  id="dev_pub" name="dev_priv">
+            <option  selected="selected" value="-1">None</option>
+            <option  value="1" {{ (device.accessProfile == 1) ? 'selected' : '' }}>See</option>
+            <option  value="2" {{ (device.accessProfile == 2) ? 'selected' : '' }}>Inform</option>
+            <option  value="3" {{ (device.accessProfile == 3) ? 'selected' : '' }}>Query</option>
+            <option  value="4" {{ (device.accessProfile == 4) ? 'selected' : '' }}>Act on</option>
+            <option  value="5" {{ (device.accessProfile == 5) ? 'selected' : '' }}>Configure</option>
+        </select>
+
+
+
+
+    <br/>
+    <br/>
+
     <div id="zebraTableDiv">
         <table id="table" style="width:100%;">
             <tr>
-                <th colspan="1"></th>
                 <th>{{ 'conf.username'|trans }}</th>
                 <th>{{ 'Privileges'|trans }}</th>
             </tr>
 
             {% for user in users %}
                 <tr>
-                    <td style="width:30px; text-align:center;">
-                        <a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Edit', { 'id': user.id }) }}">
-                            <img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
-                        </a>
-                    </td>
                     <td>
                         <a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Edit', { 'id': user.id }) }}">
                             {{ user.username }}
                         </a>
                     </td>
                     <td>
-                        <select id="dev_priv" name="dev_priv">
-                            <option id = {{ user.id }} selected="selected" value="-1">None</option>
-                            <option id = {{ user.id }} value="11" {{ (user.accessProfile == 11) ? 'selected' : '' }}>See</option>
-                            <option id = {{ user.id }} value="12" {{ (user.accessProfile == 12) ? 'selected' : '' }}>Inform</option>
-                            <option id = {{ user.id }} value="13" {{ (user.accessProfile == 13) ? 'selected' : '' }}>Query</option>
-                            <option id = {{ user.id }} value="14" {{ (user.accessProfile == 14) ? 'selected' : '' }}>Act on</option>
-                            <option id = {{ user.id }} value="15" {{ (user.accessProfile == 15) ? 'selected' : '' }}>Configure</option>
+                        <select data-device= {{ device.id }} data-user = {{ user.id }} id="dev_priv" name="dev_priv">
+                            <option  selected="selected" value="-1">None</option>
+                            <option data-user = {{ user.id }} value="11" {{ (user.accessProfile == 11) ? 'selected' : '' }}>See</option>
+                            <option data-user = {{ user.id }} value="12" {{ (user.accessProfile == 12) ? 'selected' : '' }}>Inform</option>
+                            <option data-user = {{ user.id }} value="13" {{ (user.accessProfile == 13) ? 'selected' : '' }}>Query</option>
+                            <option data-user = {{ user.id }} value="14" {{ (user.accessProfile == 14) ? 'selected' : '' }}>Act on</option>
+                            <option data-user = {{ user.id }} value="15" {{ (user.accessProfile == 15) ? 'selected' : '' }}>Configure</option>
                         </select>
                     </td>
 
@@ -51,49 +68,36 @@
 
         <br/>
 
-        {#
-        {%
-            render(controller("iot6PaginatorBundle:Paginator:paginator", {
-                '_locale': app.request.locale,
-                'nbItems': nbRooms,
-                'nbItemPerPage': nbProPage,
-                'route': route,
-                'nbPagesDisplayed': nbPageDisplayed,
-                'currentPage': page,
-                'arg': 'page'
-                }
-            ))
-        %}
-        #}
 
     </div>
-
-
-
-        <button class="ajax">click me!</button>
-        <div id="ajax-results">here comes the result</div>
         <script>
-            $(document).on('click', 'button.ajax', function(){
-                that = $(this);
+            $('select#dev_priv').on('change', function() {
+                var user = this.getAttribute('data-user');
+                var device = this.getAttribute('data-device');
+                var url = Routing.generate('iot6_InteractBundle_setDeviceUserPrivileges', { 'user': user, 'device': device, 'accessProfile':this.value });
+
                 $.ajax({
-                    url:'{{ (path('iot6_InteractBundle_setDeviceUserPrivileges')) }}',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        "some_var_name": "some_var_value"
-                    },
-                    async: true,
-                    success: function (data)
-                    {
-                        console.log(data)
-                        $('div#ajax-results').html(data.output);
+                    method: "POST",
+                    url: url,
+                    success: function(data) {
+                            alert(data);
+                        }
+                })
+            })
 
+            $('#dev_pub').on('change', function() {
+
+                var device = this.getAttribute('data-device');
+                var url = Routing.generate('iot6_InteractBundle_setDeviceAccessProfile', { 'device': device, 'accessProfile':this.value });
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    success: function(data) {
+                        alert(data);
                     }
-                });
-                return false;
+                })
+            })
 
-            });
         </script>
-
-
 {% endblock %}

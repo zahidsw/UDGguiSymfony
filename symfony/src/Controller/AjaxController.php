@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\Gui\User;
 
 
 
@@ -299,9 +300,16 @@ class AjaxController extends AbstractController
 						
 					if ($form->isValid())
 					{
+                        $em_gui = $this->getDoctrine()->getManager("gui");
 						$em_upv6->persist($device);
 						$em_upv6->flush();
-						 
+						/*$guiDevice = new Device();
+						$guiDevice->setUpv6DevicesId($device->getId());
+						$em_gui->persist($guiDevice);
+						$em_gui->flush();*/
+
+
+
 						$reponse = '<div class="customSuccess">'. $trsl->trans('msg.device_edited') .'</div>';
 					}
 					else
