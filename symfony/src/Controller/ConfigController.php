@@ -640,7 +640,7 @@ class ConfigController extends AbstractController
 		$data['nbProPage']		= $nbDevicesProPage;
 		$data['nbPageDisplayed']= $nbPageDisplayed;
 		$data['route']			= $route;
-		dump($data);
+		
 		
 		return $this->render('config/devices.html.twig', $data);
 	}
@@ -906,18 +906,18 @@ class ConfigController extends AbstractController
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		
-		$groups = $em_upv6->getRepository('App\Entity\Upv6\Groups')->findBy(array('active' => true), array('category' => 'ASC'));
+		$groups = $em_upv6->getRepository('App\Entity\Upv6\Groups');
 		
 		$data["groups"] = $groups;
 		
 		return $this->render('config/groups.html.twig', $data);
 	}
 	
-	public function groupsAdd()
+	public function groupsAdd(Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
 		
-		$request = $this->getRequest();
+		
 		if ($request->getMethod() == 'POST')
 		{
 			if($request->get('send'))

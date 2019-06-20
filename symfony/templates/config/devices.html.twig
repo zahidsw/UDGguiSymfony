@@ -33,7 +33,7 @@
 					<th style="width:130px;">{{ 'conf.assigned_name'|trans }}</th>
 					<th style="width:90px;">{{ 'conf.detected_at'|trans }}</th>
 					<th style="width:100px;">{{ 'conf.uid'|trans }}</th>
-					<th style="width:60px;">{{ 'conf.protocol'|trans }}</th>
+					
 				</tr>
 			</thead>
 			
@@ -53,9 +53,7 @@
 						<td>{{ device.assignedName }}</td>
 						<td style="text-align:center;">{{ device.detectedAt|date("d/m/Y h:i:s") }}</td>
 						<td>{{ device.macAddress }}</td>
-						<td style="text-align:center;">
-							<img src="{{ asset('assets/images/protocols/'~device.protocol.iconName) }}" />
-						</td>
+						
 					</tr>
 				{% endfor %}
 			</tbody>

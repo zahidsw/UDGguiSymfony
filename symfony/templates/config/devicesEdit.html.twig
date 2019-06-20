@@ -14,31 +14,7 @@
 		    var floors = $('#floors');
 		    var rooms = $('#iot6_interactBundle_devicesType_room');
 
-			// On load
-			buildings.val('{{ device.room.floor.building.id }}');
-			floors.val('{{ device.room.floor.id }}');
-
-			rooms.empty();
-
-			var data = 	'idFloor='+ floors.val() + 
-						'&idBuilding=' + buildings.val();
-			updateList(data, rooms, '{{ path("getRoomsForFloor") }}', '{{ device.room.id }}' );
 			
-		    // On building change
-	        buildings.on('change', function() {
-				var data = 'idBuilding='+ $(this).val();
-		        
-	        	updateList(data, floors, '{{ path("getFloorsForBuilding") }}' );
-	        	updateList(data, rooms, '{{ path("getRoomsForBuilding") }}' );
-	        });
-
-	    	// On floor change
-	        floors.on('change', function() {
-	        	var data = 	'idFloor='+ $(this).val() + 
-	        				'&idBuilding=' + buildings.val();
-	        	
-	        	updateList(data, rooms, '{{ path("getRoomsForFloor") }}' );
-	        });
 	    });
 
 		function updateList(data, dest, url, selectedValue) {
@@ -76,7 +52,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:devicesMenus.html.twig' %}
+	{% include 'config/devicesMenus.html.twig' %}
 	
 	<br/><br/>
 	

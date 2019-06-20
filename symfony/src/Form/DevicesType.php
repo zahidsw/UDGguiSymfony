@@ -27,6 +27,8 @@ class DevicesType extends AbstractType
 			->add('positionX',		TextType::class)
 			->add('positionY',		TextType::class)
 			->add('positionZ',		TextType::class)
+			->add('longitude',		TextType::class)
+			->add('latitude',		TextType::class)
 			;
 	}
 	
