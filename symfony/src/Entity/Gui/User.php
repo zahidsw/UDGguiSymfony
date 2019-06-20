@@ -6,6 +6,7 @@ use App\Entity\Gui\Purchase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\String_;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -440,6 +441,23 @@ class User implements UserInterface
         $this->registrationToken = $registrationToken;
 
         return $this;
+    }
+
+    public function setAccessProfile($accessProfile): self
+    {
+        $this->accessProfile = $accessProfile;
+
+        return $this;
+    }
+
+    /**
+     * Get accessProfile
+     *
+     * @return integer
+     */
+    public function getAccessProfile()
+    {
+        return $this->accessProfile;
     }
   
 

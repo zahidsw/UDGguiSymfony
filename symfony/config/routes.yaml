@@ -341,6 +341,29 @@ iot6_InteractBundle_deviceShow:
     path:  /{_locale}/interact/devices/show/{id}
     controller: App\Controller\InteractController:deviceShow
 
+iot6_InteractBundle_privileges:
+    path:  /{_locale}/interact/devices/privileges
+    controller: App\Controller\InteractController:privileges
+
+iot6_InteractBundle_privilegesUsers:
+    path:  /{_locale}/interact/devices/{id}/privileges/users/
+    controller: App\Controller\InteractController:privilegesUsers
+    requirements:
+        id: \d+
+
+iot6_InteractBundle_setDeviceUserPrivileges:
+    path:  /{_locale}/setDeviceUserPrivileges/{user}/{device}/{accessProfile}
+    controller: App\Controller\InteractController:setDeviceUserPrivileges
+    options:
+        expose: true
+
+iot6_InteractBundle_setDeviceAccessProfile:
+    path:  /{_locale}/setDeviceAccessProfile/{device}/{accessProfile}
+    controller: App\Controller\InteractController:setDeviceAccessProfile
+    options:
+        expose: true
+
+#{page}/building/{idBuilding}
 # iot6_InteractBundle_mapList:
 #     path:  /{_locale}/interact/mapList/{devices}
 #     controller: App\Controller\InteractController:mapList
@@ -356,7 +379,7 @@ iot6_InteractBundle_mapList:
         devices: null
 
 
-    
+
 # Ajax for Tree (popup)
 getCard:
     path:  /{_locale}/ajax/getCard/{id}

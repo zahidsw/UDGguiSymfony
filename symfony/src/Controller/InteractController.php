@@ -11,7 +11,10 @@ use App\Entity\Upv6\Devices;
 use iot6\InteractBundle\Entity\Actions;
 use iot6\InteractBundle\Entity\Modules;
 use Symfony\Component\Translation\DataCollectorTranslator;
-
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\Gui\User;
+use App\Entity\Upv6\UserHasDevice;
 
 
 class InteractController extends AbstractController
@@ -120,4 +123,126 @@ class InteractController extends AbstractController
 		};
 		return strcmp($md5($obj1), $md5($obj2));
 	}
+
+	public function privileges()
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+
+        $devices = $city->getDevices();
+
+        $devices = $devices->getValues();
+        $devices_list = [];
+
+        foreach ($devices as $device)
+        {
+            array_push($devices_list,$device->getUpv6DevicesId());
+        }
+
+
+
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $devices_list]);
+
+
+        //dd($devices);
+        $data['devices'] = $devices;
+
+
+        return $this->render('interact/privileges.html.twig',$data);
+    }
+
+
+    public function privilegesUsers(Devices $device)
+    {
+
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $users = $city->getUsers()->getValues();
+
+        $data['users'] = $users;
+        $data['device'] = $device;
+
+
+
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+            ->findBy(array('deviceId' => $device->getId()));
+
+        //$device = $em_upv6->getRepository('App\Entity\Upv6\Devices')
+            //->findOneBy(array('id' => $device->getId()));
+
+
+        foreach ($users as &$user)
+        {
+            foreach ($user_has_device as $has_device)
+            {
+                if($has_device->getUserId() ==  $user->getId())
+                {
+                    $user->setAccessProfile((integer)$has_device->getAccessProfile());
+                }
+            }
+        }
+
+
+
+
+
+
+        return $this->render('interact/privilegesUsers.html.twig',$data);
+
+    }
+
+
+    public function setDeviceUserPrivileges(User $user, Devices $device, String $accessProfile)
+    {
+
+        $userId = $user->getId();
+        $deviceId = $device->getId();
+
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+            ->findOneBy(array('deviceId' => $deviceId,'userId' => $userId));
+
+
+        if(empty($user_has_device))
+        {
+            $newUserHasDevice = new UserHasDevice();
+            $newUserHasDevice->setDeviceId($deviceId);
+            $newUserHasDevice->setuserId($userId);
+            $newUserHasDevice->setAccessProfile($accessProfile);
+            $em_upv6->persist($newUserHasDevice);
+            $em_upv6->flush();
+        } else {
+            $user_has_device->setAccessProfile($accessProfile);
+            $em_upv6->persist($user_has_device);
+            $em_upv6->flush();
+        }
+
+        $response = new JsonResponse('Privileges updated');
+
+        return $response;
+    }
+
+    public function setDeviceAccessProfile(Devices $device, String $accessProfile)
+    {
+
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $device = $em_upv6->getRepository('App\Entity\Upv6\Devices')
+            ->findOneBy(array('id' => $device->getId()));
+
+        $device->setAccessProfile($accessProfile);
+        $em_upv6->persist($device);
+        $em_upv6->flush();
+
+
+        $response = new JsonResponse('Privileges updated');
+
+        return $response;
+
+    }
+
+
+
+
 }

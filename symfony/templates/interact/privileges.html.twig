@@ -1,0 +1,43 @@
+{% extends "interact/layoutInteract.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - {{ 'subMenu.interact.iotNavigator'|trans }}
+{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+<br/>
+<br/>
+<br/>
+<div id="zebraTableDiv">
+    <table id="table" style="width:100%;">
+        <tr>
+            <th colspan="1"></th>
+            <th>{{ 'Name' }}</th>
+            <th>{{ 'Physical code' }}</th>
+            <th>{{ 'Description' }}</th>
+        </tr>
+
+        {% for device in devices %}
+            <tr>
+                <td style="width:30px; text-align:center;">
+                    <a href="{{ path('iot6_InteractBundle_privilegesUsers', { 'id': device.id }) }}">
+                        <img src="{{ asset('assets/images/interface/icons/edit.png') }}" />
+                    </a>
+                </td>
+                <td>{{ device.assignedName }}</td>
+                <td>{{ device.physicalCode }}</td>
+                <td>{{ device.description }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

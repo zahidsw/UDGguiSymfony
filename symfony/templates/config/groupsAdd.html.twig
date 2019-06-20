@@ -1,4 +1,4 @@
-{% extends "iot6ConfigBundle::layout.html.twig" %}
+{% extends "config/layoutConfig.html.twig" %}
  
 {% block title %}
 	{{ parent() }} - {{ 'subMenu.config.devices'|trans }} - {{ 'conf.group_add'|trans }}
@@ -74,7 +74,7 @@
 	
 	<br/>
 	
-	{% include 'iot6ConfigBundle:Config:msg.html.twig' %}
+	{% include 'config/msg.html.twig' %}
 	
 	<br/>
 	

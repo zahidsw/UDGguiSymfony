@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Upv6\Devices;
+use App\Entity\Gui\Device;
 use App\Entity\Upv6\UserHasDevice;
 use App\Entity\Upv6\Modules;
 use iot6\ConfigBundle\Entity\WebserviceParam;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use App\Entity\Gui\User;
 
 
 
@@ -207,14 +209,23 @@ class AjaxController extends AbstractController
 						$em_upv6->persist($deviceToAdd);
 						$em_upv6->flush();
 
+						$user = $this->container->get('security.token_storage')->getToken()->getUser();
 						$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
-						$user_has_device = new UserHasDevice();
+						/*$user_has_device = new UserHasDevice();
 						$user_has_device->setUserId($user_id);
 						$user_has_device->setDeviceId($deviceToAdd->getId());
 						$em_upv6->persist($user_has_device);
-						$em_upv6->flush();
+						$em_upv6->flush();*/
 
-	
+                        $em_udg = $this->getDoctrine()->getManager("gui");
+                        $udgDevice = new Device();
+                        $udgDevice->setUpv6DevicesId($deviceToAdd->getId());
+                        $udgDevice->addCity($user->getCity());
+                        $em_udg->persist($udgDevice);
+                        $em_udg->flush();
+
+
+
 						$reponse = '<div class="customSuccess">'. $trsl->trans('msg.device_added') .'</div>';
 					}
 					else
@@ -289,9 +300,16 @@ class AjaxController extends AbstractController
 						
 					if ($form->isValid())
 					{
+                        $em_gui = $this->getDoctrine()->getManager("gui");
 						$em_upv6->persist($device);
 						$em_upv6->flush();
-						 
+						/*$guiDevice = new Device();
+						$guiDevice->setUpv6DevicesId($device->getId());
+						$em_gui->persist($guiDevice);
+						$em_gui->flush();*/
+
+
+
 						$reponse = '<div class="customSuccess">'. $trsl->trans('msg.device_edited') .'</div>';
 					}
 					else

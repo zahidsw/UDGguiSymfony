@@ -109,10 +109,12 @@ private function getBackgroundColor()
 						'href' => 'iot6_InteractBundle_iotNavigator'),
 				array(	'name' => $translator->trans('subMenu.interact.devicesProfile'),
 						'href' => 'iot6_InteractBundle_devices'),
+                array(	'name' => 'Devices Privileges',
+                        'href' => 'iot6_InteractBundle_privileges'),
 				array(	'name' => $translator->trans('subMenu.interact.mapList'),
 						'href' => 'iot6_InteractBundle_mapList'),
-						array(	'name' => $translator->trans('subMenu.interact.locationsList'),
-						'href' => 'iot6_location_list'),
+                array(	'name' => $translator->trans('subMenu.interact.locationsList'),
+						'href' => 'iot6_location_list')
 		);
 	
 		$request = Request::createFromGlobals()->getRequestUri();
