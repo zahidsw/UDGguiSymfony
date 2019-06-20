@@ -26,32 +26,10 @@
     <br/>
     <br/>
     <br/>
-    {% block javascripts %}
-        <script language="javascript">
-            $(document).ready(function () {
-                $(".securityremove").on("click", function (event) {
-                    var $selectedVal = $('#pop_securitygroup').val();
-                    if (confirm('Are you sure you want to delete SecurityGroup?')) {
-                        $.ajax({
-                            url: "/groupsecurity/ajax",
-                            type: 'POST',
-                            data: {template_id: $selectedVal},
-                            dataType: 'json',
-                            async: true,
-                            success: function (data, status) {
-                                $("#pop_securitygroup option:selected").remove();
-                            },
-                            error: function (xhr, textStatus, errorThrown) {
-                                console.log('request failed');
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
-    {% endblock %}
 
-    <div class="leftColumn">
+    <div class="lds-hourglass ajax_loader hidden"><i class="fa fa-spinner fa-spin"></i></div>
+
+    <div class="leftColumn ">
         <div class="blocLeft">
             <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
             <a href="http://udg.cityreport.org"
@@ -78,7 +56,7 @@
                 </a>
             {% endif %}
 
-            {{form_end(form)}}
+            {{ form_end(form) }}
         </div>
     </div>
 
