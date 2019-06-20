@@ -128,4 +128,29 @@ class RoomsRepository extends ServiceEntityRepository
 	
 		return $query;
 	}
+
+	public function getRoomsNotInGroups()
+	{
+		$sql = "SELECT id, name
+				FROM rooms
+				WHERE id NOT IN (
+					SELECT ghe.entity_id
+					FROM group_has_entity ghe
+						INNER JOIN groups g ON ghe.group_id = g.group_id
+					WHERE g.group_category = 3
+						AND ghe.deletion_date IS NULL
+				)
+				ORDER BY name ASC
+				";
+	
+	
+		$rsm = new ResultSetMapping();
+		$rsm->addEntityResult('App\Entity\Upv6\Rooms', 'r');
+		$rsm->addFieldResult('r', 'id', 'id');
+		$rsm->addFieldResult('r', 'name', 'name');
+	
+		$query = $this->_em->createNativeQuery($sql, $rsm);
+	
+		return $query->getResult();
+	}
 }

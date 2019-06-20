@@ -47,4 +47,29 @@ class DeviceRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getDevicesNotInGroups()
+	{
+		$sql = "SELECT id, assigned_name
+				FROM devices
+				WHERE id NOT IN (
+					SELECT ghe.entity_id
+					FROM group_has_entity ghe
+						INNER JOIN groups g ON ghe.group_id = g.group_id
+					WHERE g.group_category = 4
+						AND ghe.deletion_date IS NULL
+				)
+				ORDER BY assigned_name ASC
+				";
+		
+		
+		$rsm = new ResultSetMapping();
+		$rsm->addEntityResult('App\Entity\Upv6\Devices', 'd');
+		$rsm->addFieldResult('d', 'id', 'id');
+		$rsm->addFieldResult('d', 'assigned_name', 'assignedName');
+
+		$query = $this->_em->createNativeQuery($sql, $rsm);
+		
+		return $query->getResult();
+	}
 }
