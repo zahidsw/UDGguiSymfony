@@ -162,7 +162,7 @@ class Categories
     /**
      * Add devices
      *
-     * @param \iot6\InteractBundle\Entity\Devices $device
+     * @param \App\Entity\Upv6\Devices $device
      * @return Categories
      */
     public function addDevice(\App\Entity\Upv6\Devices $device)
@@ -175,7 +175,7 @@ class Categories
     /**
      * Remove device
      *
-     * @param \iot6\InteractBundle\Entity\Devices $device
+     * @param \App\Entity\Upv6\Devices $device
      */
     public function removeDevice(\App\Entity\Upv6\Devices $device)
     {

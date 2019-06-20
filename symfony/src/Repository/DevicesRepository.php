@@ -354,7 +354,7 @@ class DevicesRepository extends ServiceEntityRepository
 		
 		
 		$rsm = new ResultSetMapping();
-		$rsm->addEntityResult('iot6\InteractBundle\Entity\Devices', 'd');
+		$rsm->addEntityResult('App\Entity\Upv6\Devices', 'd');
 		$rsm->addFieldResult('d', 'id', 'id');
 		$rsm->addFieldResult('d', 'assigned_name', 'assignedName');
 
@@ -377,7 +377,7 @@ class DevicesRepository extends ServiceEntityRepository
 	
 	
 		$rsm = new ResultSetMapping();
-		$rsm->addEntityResult('iot6\InteractBundle\Entity\Devices', 'd');
+		$rsm->addEntityResult('App\Entity\Upv6\Devices', 'd');
 		$rsm->addFieldResult('d', 'id', 'id');
 		$rsm->addFieldResult('d', 'assigned_name', 'assignedName');
 	
