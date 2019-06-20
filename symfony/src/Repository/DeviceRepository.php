@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
+
 /**
  * @method Device|null find($id, $lockMode = null, $lockVersion = null)
  * @method Device|null findOneBy(array $criteria, array $orderBy = null)
