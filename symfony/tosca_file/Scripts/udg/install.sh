@@ -1,28 +1,29 @@
 #!/bin/bash
 
-export DEBIAN_FRONTEND=noninteractive
+#export DEBIAN_FRONTEND=noninteractive
 
 # install ansible dependencies
 apt-get update
 apt-get install -y python
 apt-get install -y ansible
 
-echo $USER
-
 #su - ubuntu && cd $HOME
 
 echo "Git CLONE ansible playbooks"
-git clone https://fsismondi:RsAG6CiMWwxY1SGnng_Y@gitlab.distantaccess.com/mandint/iot-vno-automated-deployment.git -vvv
+git clone https://fsismondi:RsAG6CiMWwxY1SGnng_Y@gitlab.distantaccess.com/mandint/iot-vno-automated-deployment.git -vvv --progress --branch master --single-branch --depth 1
 cd iot-vno-automated-deployment/ansible
 
 echo "Setting up secrets"
 mv secrets.yaml.example secrets.yaml
 
-echo "Running tag <common> of UDG deployment"
-ansible-playbook  main.yaml -i localhost --tags common -v
+echo "Running playbook, skipping <common> and <install> part of UDG deployment"
+ansible-playbook  main.yaml -i localhost --skip-tags common,install -v
 
-echo "Running tag <common> of UDG deployment"
-ansible-playbook  main.yaml -i localhost --tags install -v
+# echo "Running tag <common> of UDG deployment"
+# ansible-playbook  main.yaml -i localhost --tags common -v
+#
+# echo "Running tag <common> of UDG deployment"
+# ansible-playbook  main.yaml -i localhost --tags install -v
 
 # # install UDG dependencies and components
 # echo "Running tag <common> of UDG deployment"

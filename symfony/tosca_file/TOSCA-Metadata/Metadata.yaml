@@ -1,8 +1,10 @@
-name: slice-test
+name: IoT_slice
 image:
     upload: false
-    names: [Ubuntu-16.04]
+    names:
+        - udg_image_20190619 # dl380 openstack
+        #- Ubuntu_16.04 # dl380 openstack
+        #- Ubuntu-16.04 # mobile openstack
 vim_types:
     - openstack
-description: slice-desc
-provider: slice-prov
+

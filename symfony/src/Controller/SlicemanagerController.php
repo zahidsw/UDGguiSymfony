@@ -21,6 +21,7 @@ use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 class SlicemanagerController extends AbstractController
 {
 	private $logger;
@@ -87,7 +88,6 @@ class SlicemanagerController extends AbstractController
 	 */
 	public function register(Request $request, Slicemanager $slice): Response
 	{
-
 		$ar = Yaml::parseFile("../tosca_file/TOSCA-Metadata/Metadata.yaml");
 		$ar["name"] = $slice->getSlicename();
 		$ar["description"] = $slice->getSlicedescription();
@@ -109,10 +109,8 @@ class SlicemanagerController extends AbstractController
 		$i=0;
 		foreach ($slice->getVirtuallink() as $keys)
 		{
-			var_dump($keys->getNeworkname());
-			var_dump($ar['topology_template']['node_templates']['UDGaaF']['requirements'][$i]['virtualLink']);
-			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][$i]['virtualLink']=  $keys->getNeworkname();
 
+			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][$i]['virtualLink']=  $keys->getNeworkname();
 			$i++;
 		}
 		$ar['topology_template']['node_templates']['CP_UDG']['requirements'][1]['virtualLink']=  $keys->getNeworkname();
@@ -127,34 +125,29 @@ class SlicemanagerController extends AbstractController
 		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
 		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
 		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
-		$process = New Process($command);
+		$this->process = New Process($command);
+		$this->process->start();
 		try {
-			$process->mustRun( function ( $type, $buffer ) {
+			$this->process->waitUntil( function ( $type, $buffer ) {
 				$this->logger->info( $buffer );
-				$this->addFlash(
-					'notice',
-					$buffer
-				);
-			} );
-
-			if (substr($process->getOutput(), 18, 7) =='FAILURE'){
+			});
+		if (substr($this->process->getOutput(), 18, 7) =='FAILURE'){
+				return new JsonResponse($this->process->getOutput());
 
 			}else{
-				$pos=strpos($process->getOutput(), 'nsr_id:');
-				//var_dump($pos);
-				$slice->setSliceid(substr($process->getOutput(), $pos+8, 36));
+				$pos=strpos($this->process->getOutput(), 'nsr_id:');
+				$slice->setSliceid(substr($this->process->getOutput(), $pos+8, 36));
 				$slice->setStatus(1);
 				$em = $this->getDoctrine()->getManager();
 				$em->persist($slice);
 				$em->flush();
+				return new JsonResponse($this->process->getOutput());
 			}
 
 		} catch (ProcessFailedException $exception) {
 			echo $exception->getMessage();
-			return $this->redirectToRoute( 'slice_list' );
+			return new JsonResponse($this->process->getOutput());
 		}
-
-		return $this->redirectToRoute('slice_list');
 	}
 
 	/**
@@ -164,18 +157,14 @@ class SlicemanagerController extends AbstractController
 	 */
 	public function status(Request $request, Slicemanager $slice): Response
 	{
-		var_dump($slice->getSliceid());
 		$command ='/home/mandint/slice-manager/slice_manager.py --get-states '. $slice->getSliceid();
 		$process = New Process($command);
 		$process->start();
-		$process->waitUntil( function ( $type, $buffer ) {
+		$process->waitUntil( function ( $type, $buffer) {
 			$this->logger->info( $buffer );
-			$this->addFlash(
-				'notice',
-				$buffer
-			);
 		} );
-		return $this->redirectToRoute('slice_list');
+
+		return new JsonResponse($process->getOutput());
 	}
 
 	/**
@@ -304,6 +293,42 @@ class SlicemanagerController extends AbstractController
 			'form' => $form->createView(),
 		] );
 	}
+
+	/**
+	 * Deletes a Security entity.
+	 *
+	 * @Route("/slicemanager/ajax"),  name="ajax")
+	 */
+
+	public function ajaxAction( Request $request ) {
+
+		if ( $request->isXmlHttpRequest() || $request->query->get( 'template_id' ) == 1 ) {
+			$template_ids = $request->request->get( 'template_id' );
+			$total        = count( $template_ids );
+			for ( $i = 0; $i < $total; $i ++ ) {
+				$repo = $this->getDoctrine()->getRepository( Securitygroup::class )->find( $template_ids[ $i ] );
+				$em   = $this->getDoctrine()->getManager();
+				$em->remove( $repo );
+				$em->flush();
+			}
+			$this->addFlash( 'success', 'SecurityGroups deleted successfully' );
+			$securitygroups = $this->getDoctrine()
+			                       ->getRepository( Securitygroup::class )
+			                       ->findAll();
+			$jsonData       = array();
+			$idx            = 0;
+			foreach ( $securitygroups as $student ) {
+				$temp                = array(
+					'name' => $student->getName(),
+					'ids'  => $student->getId(),
+				);
+				$jsonData[ $idx ++ ] = $temp;
+			}
+
+			return new JsonResponse();
+		}
+	}
+
 
 
 }

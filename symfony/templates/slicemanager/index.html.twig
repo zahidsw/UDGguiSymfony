@@ -23,9 +23,7 @@
     <br/>
     <br/>
     <br/>
-
-
-
+    <div class="lds-hourglass ajax_loader hidden"><i class="fa fa-spinner fa-spin"></i></div>
 
     <div class="leftColumn">
 
@@ -62,18 +60,17 @@
                                 {{ sl.name }}|
                             {% endfor %}
                         </td>
-                        <td style="width:30px; text-align:center;">
-                    {% if slice.status == false %}
-                            <a href="{{ path('slice_register', {id: slice.id}) }}" class="btn btn-sm btn-default">
-                                <i class="fa fa-eye" aria-hidden="true"></i> <img
-                                        src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
-                            </a>
-                    {% else %}
-                        <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
-                    {% endif %}
-                        </td>
 
                         <td style="width:30px; text-align:center;">
+                    {% if slice.status == false %}
+                            <div path="{{ path('slice_register', {id: slice.id}) }}"  value="{{slice.id}}" class="iotslicerigister">
+                                <img src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                            </div>
+                    {% else %}
+                          <img src="{{ asset('assets/images/interface/icons/updated.png') }}" class="updateslice"/>
+                    {% endif %}
+                        </td>
+                       <td style="width:30px; text-align:center;">
                             <a href="{{ path('slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">
                                 <i class="fa fa-edit" aria-hidden="true"></i> <img
                                         src="{{ asset('assets/images/interface/icons/show.png') }}"/>
@@ -88,25 +85,22 @@
                         <td style="width:30px; text-align:center;">
                             <a href="{{ path('slice_delete', { 'id': slice.id }) }}">
                                 <img src="{{ asset('assets/images/interface/icons/delete.png') }}"
-                                     onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"/>
-                            </a>
-                        </td>
-                    {% if slice.status == true %}
-                        <td style="width:30px; text-align:center;">
-                            <a href="{{ path('slice_status', { 'id': slice.id }) }}">
-                                <img src="{{ asset('assets/images/interface/icons/info_icon.png') }}"
                                      {#onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"#}
                                 />
                             </a>
                         </td>
-                    {% endif %}
+                          <td style="width:30px; text-align:center;">
+                            <div class="iotslicestatus" id="iotslice{{slice.id }}" path="{{ path('slice_status', { 'id': slice.id }) }}" status="{{slice.status}}">
+                                <img src="{{ asset('assets/images/interface/icons/info_icon.png') }}"
+                                />
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <br/>
         </div>
-
         <div class="section actions">
             <a href="{{ path('slice_new') }}" class="btn btn-lg btn-block btn-success">
                 <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Slice'|trans }}"/>
@@ -116,7 +110,8 @@
                 <input type="button" value="{{ 'Cancel'|trans }}"/>
             </a>
         </div>
-
+        <div class="outputtext box">
+        </div>
     </div>
     <div class="blocRight">
         {# read and display just one flash message type #}
@@ -126,5 +121,4 @@
             </div>
         {% endfor %}
     </div>
-
 {% endblock %}
