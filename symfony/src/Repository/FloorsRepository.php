@@ -85,7 +85,7 @@ class FloorsRepository extends ServiceEntityRepository
 	
 	
 		$rsm = new ResultSetMapping();
-		$rsm->addEntityResult('iot6\InteractBundle\Entity\Floors', 'f');
+		$rsm->addEntityResult('App\Entity\Upv6\Floors', 'f');
 		$rsm->addFieldResult('f', 'id', 'id');
 		$rsm->addFieldResult('f', 'name', 'name');
 	
@@ -108,7 +108,7 @@ class FloorsRepository extends ServiceEntityRepository
 	
 	
 		$rsm = new ResultSetMapping();
-		$rsm->addEntityResult('iot6\InteractBundle\Entity\Floors', 'f');
+		$rsm->addEntityResult('App\Entity\Upv6\Floors', 'f');
 		$rsm->addFieldResult('f', 'id', 'id');
 		$rsm->addFieldResult('f', 'name', 'name');
 	

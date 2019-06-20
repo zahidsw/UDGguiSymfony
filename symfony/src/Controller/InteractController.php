@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use JMS\SecurityExtraBundle\Annotation\Secure;
-use iot6\InteractBundle\Entity\Buildings;
-use iot6\InteractBundle\Entity\Floors;
+use App\Entity\Upv6\Buildings;
+use App\Entity\Upv6\Floors;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Upv6\Devices;
-use iot6\InteractBundle\Entity\Actions;
-use iot6\InteractBundle\Entity\Modules;
+use App\Entity\Upv6\Actions;
+use App\Entity\Upv6\Modules;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
