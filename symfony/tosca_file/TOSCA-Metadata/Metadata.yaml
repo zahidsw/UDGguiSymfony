@@ -1,8 +1,8 @@
-name: TEST2
+name: slice-test
 image:
     upload: false
     names: [Ubuntu-16.04]
 vim_types:
     - openstack
-description: 'USE FOR PERSONAL'
-provider: mandate
+description: slice-desc
+provider: slice-prov
