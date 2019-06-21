@@ -1,6 +1,5 @@
 /logs
 
-###> symfony/framework-bundle ###
 /symfony/.env
 /symfony/.env.local
 /symfony/.env.local.php
@@ -8,13 +7,14 @@
 /symfony/public/bundles/
 /symfony/var/
 /symfony/vendor/
-###< symfony/framework-bundle ###
 
-###> symfony/phpunit-bridge ###
 /symfony/.phpunit
 /symfony/phpunit.xml
-###< symfony/phpunit-bridge ###
 
-###> symfony/web-server-bundle ###
 /symfony/.web-server-pid
-###< symfony/web-server-bundle ###
+
+/symfony/tosca_file
+/symfony/config
+/symfony/symfony.lock
+
+.idea

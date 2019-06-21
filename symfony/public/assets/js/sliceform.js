@@ -122,6 +122,32 @@ $(document).ready(function () {
     });
 
     //------- end ---------------------
+    $(".iotpop").click(function () {
+        $('.outputtext').css('display', 'none');
+        var path = $(this).attr("path");
+        var value = $(this).attr("value");
+        $(this).replaceWith('<img src="/assets/images/interface/icons/updated.png">');
+        $(".hidden").show();
+        $.ajax({
+            url: path,
+            type: 'POST',
+            data: {slice: value},
+            dataType: 'json',
+            async: true,
+            success: function (data, status) {
+                $('.outputtext').slideToggle('slow', function () {
+                    $(this).text(data);
+                });
+                $(".hidden").hide();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                $('.outputtext').slideToggle('slow', function () {
+                });
+                $(".hidden").hide();
+            }
+        });
+    });
+    ///////////----------------------------
     $("input[name='ingredients[]']").change(function () {
         if ($('#temp').is(":checked")) {
             $('#form').show();
