@@ -172,7 +172,7 @@ class FrontController extends AbstractController {
 	/**
 	 * Displays a form to edit an existing pop entity.
 	 *
-	 * @Route("/{_locale}/{id<\d+>}/register",methods={"GET", "POST"}, name="pop_register")
+	 * @Route("/{id<\d+>}/register",methods={"GET", "POST"}, name="pop_register")
 	 */
 	public function register( Request $request, Pop $pop ): Response {
 		$encoders    = [ new XmlEncoder(), new JsonEncoder() ];
@@ -193,41 +193,30 @@ class FrontController extends AbstractController {
 				'longitude' => $pop->getLongitude()
 			)
 		);
-
 		file_put_contents( '../tosca_file/my.json', json_encode( $aVal ) );
 		$this->logger->info( 'Executing: slice-manager --pop-descriptor /home/mandint/tmp/pop.json' );
 		$command = '/home/mandint/slice-manager/slice_manager.py  --pop-descriptor ../tosca_file/my.json';
-		$process = New Process($command);
+		$this->process = New Process($command);
 		try {
 
-			$process->mustRun( function ( $type, $buffer ) {
-				$this->logger->info( $buffer );
-				$this->addFlash(
-					'notice',
-					$buffer
-				);
+			$this->process->mustRun( function ( $type, $buffer ) {
+				return new JsonResponse($this->process->getOutput());
 			} );
-
-			if (substr($process->getOutput(), 0, 7) =='FAILURE'){
-				$this->logger->info('some problem in deploying POP pleae contact administrator');
-				$this->logger->error($process->getOutput());
-
+			if (substr($this->process->getOutput(), 0, 7) =='FAILURE'){
+				return new JsonResponse($this->process->getOutput());
 			}else{
-
 				$pop->setStatus(1);
 				$em = $this->getDoctrine()->getManager();
 				$em->persist( $pop );
 				$em->flush();
+				return new JsonResponse($this->process->getOutput());
 			}
 
 		} catch (ProcessFailedException $exception) {
 			echo $exception->getMessage();
-			return $this->redirectToRoute( 'pop_list' );
+			return new JsonResponse($this->process->getOutput());
 		}
-		return $this->redirectToRoute( 'pop_list' );
-
 	}
-
 	/**
 	 * Displays a form to edit an existing Post entity.
 	 *

@@ -21,6 +21,7 @@
     <br/>
     <br/>
     <br/>
+    <div class="lds-hourglass ajax_loader hidden"><i class="fa fa-spinner fa-spin"></i></div>
     <div class="leftColumn">
         <div class="blocLeft">
             <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
@@ -50,14 +51,11 @@
                         <td>{{ pop.username }}</td>
                         <td>{{ pop.type }}</td>
                         <td>{{ pop.keypair }}</td>
-
                         <td style="width:30px; text-align:center;">
                             {% if pop.status == false %}
-                                <a href="{{ path('pop_register', {id: pop.id}) }}" id="pop_register"
-                                   class="btn btn-sm btn-default">
-                                    <i class="fa fa-eye" aria-hidden="true"></i> <img
-                                            src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
-                                </a>
+                                <div path="{{ path('pop_register', {id: pop.id}) }}"  value="{{pop.id}}" class="iotpop">
+                                    <img src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                                </div>
                             {% else %}
                                 <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
                             {% endif %}
@@ -99,7 +97,10 @@
             <i class="fa fa-eye" aria-hidden="true"></i>
             <input type="button" value="{{ 'Cancel'|trans }}"/>
         </a>
+        <div class="outputtext box">
+        </div>
     </div>
+
     <div class="blocRight">
         {# read and display just one flash message type #}
         {% for message in app.flashes('notice') %}
