@@ -21,7 +21,7 @@
 					</a>
 				</td>
 				<td style="text-align:center; width:50px;">
-					<a style="font-size:10px;" href="{{ path('iot6_AlertBundle_ShowEdit', { id: alert.id } ) }}">{{ alert.createdAt|date("d/m/Y H:i:s") }}</a>
+					<a style="font-size:10px;" href="{{ path('iot6_AlertBundle_ShowEdit', { id: alert.id } ) }}">{{ alert.createdAt|date("d/m/Y H:i:s", 'Europe/Paris') }}</a>
 				</td>
 				<td style="width: 150px;">
 					<a style="font-size:10px;" href="{{ path('iot6_AlertBundle_ShowEdit', { id: alert.id } ) }}">{{ alert.message }}</a>
