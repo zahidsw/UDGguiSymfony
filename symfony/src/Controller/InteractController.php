@@ -126,28 +126,21 @@ class InteractController extends AbstractController
 
 	public function privileges()
     {
+        $devices_list = [];
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $city = $user->getCity();
+        $cityDevices = $city->getCityDevices();
 
-        $devices = $city->getDevices();
-
-        $devices = $devices->getValues();
-        $devices_list = [];
-
-        foreach ($devices as $device)
+        foreach ($cityDevices as $cityDevice)
         {
+            $device = $cityDevice->getDevice();
             array_push($devices_list,$device->getUpv6DevicesId());
         }
-
-
 
         $em_upv6 = $this->getDoctrine()->getManager("upv6");
         $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $devices_list]);
 
-
-        //dd($devices);
         $data['devices'] = $devices;
-
 
         return $this->render('interact/privileges.html.twig',$data);
     }
@@ -183,11 +176,6 @@ class InteractController extends AbstractController
                 }
             }
         }
-
-
-
-
-
 
         return $this->render('interact/privilegesUsers.html.twig',$data);
 

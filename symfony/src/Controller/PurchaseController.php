@@ -193,7 +193,7 @@ class PurchaseController extends AbstractController
                     'last_name' => 'Client',
                     'email' => 'felpone84@gmail.com',
                     'street' => 'Buchanan St. 21',
-                    'city' => 'carouge',
+                    'city' => 'versoix',
                     'state' => 'Country',
                     'zip_code' => '94147',
                     'country' => 'Country',
