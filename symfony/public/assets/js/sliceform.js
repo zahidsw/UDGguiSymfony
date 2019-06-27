@@ -152,13 +152,10 @@ $(document).ready(function () {
         if ($('#temp').is(":checked")) {
             $('#form').show();
             $('#div_humidity').hide();
-
-            //alert("fff"+data);
-        }
+            }
         else if ($('#humidity').is(":checked")) {
             $('#form').hide();
             $('#div_humidity').show();
-
         } else {
             $('#div_humidity').show();
         }

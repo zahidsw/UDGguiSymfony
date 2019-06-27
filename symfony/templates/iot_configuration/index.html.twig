@@ -29,7 +29,7 @@
         <div class="blocLeft">
             <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
             <a href="http://udg.cityreport.org"
-               class="title indent"><strong> {{ 'IoT Configuration List'|trans }}</strong></a>
+               class="title indent"><strong> {{ 'IoT Configuration List for avaliable Slices'|trans }}</strong></a>
         </div>
 
         <div id="zebraTableDiv">
@@ -101,11 +101,11 @@
     </div>
     <div class="section actions">
         <a href="{{ path('configuration_new') }}" class="btn btn-lg btn-block btn-success">
-            <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Configration'|trans }}"/>
+            <i class="fa fa-plus" aria-hidden="true"></i><input type="button" title="add a new configuration" value="{{ 'New Configration'|trans }}"/>
         </a>
         <a href="{{ path('iot_list') }}" class="btn btn-sm btn-default">
             <i class="fa fa-eye" aria-hidden="true"></i>
-            <input type="button" value="{{ 'Cancel'|trans }}"/>
+            <input type="button" title="go back main manenue" value="{{ 'Cancel'|trans }}"/>
         </a>
     </div>
 

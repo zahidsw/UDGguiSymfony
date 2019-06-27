@@ -24,7 +24,7 @@
 
     <div class="blocLeft">
         <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
-        <a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'IoT Virtual Network'|trans }}</strong></a>
+        <a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'New IoT configuration for avaliable slices'|trans }}</strong></a>
     </div>
     <div class="leftColumn">
         <div class="blocLeft">
@@ -43,11 +43,11 @@
             {{ include('iot_configuration/_form.html.twig') }}
             {{ form_rest(form) }}
             <br/>
-            <input type="submit" value="{{ 'Add'|trans }}"/>
+            <input type="submit" title="add a new configuration" value="{{ 'Add'|trans }}"/>
 
             <a href="{{ path('iot_configuration') }}" class="btn btn-sm btn-default">
                 <i class="fa fa-eye" aria-hidden="true"></i>
-                <input type="button" value="{{ 'Cancel'|trans }}"/>
+                <input type="button" title="back to configuration list" value="{{ 'Cancel'|trans }}"/>
             </a>
             {{ form_end(form) }}
             <div id="div_humidity" class="blocLeft">
