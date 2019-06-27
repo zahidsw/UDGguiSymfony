@@ -62,7 +62,7 @@
         </td>
         <td>  <a href="{{ path('slicecreateflavour') }}" class="btn btn-link">
                 <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" value="{{ 'add Flavour type'|trans }}"/>
+                <input type="button" title="Available flavour for slice creation" value="{{ 'add Flavour type'|trans }}"/>
             </a>
         </td>
 
@@ -80,7 +80,7 @@
         </td>
         <td>  <a href="{{ path('slicecreatenetworks')}}" class="btn btn-link">
                 <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" value="{{ 'add Network type'|trans }}"/>
+                <input type="button" title="Available virtual network for communication" value="{{ 'add Network type'|trans }}"/>
             </a>
         </td>
     </tr>
@@ -97,7 +97,7 @@
         </td>
         <td>  <a href="{{ url('vnocreate', {name: 'slice_new'}) }}" class="btn btn-link">
                 <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" value="{{ 'add New Pop'|trans }}"/>
+                <input type="button" title="add a new pop" value="{{ 'add New Pop'|trans }}"/>
             </a>
         </td>
 

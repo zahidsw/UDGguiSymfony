@@ -35,24 +35,22 @@
             <a href="http://udg.cityreport.org"
                class="title indent"><strong> {{ 'IoT Pop Creation'|trans }}</strong></a>
         </div>
-
         <div class="blocLeft">
-
             {{ form_start(form, {'attr': {'id': 'form'},'action': path('vnocreate') }) }}
             {{ form_errors(form) }}
             {{ include('frontpage/_form.html.twig') }}
             {{ form_rest(form) }}
             <br/>
-            <input type="submit" value="{{ 'Add'|trans }}"/>
+            <input type="submit" title="add a new pop" value="{{ 'Add'|trans }}"/>
             {% if return %}
                 <a href="{{ path('slice_new') }}" class="btn btn-link">
                     <i class="fa fa-list-alt" aria-hidden="true"></i>
-                    <input type="button" value="{{ 'Cancel'|trans }}"/>
+                    <input type="button" title="back to new slice form" value="{{ 'Cancel'|trans }}"/>
                 </a>
             {% else %}
                 <a href="{{ path('vnolist') }}" class="btn btn-link">
                     <i class="fa fa-list-alt" aria-hidden="true"></i>
-                    <input type="button" value="{{ 'Cancel'|trans }}"/>
+                    <input type="button" title="go back to Pop list" value="{{ 'Cancel'|trans }}"/>
                 </a>
             {% endif %}
 

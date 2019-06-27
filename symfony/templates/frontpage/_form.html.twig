@@ -8,7 +8,14 @@
                 form.name,
                 (pop.name is null ? {'attr': {'value':'client6'} } : {}))
             }}</td>
+        <td>
+            <small>{{ form_help(form.name) }}</small>
+        </td>
         <td>{{ form_errors(form.name) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.name) }}</span>
+        </td>
 
     </tr>
     <tr>
@@ -18,9 +25,14 @@
                 (pop.auth is null ? {'attr': {'value':'http://10.10.0.10:5000/v3'} } : {}))
             }}
         </td>
-
+        <td>
+            <small>{{ form_help(form.auth) }}</small>
+        </td>
         <td>{{ form_errors(form.auth) }}</td>
-        <td>{{ form_help(form.auth) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.auth) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.tenant, 'Tenant') }}</td>
@@ -29,7 +41,14 @@
                 (pop.tenant is null ? {'attr': {'value':'cf133311bf2846f89e3832c8307a547a'} } : {}))
             }}
         </td>
+        <td>
+            <small>{{ form_help(form.tenant) }}</small>
+        </td>
         <td>{{ form_errors(form.tenant) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.tenant) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.username, 'Username') }}</td>
@@ -38,7 +57,14 @@
                 (pop.username is null ? {'attr': {'value':'admin'} } : {}))
             }}
         </td>
+        <td>
+            <small>{{ form_help(form.username) }}</small>
+        </td>
         <td>{{ form_errors(form.username) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.username) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.Password, 'Password') }}</td>
@@ -47,14 +73,26 @@
                 (pop.Password is null ? {'attr': {'value':'65S8xLcC57'} } : {}))
             }}
         </td>
-
+        <td>
+            <small>{{ form_help(form.Password) }}</small>
+        </td>
         <td>{{ form_errors(form.Password) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.Password) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.type, 'Type') }}</td>
         <td>{{ form_widget(form.type) }}</td>
-
+        <td>
+            <small>{{ form_help(form.type) }}</small>
+        </td>
         <td>{{ form_errors(form.type) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.type) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.keypair, 'KeyPair') }}</td>
@@ -62,21 +100,35 @@
                 form.keypair,
                 (pop.keypair is null ? {'attr': {'value':'mhazan'} } : {}))
             }}</td>
+        <td>
+            <small>{{ form_help(form.keypair) }}</small>
+        </td>
         <td>{{ form_errors(form.keypair) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.keypair) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.securitygroup, 'SecurityGroups') }}</td>
         <td>{{ form_widget(form.securitygroup) }}</td>
+        <td>
+            <small>{{ form_help(form.securitygroup) }}</small>
+        </td>
         <td>{{ form_errors(form.securitygroup) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.securitygroup) }}</span>
+        </td>
 
         <td>  <a href="{{ path('vnosecuritygroup') }}" class="btn btn-link">
                 <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" value="{{ 'add SecurityGroups'|trans }}"/>
+                <input type="button" title="add a new group" value="{{ 'add SecurityGroups'|trans }}"/>
             </a>
         </td>
         <td>  <a class="btn btn-link securityremove">
                 <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" id="remove" value="{{ 'remove SecurityGroups'|trans }}"/>
+                <input type="button" id="remove" title="Remove a Security group" value="{{ 'remove SecurityGroups'|trans }}"/>
             </a>
         </td>
 
@@ -87,7 +139,14 @@
                 form.locationname,
                 (pop.locationname is null ? {'attr': {'value':'Aarhus'} } : {}))
             }}</td>
+        <td>
+            <small>{{ form_help(form.locationname) }}</small>
+        </td>
         <td>{{ form_errors(form.locationname) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.locationname) }}</span>
+        </td>
     </tr>
     <tr>
         <td>{{ form_label(form.latitude, 'Latitude') }}</td>
@@ -95,7 +154,14 @@
                 form.latitude,
                 (pop.latitude is null ? {'attr': {'value':'56.162939'} } : {}))
             }}</td>
+        <td>
+            <small>{{ form_help(form.latitude) }}</small>
+        </td>
         <td>{{ form_errors(form.latitude) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.latitude) }}</span>
+        </td>
     </tr>
 
     <tr>
@@ -104,6 +170,13 @@
                 form.longitude,
                 (pop.longitude is null ? {'attr': {'value':'10.203921'} } : {}))
             }}</td>
+        <td>
+            <small>{{ form_help(form.longitude) }}</small>
+        </td>
         <td>{{ form_errors(form.longitude) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.longitude) }}</span>
+        </td>
     </tr>
 </table>
