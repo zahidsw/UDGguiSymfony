@@ -226,12 +226,9 @@ class AjaxController extends AbstractController
 						$em_udg->persist($udgDevice);
                         $em_udg->flush();
 
-
 						$udgCityDevice->setCity($user->getCity());
 						$udgCityDevice->setDevice($udgDevice);
 
-                        
-                        
                         $em_udg->persist($udgCityDevice);
                         $em_udg->flush();
 

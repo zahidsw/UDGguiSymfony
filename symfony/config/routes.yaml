@@ -351,6 +351,18 @@ iot6_InteractBundle_privilegesUsers:
     requirements:
         id: \d+
 
+iot6_InteractBundle_privilegesPublic:
+    path:  /{_locale}/interact/devices/{id}/privileges/public/
+    controller: App\Controller\InteractController:privilegesPublic
+    requirements:
+        id: \d+
+
+iot6_InteractBundle_privilegesAccredited:
+    path:  /{_locale}/interact/devices/{id}/privileges/accredited/
+    controller: App\Controller\InteractController:privilegesAccredited
+    requirements:
+        id: \d+
+
 iot6_InteractBundle_setDeviceUserPrivileges:
     path:  /{_locale}/setDeviceUserPrivileges/{user}/{device}/{accessProfile}
     controller: App\Controller\InteractController:setDeviceUserPrivileges

@@ -26,21 +26,21 @@
                 <th>{{ 'Privileges'|trans }}</th>
             </tr>
 
-            {% for user in users %}
+            {% for city in cityDevice %}
                 <tr>
                     <td>
-                        <a>
-                            {{ user.username }}
+                        <a >
+                            {{ city.name }}
                         </a>
                     </td>
                     <td>
-                        <select data-device= {{ device.id }} data-user = {{ user.id }} id="dev_priv" name="dev_priv">
+                        <select data-device= {{ device.id }} data-city = {{ city.id }} id="dev_priv" name="dev_priv">
                             <option  selected="selected" value="-1">None</option>
-                            <option data-user = {{ user.id }} value="11" {{ (user.accessProfile == 11) ? 'selected' : '' }}>See</option>
-                            <option data-user = {{ user.id }} value="12" {{ (user.accessProfile == 12) ? 'selected' : '' }}>Inform</option>
-                            <option data-user = {{ user.id }} value="13" {{ (user.accessProfile == 13) ? 'selected' : '' }}>Query</option>
-                            <option data-user = {{ user.id }} value="14" {{ (user.accessProfile == 14) ? 'selected' : '' }}>Act on</option>
-                            <option data-user = {{ user.id }} value="15" {{ (user.accessProfile == 15) ? 'selected' : '' }}>Configure</option>
+                            <option data-city = {{ city.id }} value="6" {{ (city.accreditedAccessProfile == 6) ? 'selected' : '' }}>See</option>
+                            <option data-city = {{ city.id }} value="7" {{ (city.accreditedAccessProfile == 7) ? 'selected' : '' }}>Inform</option>
+                            <option data-city = {{ city.id }} value="8" {{ (city.accreditedAccessProfile == 8) ? 'selected' : '' }}>Query</option>
+                            <option data-city = {{ city.id }} value="9" {{ (city.accreditedAccessProfile == 9) ? 'selected' : '' }}>Act on</option>
+                            <option data-city = {{ city.id }} value="10" {{ (city.accreditedAccessProfile == 10) ? 'selected' : '' }}>Configure</option>
                         </select>
                     </td>
 

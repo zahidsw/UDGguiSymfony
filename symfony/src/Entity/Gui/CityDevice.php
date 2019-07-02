@@ -19,9 +19,14 @@ class CityDevice
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $ownership;
+    private $accreditedByCityId;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $accreditedAccessProfile;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Gui\City", inversedBy="cityDevices",fetch="EAGER")

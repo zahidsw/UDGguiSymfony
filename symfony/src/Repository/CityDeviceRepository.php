@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\CityDevice;
+use App\Entity\Gui\CityDevice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
