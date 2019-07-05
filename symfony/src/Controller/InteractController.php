@@ -249,22 +249,51 @@ class InteractController extends AbstractController
             
             if($deviceU->getId() == $device->getUpv6DevicesId())
             {
-                $devices_list = $device;
+                $deviceGui = $device;
             }
         }
 
 
         $em_gui = $this->getDoctrine()->getManager("gui");
-        $cityDevices = $em_gui->getRepository('App\Entity\Gui\City')->findAccreditation($devices_list,$city);
+        $cityDevices = $em_gui->getRepository('App\Entity\Gui\City')->findAccreditation($deviceGui,$city);
        
        
-   
-
         $data['cityDevice'] = $cityDevices;
         $data['device'] = $deviceU;
+        $data['deviceGui'] = $deviceGui;
         
-
         return $this->render('interact/privilegesAccredited.html.twig',$data);
     }
+
+
+    public function setAccreditedDeviceAccessProfile(String $device, String $citytocredit, String $accessProfile)
+    {
+        $em_gui = $this->getDoctrine()->getManager("gui");
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $cityDevices = $em_gui->getRepository('App\Entity\Gui\CityDevice')
+        ->findOneBy(['city' => $citytocredit, 'device'=> $device, 'accreditedByCityId' => $city->getId()]);
+
+        if(empty($cityDevices))
+        {
+            $cityDevices = new CityDevice();
+            $cityDevices->setAccreditedByCityId($city->getId());
+            $city = $em_gui->getRepository('App\Entity\Gui\City')->findOneBy(['id' => $citytocredit]);
+            $cityDevices->setCity($city);
+            $device = $em_gui->getRepository('App\Entity\Gui\Device')->findOneBy(['id' => $device]);
+            $cityDevices->setDevice($device);
+        }
+
+        $cityDevices->setAccreditedAccessProfile($accessProfile);
+        $em_gui->persist($cityDevices);
+        $em_gui->flush();
+        
+
+         $response = new JsonResponse('Privileges updated');
+
+         return $response;
+
+    }
+
 
 }

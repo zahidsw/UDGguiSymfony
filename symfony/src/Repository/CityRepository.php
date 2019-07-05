@@ -27,7 +27,7 @@ class CityRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-         SELECT * 
+         SELECT c.id, c.name, cd.accreditedByCityId, cd.device_id, cd.accreditedAccessProfile
          FROM city c
          LEFT JOIN CityDevice cd ON (c.id = cd.city_id AND accreditedByCityId = :cityId AND cd.device_id = :deviceId)
          ORDER BY c.name

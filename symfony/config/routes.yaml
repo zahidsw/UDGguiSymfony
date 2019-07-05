@@ -375,6 +375,12 @@ iot6_InteractBundle_setDeviceAccessProfile:
     options:
         expose: true
 
+iot6_InteractBundle_setAccreditedDeviceAccessProfile:
+    path:  /{_locale}/setAccreditedDeviceAccessProfile/{device}/{citytocredit}/{accessProfile}
+    controller: App\Controller\InteractController:setAccreditedDeviceAccessProfile
+    options:
+        expose: true
+
 #{page}/building/{idBuilding}
 # iot6_InteractBundle_mapList:
 #     path:  /{_locale}/interact/mapList/{devices}

@@ -25,7 +25,6 @@
                 <th>{{ 'conf.username'|trans }}</th>
                 <th>{{ 'Privileges'|trans }}</th>
             </tr>
-
             {% for city in cityDevice %}
                 <tr>
                     <td>
@@ -34,13 +33,13 @@
                         </a>
                     </td>
                     <td>
-                        <select data-device= {{ device.id }} data-city = {{ city.id }} id="dev_priv" name="dev_priv">
+                        <select  data-device = {{ deviceGui.id }} data-city = {{ city.id }}  id="dev_acc" name="dev_acc">
                             <option  selected="selected" value="-1">None</option>
-                            <option data-city = {{ city.id }} value="6" {{ (city.accreditedAccessProfile == 6) ? 'selected' : '' }}>See</option>
-                            <option data-city = {{ city.id }} value="7" {{ (city.accreditedAccessProfile == 7) ? 'selected' : '' }}>Inform</option>
-                            <option data-city = {{ city.id }} value="8" {{ (city.accreditedAccessProfile == 8) ? 'selected' : '' }}>Query</option>
-                            <option data-city = {{ city.id }} value="9" {{ (city.accreditedAccessProfile == 9) ? 'selected' : '' }}>Act on</option>
-                            <option data-city = {{ city.id }} value="10" {{ (city.accreditedAccessProfile == 10) ? 'selected' : '' }}>Configure</option>
+                            <option  value="6" {{ (city.accreditedAccessProfile == 6) ? 'selected' : '' }}>See</option>
+                            <option  value="7" {{ (city.accreditedAccessProfile == 7) ? 'selected' : '' }}>Inform</option>
+                            <option  value="8" {{ (city.accreditedAccessProfile == 8) ? 'selected' : '' }}>Query</option>
+                            <option  value="9" {{ (city.accreditedAccessProfile == 9) ? 'selected' : '' }}>Act on</option>
+                            <option  value="10" {{ (city.accreditedAccessProfile == 10) ? 'selected' : '' }}>Configure</option>
                         </select>
                     </td>
 
@@ -53,10 +52,12 @@
 
     </div>
         <script>
-            $('select#dev_priv').on('change', function() {
-                var user = this.getAttribute('data-user');
+            $('select#dev_acc').on('change', function() {
+                
                 var device = this.getAttribute('data-device');
-                var url = Routing.generate('iot6_InteractBundle_setDeviceUserPrivileges', { 'user': user, 'device': device, 'accessProfile':this.value });
+                var cityToCredit = this.getAttribute('data-city');
+                console.log(cityToCredit);
+                var url = Routing.generate('iot6_InteractBundle_setAccreditedDeviceAccessProfile', { 'device': device, 'citytocredit': cityToCredit,  'accessProfile':this.value });
 
                 $.ajax({
                     method: "POST",
@@ -67,19 +68,7 @@
                 })
             })
 
-            $('#dev_pub').on('change', function() {
-
-                var device = this.getAttribute('data-device');
-                var url = Routing.generate('iot6_InteractBundle_setDeviceAccessProfile', { 'device': device, 'accessProfile':this.value });
-
-                $.ajax({
-                    method: "POST",
-                    url: url,
-                    success: function(data) {
-                        alert(data);
-                    }
-                })
-            })
+        
 
         </script>
 {% endblock %}

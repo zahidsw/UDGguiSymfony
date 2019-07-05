@@ -78,4 +78,28 @@ class CityDevice
 
         return $this;
     }
+
+    public function getAccreditedAccessProfile(): ?int
+    {
+        return $this->accreditedAccessProfile;
+    }
+
+    public function setAccreditedAccessProfile(?int $accreditedAccessProfile): self
+    {
+        $this->accreditedAccessProfile = $accreditedAccessProfile;
+
+        return $this;
+    }
+    
+    public function getAccreditedByCityId(): ?int
+    {
+        return $this->accreditedByCityId;
+    }
+
+    public function setAccreditedByCityId(?int $accreditedByCityId): self
+    {
+        $this->accreditedByCityId = $accreditedByCityId;
+
+        return $this;
+    }
 }
