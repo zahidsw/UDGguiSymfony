@@ -135,8 +135,12 @@ class InteractController extends AbstractController
 
         foreach ($cityDevices as $cityDevice)
         {
-            $device = $cityDevice->getDevice();
-            array_push($devices_list,$device->getUpv6DevicesId());
+            if($cityDevice->getAccreditedAccessProfile() != -1)
+            {
+                $device = $cityDevice->getDevice();
+                array_push($devices_list,$device->getUpv6DevicesId());
+            }
+            
         }
 
         $em_upv6 = $this->getDoctrine()->getManager("upv6");
