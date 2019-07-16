@@ -526,7 +526,9 @@ div.scenarios {
 .pagination li {
 	margin-left: 4px;
 	margin-right: 4px;
- 	float:left; /*pour IE*/
+	 float:left; /*pour IE*/
+	 color: red;
+
 }
 .pagination li a {
 	color: white !important;

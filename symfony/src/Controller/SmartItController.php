@@ -386,7 +386,9 @@ class SmartItController extends AbstractController
     			$message = $this->translator->trans('msg.rule_edited');
     			$this->get('session')->getFlashBag()->add('ok', $message);
     			
-    			return $this->redirect($request->get('backUrl'));
+    			//return $this->redirect($request->get('backUrl'));
+				return $this->redirectToRoute('iot6_SmartItBundle_RulesManager');
+
     		}
     	}
     	
@@ -457,7 +459,7 @@ class SmartItController extends AbstractController
     	return $this->render('smartit/scheduler.html.twig', $data);
     }
     
-    public function scheduleActDesact(Schedules $schedule,Request $request)
+    public function scheduleActDesact(Schedules $schedule, Request $request)
     {
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	 
@@ -742,7 +744,8 @@ class SmartItController extends AbstractController
     {
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	
-    	$error = null;
+		$error = null;
+		$message = null;
     	
 
     	if ($request->getMethod() == 'POST')
@@ -760,17 +763,20 @@ class SmartItController extends AbstractController
     		$idRule 	= $request->get('rules');
     		
     		if($idEvent == -1 || is_null($idEvent)) {
-    			$error = $this->translator->trans('error.select_one_event');
+				$error = $this->translator->trans('error.select_one_event');
+				$message = "One event must be selected";
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if($idRule == -1 || is_null($idRule)) {
-    			$error = $this->translator->trans('error.select_one_rule');
+				$error = $this->translator->trans('error.select_one_rule');
+				$message = "One rule must be selected";
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     	
     		if($idBuilding == -1 && $idFloor == -1 && $idRoomType == -1 && $idRoom == -1 && $idCategory == -1 && $idFamily == -1 && $idDevice == -1 ) {
-    			$error = $this->translator->trans('error.select_one_source');
+				$error = $this->translator->trans('error.select_one_source');
+				$message = "Select a source, cannot be all";
     			$this->get('session')->getFlashBag()->add('ko', $message);
     		}
     		

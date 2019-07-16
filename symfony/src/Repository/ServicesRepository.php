@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\EntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;

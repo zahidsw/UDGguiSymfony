@@ -25,13 +25,11 @@ class Schedules
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Upv6\Rules", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $rule;
     
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Upv6\Targets", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $target;
 
