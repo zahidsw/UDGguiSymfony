@@ -1,0 +1,74 @@
+{% extends "interact/layoutInteract.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - {{ 'subMenu.interact.iotNavigator'|trans }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <br/><br/>
+    <h1>Users privileges for {{ device.name }}</h1>
+    <br/>
+    <br/>
+    {% include 'interact/privilegesMenus.html.twig' %}
+
+
+    <br/>
+    <br/>
+
+    <div id="zebraTableDiv">
+        <table id="table" style="width:100%;">
+            <tr>
+                <th>{{ 'conf.username'|trans }}</th>
+                <th>{{ 'Privileges'|trans }}</th>
+            </tr>
+            {% for city in cityDevice %}
+                <tr>
+                    <td>
+                        <a >
+                            {{ city.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <select  data-device = {{ deviceGui.id }} data-city = {{ city.id }}  id="dev_acc" name="dev_acc">
+                            <option  selected="selected" value="-1">None</option>
+                            <option  value="6" {{ (city.accreditedAccessProfile == 6) ? 'selected' : '' }}>See</option>
+                            <option  value="7" {{ (city.accreditedAccessProfile == 7) ? 'selected' : '' }}>Inform</option>
+                            <option  value="8" {{ (city.accreditedAccessProfile == 8) ? 'selected' : '' }}>Query</option>
+                            <option  value="9" {{ (city.accreditedAccessProfile == 9) ? 'selected' : '' }}>Act on</option>
+                            <option  value="10" {{ (city.accreditedAccessProfile == 10) ? 'selected' : '' }}>Configure</option>
+                        </select>
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
+
+        <br/>
+
+
+    </div>
+        <script>
+            $('select#dev_acc').on('change', function() {
+                
+                var device = this.getAttribute('data-device');
+                var cityToCredit = this.getAttribute('data-city');
+                console.log(cityToCredit);
+                var url = Routing.generate('iot6_InteractBundle_setAccreditedDeviceAccessProfile', { 'device': device, 'citytocredit': cityToCredit,  'accessProfile':this.value });
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    success: function(data) {
+                            alert(data);
+                        }
+                })
+            })
+
+        
+
+        </script>
+{% endblock %}

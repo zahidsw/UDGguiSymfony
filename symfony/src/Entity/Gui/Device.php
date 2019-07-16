@@ -2,6 +2,7 @@
 
 namespace App\Entity\Gui;
 
+use App\Entity\Gui\CityDevice;
 use App\Entity\Gui\City;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,13 +26,14 @@ class Device
     private $upv6DevicesId;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Gui\City", inversedBy="devices")
+     * @ORM\OneToMany(targetEntity="App\Entity\Gui\CityDevice", mappedBy="device")
      */
-    private $city;
+    private $cityDevices;
 
     public function __construct()
     {
         $this->city = new ArrayCollection();
+        $this->cityDevices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,26 +54,31 @@ class Device
     }
 
     /**
-     * @return Collection|City[]
+     * @return Collection|CityDevice[]
      */
-    public function getCity(): Collection
+    public function getCityDevices(): Collection
     {
-        return $this->city;
+        return $this->cityDevices;
     }
 
-    public function addCity(City $city): self
+    public function addCityDevice(CityDevice $cityDevice): self
     {
-        if (!$this->city->contains($city)) {
-            $this->city[] = $city;
+        if (!$this->cityDevices->contains($cityDevice)) {
+            $this->cityDevices[] = $cityDevice;
+            $cityDevice->setDevice($this);
         }
 
         return $this;
     }
 
-    public function removeCity(City $city): self
+    public function removeCityDevice(CityDevice $cityDevice): self
     {
-        if ($this->city->contains($city)) {
-            $this->city->removeElement($city);
+        if ($this->cityDevices->contains($cityDevice)) {
+            $this->cityDevices->removeElement($cityDevice);
+            // set the owning side to null (unless already changed)
+            if ($cityDevice->getDevice() === $this) {
+                $cityDevice->setDevice(null);
+            }
         }
 
         return $this;

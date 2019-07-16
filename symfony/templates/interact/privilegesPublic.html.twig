@@ -1,0 +1,63 @@
+{% extends "interact/layoutInteract.html.twig" %}
+
+{% block title %}
+    {{ parent() }} - {{ 'subMenu.interact.iotNavigator'|trans }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <br/><br/>
+    <h1>Public privileges for {{ device.name }}</h1>
+    <br/>
+    <br/>
+    {% include 'interact/privilegesMenus.html.twig' %}
+
+    <br/><br/>
+
+        <select data-device= {{ device.id }}  id="dev_pub" name="dev_priv">
+            <option  selected="selected" value="-1">None</option>
+            <option  value="1" {{ (device.accessProfile == 1) ? 'selected' : '' }}>See</option>
+            <option  value="2" {{ (device.accessProfile == 2) ? 'selected' : '' }}>Inform</option>
+            <option  value="3" {{ (device.accessProfile == 3) ? 'selected' : '' }}>Query</option>
+            <option  value="4" {{ (device.accessProfile == 4) ? 'selected' : '' }}>Act on</option>
+            <option  value="5" {{ (device.accessProfile == 5) ? 'selected' : '' }}>Configure</option>
+        </select>
+
+    <br/>
+    <br/>
+
+   
+        <script>
+            $('select#dev_priv').on('change', function() {
+                var user = this.getAttribute('data-user');
+                var device = this.getAttribute('data-device');
+                var url = Routing.generate('iot6_InteractBundle_setDeviceUserPrivileges', { 'user': user, 'device': device, 'accessProfile':this.value });
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    success: function(data) {
+                            alert(data);
+                        }
+                })
+            })
+
+            $('#dev_pub').on('change', function() {
+
+                var device = this.getAttribute('data-device');
+                var url = Routing.generate('iot6_InteractBundle_setDeviceAccessProfile', { 'device': device, 'accessProfile':this.value });
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    success: function(data) {
+                        alert(data);
+                    }
+                })
+            })
+
+        </script>
+{% endblock %}

@@ -14,6 +14,8 @@ use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Gui\User;
+use App\Entity\Gui\CityDevice;
+use App\Entity\Gui\City;
 use App\Entity\Upv6\UserHasDevice;
 
 
@@ -126,28 +128,25 @@ class InteractController extends AbstractController
 
 	public function privileges()
     {
+        $devices_list = [];
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $city = $user->getCity();
+        $cityDevices = $city->getCityDevices();
 
-        $devices = $city->getDevices();
-
-        $devices = $devices->getValues();
-        $devices_list = [];
-
-        foreach ($devices as $device)
+        foreach ($cityDevices as $cityDevice)
         {
-            array_push($devices_list,$device->getUpv6DevicesId());
+            if($cityDevice->getAccreditedAccessProfile() != -1)
+            {
+                $device = $cityDevice->getDevice();
+                array_push($devices_list,$device->getUpv6DevicesId());
+            }
+            
         }
-
-
 
         $em_upv6 = $this->getDoctrine()->getManager("upv6");
         $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $devices_list]);
 
-
-        //dd($devices);
         $data['devices'] = $devices;
-
 
         return $this->render('interact/privileges.html.twig',$data);
     }
@@ -155,7 +154,6 @@ class InteractController extends AbstractController
 
     public function privilegesUsers(Devices $device)
     {
-
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $city = $user->getCity();
         $users = $city->getUsers()->getValues();
@@ -169,10 +167,6 @@ class InteractController extends AbstractController
         $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
             ->findBy(array('deviceId' => $device->getId()));
 
-        //$device = $em_upv6->getRepository('App\Entity\Upv6\Devices')
-            //->findOneBy(array('id' => $device->getId()));
-
-
         foreach ($users as &$user)
         {
             foreach ($user_has_device as $has_device)
@@ -184,13 +178,7 @@ class InteractController extends AbstractController
             }
         }
 
-
-
-
-
-
         return $this->render('interact/privilegesUsers.html.twig',$data);
-
     }
 
 
@@ -242,7 +230,74 @@ class InteractController extends AbstractController
 
     }
 
+    public function privilegesPublic(Devices $device)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $users = $city->getUsers()->getValues();
+        $data['device'] = $device;
 
+        return $this->render('interact/privilegesPublic.html.twig',$data);
+    }
+
+    public function privilegesAccredited(Devices $deviceU)
+    {
+        $devices_list = [];
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $cityDevices = $city->getCityDevices();
+
+        foreach ($cityDevices as $cityDevice)
+        {
+            $device = $cityDevice->getDevice();
+            
+            if($deviceU->getId() == $device->getUpv6DevicesId())
+            {
+                $deviceGui = $device;
+            }
+        }
+
+
+        $em_gui = $this->getDoctrine()->getManager("gui");
+        $cityDevices = $em_gui->getRepository('App\Entity\Gui\City')->findAccreditation($deviceGui,$city);
+       
+       
+        $data['cityDevice'] = $cityDevices;
+        $data['device'] = $deviceU;
+        $data['deviceGui'] = $deviceGui;
+        
+        return $this->render('interact/privilegesAccredited.html.twig',$data);
+    }
+
+
+    public function setAccreditedDeviceAccessProfile(String $device, String $citytocredit, String $accessProfile)
+    {
+        $em_gui = $this->getDoctrine()->getManager("gui");
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $cityDevices = $em_gui->getRepository('App\Entity\Gui\CityDevice')
+        ->findOneBy(['city' => $citytocredit, 'device'=> $device, 'accreditedByCityId' => $city->getId()]);
+
+        if(empty($cityDevices))
+        {
+            $cityDevices = new CityDevice();
+            $cityDevices->setAccreditedByCityId($city->getId());
+            $city = $em_gui->getRepository('App\Entity\Gui\City')->findOneBy(['id' => $citytocredit]);
+            $cityDevices->setCity($city);
+            $device = $em_gui->getRepository('App\Entity\Gui\Device')->findOneBy(['id' => $device]);
+            $cityDevices->setDevice($device);
+        }
+
+        $cityDevices->setAccreditedAccessProfile($accessProfile);
+        $em_gui->persist($cityDevices);
+        $em_gui->flush();
+        
+
+         $response = new JsonResponse('Privileges updated');
+
+         return $response;
+
+    }
 
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity\Gui;
 
+use App\Entity\Gui\CityDevice;
 use App\Entity\Gui\Device;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,14 +38,15 @@ class City
     private $users;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Gui\Device", mappedBy="city",fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="App\Entity\Gui\CityDevice", mappedBy="city",fetch="EAGER")
      */
-    private $devices;
+    private $cityDevices;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->devices = new ArrayCollection();
+        $this->cityDevices = new ArrayCollection();
     }
 
 
@@ -109,28 +111,31 @@ class City
     }
 
     /**
-     * @return Collection|Device[]
+     * @return Collection|CityDevice[]
      */
-    public function getDevices(): Collection
+    public function getCityDevices(): Collection
     {
-        return $this->devices;
+        return $this->cityDevices;
     }
 
-    public function addDevice(Device $device): self
+    public function addCityDevice(CityDevice $cityDevice): self
     {
-        if (!$this->devices->contains($device)) {
-            $this->devices[] = $device;
-            $device->addCity($this);
+        if (!$this->cityDevices->contains($cityDevice)) {
+            $this->cityDevices[] = $cityDevice;
+            $cityDevice->setCity($this);
         }
 
         return $this;
     }
 
-    public function removeDevice(Device $device): self
+    public function removeCityDevice(CityDevice $cityDevice): self
     {
-        if ($this->devices->contains($device)) {
-            $this->devices->removeElement($device);
-            $device->removeCity($this);
+        if ($this->cityDevices->contains($cityDevice)) {
+            $this->cityDevices->removeElement($cityDevice);
+            // set the owning side to null (unless already changed)
+            if ($cityDevice->getCity() === $this) {
+                $cityDevice->setCity(null);
+            }
         }
 
         return $this;

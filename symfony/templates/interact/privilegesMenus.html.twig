@@ -1,0 +1,9 @@
+
+{% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('iot6_InteractBundle_privilegesUsers', {id: device.id}) }}" class="subtitle2">[{{ 'Users' }}]</a>
+    <a href="{{ path('iot6_InteractBundle_privilegesAccredited' , {id: device.id}) }}" class="subtitle2">[{{ 'Accredited' }}]</a>
+    <a href="{{ path('iot6_InteractBundle_privilegesPublic' , {id: device.id}) }}" class="subtitle2">[{{ 'Public' }}]</a>
+{% endif %}
+
+
+

@@ -20,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use App\Entity\Gui\User;
+use App\Entity\Gui\CityDevice;
 
 
 
@@ -218,10 +219,17 @@ class AjaxController extends AbstractController
 						$em_upv6->flush();*/
 
                         $em_udg = $this->getDoctrine()->getManager("gui");
-                        $udgDevice = new Device();
-                        $udgDevice->setUpv6DevicesId($deviceToAdd->getId());
-                        $udgDevice->addCity($user->getCity());
-                        $em_udg->persist($udgDevice);
+						$udgDevice = new Device();
+						$udgCityDevice = new CityDevice();
+
+						$udgDevice->setUpv6DevicesId($deviceToAdd->getId());
+						$em_udg->persist($udgDevice);
+                        $em_udg->flush();
+
+						$udgCityDevice->setCity($user->getCity());
+						$udgCityDevice->setDevice($udgDevice);
+
+                        $em_udg->persist($udgCityDevice);
                         $em_udg->flush();
 
 

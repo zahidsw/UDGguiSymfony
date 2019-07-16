@@ -9,29 +9,11 @@
 
 {% block body %}
     {{ parent() }}
-
-
-
     <br/><br/>
-
-
-    <h1>Privileges for {{ device.name }}</h1>
+    <h1>Users privileges for {{ device.name }}</h1>
     <br/>
     <br/>
-
-
-    <h1>Public privileges</h1>
-
-        <select data-device= {{ device.id }}  id="dev_pub" name="dev_priv">
-            <option  selected="selected" value="-1">None</option>
-            <option  value="1" {{ (device.accessProfile == 1) ? 'selected' : '' }}>See</option>
-            <option  value="2" {{ (device.accessProfile == 2) ? 'selected' : '' }}>Inform</option>
-            <option  value="3" {{ (device.accessProfile == 3) ? 'selected' : '' }}>Query</option>
-            <option  value="4" {{ (device.accessProfile == 4) ? 'selected' : '' }}>Act on</option>
-            <option  value="5" {{ (device.accessProfile == 5) ? 'selected' : '' }}>Configure</option>
-        </select>
-
-
+    {% include 'interact/privilegesMenus.html.twig' %}
 
 
     <br/>
@@ -47,7 +29,7 @@
             {% for user in users %}
                 <tr>
                     <td>
-                        <a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Edit', { 'id': user.id }) }}">
+                        <a>
                             {{ user.username }}
                         </a>
                     </td>
