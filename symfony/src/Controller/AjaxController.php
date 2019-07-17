@@ -35,7 +35,7 @@ class AjaxController extends AbstractController
 		$this->translator = $translator;
 	}
 	/**************  Tree  ****************/
-	
+	/**for admin */
 	public function getJsonTree(Request $request)
 	{
 		$em_upv6 = $this->getDoctrine()->getManager("upv6");
@@ -45,13 +45,9 @@ class AjaxController extends AbstractController
 		$cardsArray = array();
 
 		// User session
-		//$request = $this->getRequest();
 		$session = $request->getSession();
 		$session_id = $session->getId();
 
-		// The user himself
-		//$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
-		
 		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 
 		foreach ($listCards as $card)
@@ -67,13 +63,20 @@ class AjaxController extends AbstractController
 	
 				foreach($listDevices as $device)
 				{
-					// Check the link between the device and the user
-					$user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
-									->findOneBy(array('userId' => $user_id, 'deviceId' => $device->getId()));
-					if($user_has_device == true)
+					$devices_list = [];
+					$user = $this->container->get('security.token_storage')->getToken()->getUser();
+					$city = $user->getCity();
+					$cityDevices = $city->getCityDevices();
+					
+					foreach ($cityDevices as $cityDevice)
 					{
-						$devicesArray[] = array('data' => $device->getAssignedName(),
+						$deviceU = $cityDevice->getDevice();
+						
+						if($deviceU->getUpv6DevicesId() == $device->getId())
+						{
+							$devicesArray[] = array('data' => $device->getAssignedName(),
 								'attr' => array('id' => $device->getId(), 'rel' => 'device'));
+						}		
 					}
 				}
 				 
@@ -100,6 +103,72 @@ class AjaxController extends AbstractController
 		 
 		return $response;
 	}
+
+	public function getJsonTreeNormalUser(Request $request)
+	{
+		$em_upv6 = $this->getDoctrine()->getManager("upv6");
+		$listCards = $em_upv6->getRepository('App\Entity\Upv6\Cards')->findBy(array(), array('name' => 'ASC'));
+		 
+		$array = array();
+		$cardsArray = array();
+
+		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+
+		foreach ($listCards as $card)
+		{
+			$protocolArray = array();
+	
+			$tempArray = array();
+	
+			foreach($card->getProtocols() as $protocol)
+			{
+				$listDevices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findDevicesByCardAndProtocol($card, $protocol);
+				$devicesArray = array();
+	
+				foreach($listDevices as $device)
+				{
+					// Check the link between the device and the user
+					$user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+									->findOneBy(array('userId' => $user_id, 'deviceId' => $device->getId()));
+
+									
+					if($user_has_device == true)
+					{
+						if($user_has_device->getAccessProfile() != -1)
+						{
+							$devicesArray[] = array('data' => $device->getAssignedName(),
+								'attr' => array('id' => $device->getId(), 'rel' => 'device'));
+						}
+						
+					}
+				}
+				 
+				$protocolArray['data'] = $protocol->getName();
+				$protocolArray['attr'] = array('id' => $protocol->getId(), 'rel' => 'protocol');
+				$protocolArray['children'] = array($devicesArray);
+				 
+				$tempArray[] = $protocolArray;
+			}
+	
+			$cardsArray['data'] = array('title' => $card->getName());
+	
+			$cardsArray['attr'] = array('id' => $card->getId(),
+					'rel' => 'card',
+					'status' => $card->getCardState()
+			);
+	
+			$cardsArray['children'] = $tempArray;
+	
+			$array[] = $cardsArray;
+
+		}
+
+		$response = new Response(json_encode($array));
+		 
+		return $response;
+
+
+	}// copy the  same previous getjsontree
 	
 	public function getCard($id, Request $request)
 	{

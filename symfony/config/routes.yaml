@@ -336,6 +336,10 @@ iot6_InteractBundle_iotNavigator:
 iot6_InteractBundle_devices:
     path:  /{_locale}/interact/devices
     controller: App\Controller\InteractController:devices
+
+iot6_InteractBundle_userDevices:
+    path:  /{_locale}/interact/userdevices
+    controller: App\Controller\InteractController:userDevices
     
 iot6_InteractBundle_deviceShow:
     path:  /{_locale}/interact/devices/show/{id}
@@ -421,6 +425,13 @@ getDevice:
 getJsonTree:
     path: /ajax/getJsonTree
     controller: App\Controller\AjaxController:getJsonTree
+    requirements: 
+        _format: xml|json 
+        _method: GET 
+
+getJsonTreeNormalUser:
+    path: /ajax/getJsonTreeNormalUser
+    controller: App\Controller\AjaxController:getJsonTreeNormalUser
     requirements: 
         _format: xml|json 
         _method: GET 

@@ -107,10 +107,14 @@ private function getBackgroundColor()
 		$listeSubMenu = array(
 				array(	'name' => $translator->trans('subMenu.interact.iotNavigator'),
 						'href' => 'iot6_InteractBundle_iotNavigator'),
-				array(	'name' => $translator->trans('subMenu.interact.devicesProfile'),
-						'href' => 'iot6_InteractBundle_devices'),
+				array(	'name' => $translator->trans('City Device Profiles'),// make accessible only to admin
+						'href' => 'iot6_InteractBundle_devices',
+						'privileges' => 'admin'),
+				array(	'name' => $translator->trans('User Device Profiles'),// make accessible only to normal user
+						'href' => 'iot6_InteractBundle_userDevices'),
                 array(	'name' => 'Devices Privileges',
-                        'href' => 'iot6_InteractBundle_privileges'),
+						'href' => 'iot6_InteractBundle_privileges',
+						'privileges' => 'admin'),
 				array(	'name' => $translator->trans('subMenu.interact.mapList'),
 						'href' => 'iot6_InteractBundle_mapList'),
                 array(	'name' => $translator->trans('subMenu.interact.locationsList'),

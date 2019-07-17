@@ -93,6 +93,11 @@ class InteractController extends AbstractController
     {
     	return $this->render('interact/devices.html.twig');
     }
+
+    public function userDevices()
+    {
+        return $this->render('interact/userdevices.html.twig');
+    }
   	
     public function deviceShow(Request $request,Devices $device)
     {
