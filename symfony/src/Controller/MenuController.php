@@ -110,6 +110,9 @@ private function getBackgroundColor()
 				array(	'name' => $translator->trans('City Device Profiles'),// make accessible only to admin
 						'href' => 'iot6_InteractBundle_devices',
 						'privileges' => 'admin'),
+				array(	'name' => $translator->trans('Available Device'),// make accessible only to admin
+						'href' => 'iot6_InteractBundle_availabledevices',
+						'privileges' => 'admin'),
 				array(	'name' => $translator->trans('User Device Profiles'),// make accessible only to normal user
 						'href' => 'iot6_InteractBundle_userDevices'),
                 array(	'name' => 'Devices Privileges',

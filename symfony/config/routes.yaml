@@ -337,6 +337,10 @@ iot6_InteractBundle_devices:
     path:  /{_locale}/interact/devices
     controller: App\Controller\InteractController:devices
 
+iot6_InteractBundle_availabledevices:
+    path:  /{_locale}/interact/availabledevices
+    controller: App\Controller\InteractController:availableDevices
+
 iot6_InteractBundle_userDevices:
     path:  /{_locale}/interact/userdevices
     controller: App\Controller\InteractController:userDevices
@@ -370,6 +374,12 @@ iot6_InteractBundle_privilegesAccredited:
 iot6_InteractBundle_setDeviceUserPrivileges:
     path:  /{_locale}/setDeviceUserPrivileges/{user}/{device}/{accessProfile}
     controller: App\Controller\InteractController:setDeviceUserPrivileges
+    options:
+        expose: true
+
+iot6_InteractBundle_setCityDevice:
+    path:  /{_locale}/setCityDevice/{deviceIdU}
+    controller: App\Controller\InteractController:setCityDevice
     options:
         expose: true
 

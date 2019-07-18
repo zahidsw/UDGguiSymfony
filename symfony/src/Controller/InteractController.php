@@ -17,6 +17,7 @@ use App\Entity\Gui\User;
 use App\Entity\Gui\CityDevice;
 use App\Entity\Gui\City;
 use App\Entity\Upv6\UserHasDevice;
+use App\Entity\Gui\Device;
 
 
 class InteractController extends AbstractController
@@ -92,6 +93,39 @@ class InteractController extends AbstractController
     public function devices()
     {
     	return $this->render('interact/devices.html.twig');
+    }
+
+    public function availableDevices()
+    {
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findAll();
+
+        $data['devices'] = $devices;
+
+    	return $this->render('interact/availabledevices.html.twig', $data);
+    }
+
+
+
+    public function setCityDevice(String $deviceIdU)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+					
+        $em_udg = $this->getDoctrine()->getManager("gui");
+		$udgDevice = new Device();
+		$udgCityDevice = new CityDevice();
+		$udgDevice->setUpv6DevicesId($deviceIdU);
+		$em_udg->persist($udgDevice);
+        $em_udg->flush();
+
+		$udgCityDevice->setCity($user->getCity());
+		$udgCityDevice->setDevice($udgDevice);
+
+        $em_udg->persist($udgCityDevice);
+        $em_udg->flush();
+        $response = new JsonResponse('Device added');
+        return $response;
     }
 
     public function userDevices()

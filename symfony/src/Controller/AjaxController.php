@@ -8,7 +8,7 @@ use App\Entity\Upv6\Devices;
 use App\Entity\Gui\Device;
 use App\Entity\Upv6\UserHasDevice;
 use App\Entity\Upv6\Modules;
-use iot6\ConfigBundle\Entity\WebserviceParam;
+use App\Entity\Gui\WebserviceParam;
 use iot6\InteractBundle\Form\Type\CardStateType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\DataCollectorTranslator;
@@ -139,7 +139,6 @@ class AjaxController extends AbstractController
 							$devicesArray[] = array('data' => $device->getAssignedName(),
 								'attr' => array('id' => $device->getId(), 'rel' => 'device'));
 						}
-						
 					}
 				}
 				 
@@ -446,8 +445,10 @@ class AjaxController extends AbstractController
 		
 		
 		// The user himself
-		//$user_id = $em_upv6->getRepository('App\Entity\Upv6\UsersMiddleware')->findOneBy(array('sessionId' => $session_id));
 		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		$userRole = $user->getRoles();
+		
 		$listUserDevices = $em_upv6->getRepository('App\Entity\Upv6\Devices')
 						->findDevicesByLocation($idBuilding, $idFloor, $idRoomyType, $idRoom, $idCategory, $idFamiliy);
 
@@ -455,9 +456,17 @@ class AjaxController extends AbstractController
 		$listDevices = array();
 		foreach($listUserDevices as $device)
 		{
-			// Check the link between the device and the user
-			$user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+			if(in_array("ROLE_ADMIN",$userRole))
+			{
+				// Check the link between the device and the user
+				$user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+				->findOneBy(array('deviceId' => $device->getId()));
+			} else 
+			{
+				$user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
 							->findOneBy(array('userId' => $user_id, 'deviceId' => $device->getId()));
+			}
+			
 			if($user_has_device == true)
 			{
 				$listDevices[] = $device;
@@ -703,9 +712,9 @@ class AjaxController extends AbstractController
 	/**************  Webservice Execute  ****************/
 	
 	// Execute Action (webservice)
-	public function execute()
+	public function execute(Request $request)
 	{
-		$request = $this->getRequest();
+		
 		$action_id = $request->get('action_id');
 		$devices_ids = $request->get('device_id_list');
 		$params_list = $request->get('params_list');
