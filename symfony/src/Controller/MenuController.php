@@ -107,22 +107,34 @@ private function getBackgroundColor()
 		$listeSubMenu = array(
 				array(	'name' => $translator->trans('subMenu.interact.iotNavigator'),
 						'href' => 'iot6_InteractBundle_iotNavigator'),
-				array(	'name' => $translator->trans('City Device Profiles'),// make accessible only to admin
-						'href' => 'iot6_InteractBundle_devices',
-						'privileges' => 'admin'),
-				array(	'name' => $translator->trans('Available Device'),// make accessible only to admin
-						'href' => 'iot6_InteractBundle_availabledevices',
-						'privileges' => 'admin'),
-				array(	'name' => $translator->trans('User Device Profiles'),// make accessible only to normal user
-						'href' => 'iot6_InteractBundle_userDevices'),
-                array(	'name' => 'Devices Privileges',
-						'href' => 'iot6_InteractBundle_privileges',
-						'privileges' => 'admin'),
 				array(	'name' => $translator->trans('subMenu.interact.mapList'),
 						'href' => 'iot6_InteractBundle_mapList'),
                 array(	'name' => $translator->trans('subMenu.interact.locationsList'),
-						'href' => 'iot6_location_list')
+						'href' => 'iot6_location_list'),
+				array(	'name' => $translator->trans('User Devices'),// make accessible only to normal user
+						'href' => 'iot6_InteractBundle_userDevices'),
 		);
+
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		
+		if(in_array( "ROLE_ADMIN",$user->getRoles()))
+		{
+			array_push($listeSubMenu, array('name' => $translator->trans('Available Device'),
+			'href' => 'iot6_InteractBundle_availabledevices',
+			'privileges' => 'admin'));
+
+			array_push($listeSubMenu, array('name' => $translator->trans('City Device Profiles'),
+			'href' => 'iot6_InteractBundle_devices',
+			'privileges' => 'admin'));
+
+			array_push($listeSubMenu,  array(	'name' => 'Devices Privileges',
+			'href' => 'iot6_InteractBundle_privileges',
+			'privileges' => 'admin'));
+		}
+
+
+
+
 	
 		$request = Request::createFromGlobals()->getRequestUri();
 	

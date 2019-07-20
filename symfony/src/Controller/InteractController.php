@@ -113,24 +113,89 @@ class InteractController extends AbstractController
 		$user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 					
         $em_udg = $this->getDoctrine()->getManager("gui");
-		$udgDevice = new Device();
-		$udgCityDevice = new CityDevice();
-		$udgDevice->setUpv6DevicesId($deviceIdU);
-		$em_udg->persist($udgDevice);
-        $em_udg->flush();
 
+        $em_gui = $this->getDoctrine()->getManager("gui");
+        $udgDevice = $em_gui->getRepository('App\Entity\Gui\Device')->findOneBy(['upv6DevicesId' => $deviceIdU]);
+
+        if(is_null($udgDevice))
+        {
+            $udgDevice = new Device();
+            $udgDevice->setUpv6DevicesId($deviceIdU);
+            $em_udg->persist($udgDevice);
+            $em_udg->flush();
+        }
+
+		$udgCityDevice = new CityDevice();
 		$udgCityDevice->setCity($user->getCity());
 		$udgCityDevice->setDevice($udgDevice);
 
         $em_udg->persist($udgCityDevice);
         $em_udg->flush();
-        $response = new JsonResponse('Device added');
+        $response = new JsonResponse('Device added!');
         return $response;
+    }
+
+    public function removeDeviceFromCity(String $deviceIdU)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+        $em_gui = $this->getDoctrine()->getManager("gui");
+        $device = $em_gui->getRepository('App\Entity\Gui\Device')->findOneBy(['upv6DevicesId' => $deviceIdU]);
+
+        $city = $user->getCity();
+        $cityDevices = $em_gui->getRepository('App\Entity\Gui\CityDevice')
+        ->findOneBy(['city' => $city->getId(), 'device'=> $device]);
+
+           
+
+        $cityUsers = $city->getUsers();
+
+        foreach($cityUsers as $cityuser)
+        {
+            $this->removeDeviceUserPrivileges($cityuser->getId(), $deviceIdU);
+        }
+
+
+        $em_gui->remove($cityDevices);
+        $em_gui->flush();  
+
+        $response = new JsonResponse('Device removed');
+        return $response;
+
+
+    }
+
+    public function removeDeviceUserPrivileges($userId, $deviceIdU)
+    {
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+            ->findOneBy(array('deviceId' => $deviceIdU, 'userId' => $userId ));
+
+        if(!is_null($user_has_device))
+        {
+            $em_upv6->remove($user_has_device);
+            $em_upv6->flush();
+        }
     }
 
     public function userDevices()
     {
-        return $this->render('interact/userdevices.html.twig');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user_id = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
+        $em_upv6 = $this->getDoctrine()->getManager("upv6");
+        $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+            ->findBy(array('userId' => $user_id ));
+
+        //dd($user_has_device);
+        $devices_list = [];
+        foreach($user_has_device as $device)
+        {
+            array_push($devices_list, $device->getDeviceId());
+        }
+        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $devices_list]);
+
+        $data['devices'] = $devices;
+        return $this->render('interact/userdevices.html.twig', $data);
     }
   	
     public function deviceShow(Request $request,Devices $device)
@@ -200,8 +265,6 @@ class InteractController extends AbstractController
         $data['users'] = $users;
         $data['device'] = $device;
 
-
-
         $em_upv6 = $this->getDoctrine()->getManager("upv6");
         $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
             ->findBy(array('deviceId' => $device->getId()));
@@ -240,10 +303,18 @@ class InteractController extends AbstractController
             $newUserHasDevice->setAccessProfile($accessProfile);
             $em_upv6->persist($newUserHasDevice);
             $em_upv6->flush();
-        } else {
-            $user_has_device->setAccessProfile($accessProfile);
-            $em_upv6->persist($user_has_device);
-            $em_upv6->flush();
+        } else 
+        {
+
+            if($accessProfile == "-1")
+            {
+                $em_upv6->remove($user_has_device);
+                $em_upv6->flush();
+            } else {
+                $user_has_device->setAccessProfile($accessProfile);
+                $em_upv6->persist($user_has_device);
+                $em_upv6->flush();
+            } 
         }
 
         $response = new JsonResponse('Privileges updated');
@@ -327,10 +398,33 @@ class InteractController extends AbstractController
             $cityDevices->setDevice($device);
         }
 
-        $cityDevices->setAccreditedAccessProfile($accessProfile);
-        $em_gui->persist($cityDevices);
-        $em_gui->flush();
-        
+        if($accessProfile == "-1")
+        {
+            $city = $em_gui->getRepository('App\Entity\Gui\City')->findOneBy(['id' => $citytocredit]);
+            $users = $city->getUsers();
+            $device = $em_gui->getRepository('App\Entity\Gui\Device')->findOneBy(['id' => $device]);
+          
+            foreach ($users as $user)
+            {
+                $em_upv6 = $this->getDoctrine()->getManager("upv6");
+                $user_has_device = $em_upv6->getRepository('App\Entity\Upv6\UserHasDevice')
+                ->findOneBy(array('deviceId' => $device->getUpv6DevicesId(),'userId' => $user->getId()));
+               
+                if(!is_null($user_has_device))
+                {
+                    $em_upv6->remove($user_has_device);
+                    $em_upv6->flush();
+                }
+            }
+            $em_gui->remove($cityDevices);
+            $em_gui->flush();
+        } else 
+        {
+            $cityDevices->setAccreditedAccessProfile($accessProfile);
+            $em_gui->persist($cityDevices);
+            $em_gui->flush();
+        }
+
 
          $response = new JsonResponse('Privileges updated');
 

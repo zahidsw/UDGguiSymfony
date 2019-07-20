@@ -6,117 +6,6 @@
 
 {% block head %}
 	{{ parent() }}
-	
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-	
-	<script src="{{ asset('assets/scripts/jquery.jstree.js') }}"></script>
-	<!-- <script src="{{ asset('scripts/jquery.cookie.js') }}"></script>  -->
-	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	
-
-	
-	<script>
-		var dlg;
-	
-		$(document).ready(function() {
-			var height = '{{ is_tablet() ? 500 : 500 }}';
-			var width = '{{ is_tablet() ? 420  : 750 }}';
-			dlg = $( "#dialog-form" );
-			dlg.dialog({
-				 autoOpen: false,
-				 height: height,
-				 width: width,
-				 modal: true,
-				 close: function() {
-					 $("#tree").jstree("deselect_all");
-					 $("#tree").jstree("refresh");
-					}
-				});
-		});
-
-		function loadPopUp(level, id) {
-			var route = null;
-			var title = "";
-			
-			if(level == 1) {
-				route = 'getCard';
-				title = '{{ 'msg.card'|trans }}';
-			}
-			else if(level == 2) {
-				route = 'getProtocol';
-				title = '{{ 'msg.protocol'|trans }}';
-			}
-			else if(level == 3) {
-				route = 'getDevice';
-				title = '{{ 'msg.device'|trans }}';
-			}
-			
-			var url = Routing.generate(route, { 'id': id, '_locale': '{{ app.request.locale }}' });
-			
-
-
-			$("#content").load(url, function() {
-				dlg.dialog("open");
-				dlg.dialog("option", "title", title);
-				}
-			);
-		}
-	</script>
-	
-	<script>
-		$(function () {
-			$("#tree").jstree({ 
-				"json_data" : {
-					"ajax" : {
-						"url" : "{{ path('getJsonTreeNormalUser') }}"
-					}
-				},
-				"themes" : {
-					"theme" : "classic"
-				},
-				"types" : {
-					"types" : {
-						"card" : {
-							"icon" : {
-								"image" : "{{ asset('assets/images/interface/icons/card.png') }}"
-							},
-							"select_node" : function() {}
-						},
-						"protocol" : {
-							"icon" : {
-								"image" : "{{ asset('assets/images/interface/icons/protocol.png') }}"
-							},
-							"select_node" : function() {}
-						},
-						"device" : {
-							"icon" : {
-								"image" : "{{ asset('assets/images/interface/icons/device.png') }}"
-							},
-							"select_node" : function() {}
-						},
-						"default" : {
-							"valid_children" : [ "default" ]
-						}
-					}
-				},
-				"plugins" : [ "themes", "json_data", "ui", "types" ]
-			})
-				.bind("select_node.jstree", function(event, data) {
-					var inst=data.inst;
-					var level=inst.get_path().length;
-				    var selected=inst.get_selected();
-				    var id=selected.attr('id');
-				    loadPopUp(level, id);
-				});
-			
-		});
-
-		//"cookies",
-
-	</script>
-	
-	
-	
 {% endblock %}
 
 {% block body %}
@@ -124,13 +13,26 @@
 	
 	<h1>{{ 'subMenu.interact.devicesProfile'|trans }}</h1>
 	
-	<div id="dialog-form">
-		<div id="content"></div>
-	</div>
-	
-	<br/><br/>
-	
-	<div id="tree"></div>
+	<br/>
+<br/>
+<br/>
+<div id="zebraTableDiv">
+    <table id="table" style="width:100%;">
+        <tr>
+            <th>{{ 'Name' }}</th>
+            <th>{{ 'Physical code' }}</th>
+            <th>{{ 'Description' }}</th>
+        </tr>
+
+        {% for device in devices %}
+            <tr>
+                <td>{{ device.assignedName }}</td>
+                <td>{{ device.physicalCode }}</td>
+                <td>{{ device.description }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 	
 	
 {% endblock %}
