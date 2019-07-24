@@ -748,6 +748,10 @@ iot6_ConfigBundle_AccessSecurity_Users:
     path:  /{_locale}/config/security/users
     controller: App\Controller\ConfigController:users
 
+iot6_ConfigBundle_AccessSecurity_UsersAdmin:
+    path:  /{_locale}/config/security/usersAdmin
+    controller: App\Controller\ConfigController:usersAdmin
+
 iot6_ConfigBundle_AccessSecurity_Users_ActDesact:
     path:  /{_locale}/security/users/actDesact/{id}
     controller: App\Controller\ConfigController:usersActDesact
@@ -757,6 +761,10 @@ iot6_ConfigBundle_AccessSecurity_Users_ActDesact:
 iot6_ConfigBundle_AccessSecurity_Users_Add:
     path:  /{_locale}/security/users/add
     controller: App\Controller\ConfigController:usersAdd
+
+iot6_ConfigBundle_AccessSecurity_UsersAdmin_Add:
+    path:  /{_locale}/security/usersAdmin/add
+    controller: App\Controller\ConfigController:usersAdminAdd
     
 iot6_ConfigBundle_AccessSecurity_Users_Edit:
     path:  /{_locale}/security/users/edit/{id}

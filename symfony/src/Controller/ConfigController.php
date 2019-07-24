@@ -39,6 +39,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\KeyRockAPI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Service\UserManagement;
 
 
 
@@ -51,13 +52,15 @@ class ConfigController extends AbstractController
 	private $translator;
 	private $encoderFactory;
 	private $keyRockAPI;
+	private $userManagement;
 	
 
-    public function __construct(DataCollectorTranslator $translator, EncoderFactory $encoderFactory,KeyRockAPI $keyRockAPI)
+    public function __construct(DataCollectorTranslator $translator, EncoderFactory $encoderFactory,KeyRockAPI $keyRockAPI, UserManagement $userManagement)
     {
 		$this->translator = $translator;
 		$this->encoderFactory = $encoderFactory;
 		$this->keyRockAPI = $keyRockAPI; 
+		$this->userManagement = $userManagement;
 	}
 
     public function config()
@@ -1229,6 +1232,19 @@ class ConfigController extends AbstractController
 		
 		return $this->render('config/users.html.twig', $data);
 	}
+
+	public function usersAdmin(Request $request)
+	{
+		//$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+		$user = $this->container->get('security.token_storage')->getToken()->getUser();
+		$em_gui = $this->getDoctrine()->getManager("gui");
+        $cityAdmins = $em_gui->getRepository('App\Entity\Gui\User')
+        ->findBy(['roles' => 'ROLE_USER,ROLE_ADMIN']);
+		
+		$data["users"] = $cityAdmins;
+		
+		return $this->render('config/usersAdmin.html.twig', $data);
+	}
 	
 	public function usersActDesact(User $user)
 	{
@@ -1280,7 +1296,41 @@ class ConfigController extends AbstractController
 		return $user;
 	}
 
-	public function usersAdd(Request $request)
+	public function usersAdminAdd(Request $request, \Swift_Mailer $mailer)
+	{
+		//$this->denyAccessUnlessGranted('SUPER_ADMIN');
+		if ($request->getMethod() == 'POST' && $request->get('send'))
+		{
+			$username	= $request->get('username');
+			$email		= $request->get('email');
+			$city 		= $request->get('city');
+
+		$userAdmin = $this->userManagement->addUser($email, $city);
+
+		$entityManager = $this->getDoctrine()->getManager("gui");
+            $userDb = $entityManager->getRepository(User::class)->findOneBy(['id' => $userAdmin['dbUser']['id']]);
+
+            if(!$userDb->isEnabled())
+            {
+                $userRegistrationToken = $this->userManagement->generateRegistrationToken();
+                $userDb->setRegistrationToken($userRegistrationToken);
+                $entityManager->persist($userDb);
+                $entityManager->flush();
+                $message = (new \Swift_Message('UDG: you got mail!'))
+					->setFrom('demo@mandint.org')
+                    ->setTo($email)
+                    ->setBody(
+                        $this->renderView('emails/registration.html.twig',['name' => $username ,'token'=>$userRegistrationToken]), 'text/html'
+                    );
+                $mailer->send($message);
+            }
+
+		}
+
+		return $this->render('config/usersAdminAdd.html.twig');
+	}
+
+	public function usersAdd(Request $request, \Swift_Mailer $mailer)
 	{
 		$this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -1303,60 +1353,13 @@ class ConfigController extends AbstractController
 		{
 			$username	= $request->get('username');
 			$email		= $request->get('email');
-			$isActive	= $request->get('isActive');
-			$pass 		= $request->get('pass');
-			$conf 		= $request->get('conf');
 			$roles 		= $request->get('roles');
 
-			
-
-			if($pass != $conf) {
-				$this->setMessage('ko', 'conf.ko.not_identical_pwd');
-				$referer = $request->headers->get('referer');
-				return $this->redirect($referer);
-			}
-
-
-			$this->keyRockAPI->setApplicationId($this->getParameter('keyrock.app.id'));	
-			//$user = $this->container->get('security.token_storage')->getToken()->getUser();
-			// ONLY if I am cityadminowner I can do this createtoken with admin user
 			try {
 
-				$keyrockUser = $this->userKeyRockExists($email);
-				if(!$keyrockUser)
-				{
-					//impersonate admin user in order to create a new user
-					$response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
-					$headers = $response->getHeaders();
-					$this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
-					// create the user in keyrock
-					$response = $this->keyRockAPI->registerUser($username,$email,$pass);
-					$newUser = (string)$response->getBody();
-					$newUser =json_decode($newUser,true);
-					$newUserKeyrockId = $newUser['user']['id'];
-				} else 
-				{
-					$newUserKeyrockId = $keyrockUser['id'];
-				}
-				
-				
-				// impersonate the logged user (city admin only allowed in this action)
 				$user = $this->container->get('security.token_storage')->getToken()->getUser();
 				$city = $user->getCity();
-				$this->keyRockAPI->setAuthToken($user->getSubjectToken());
-				$response = $this->keyRockAPI->getOrganizations();
-				$organizations = (string)$response->getBody();
-				$organizations =json_decode($organizations,true);
 				
-			
-				foreach($organizations['organizations'] as $organization)
-				{
-						if($organization['Organization']['name'] == $city->getName())
-						{
-							$organizationId = $organization['Organization']['id'];
-						}
-				}
-
 				$newUserRole = 'member';
 
 				foreach ($roles as $roleId) 
@@ -1368,35 +1371,25 @@ class ConfigController extends AbstractController
 					}
 				}
 
-				
-				$this->keyRockAPI->addUserToOrganization($newUserKeyrockId, $organizationId, $newUserRole);
+				$user = $this->userManagement->addUser($email, $city->getName(), $newUserRole);
 
+				$entityManager = $this->getDoctrine()->getManager("gui");
+            	$userDb = $entityManager->getRepository(User::class)->findOneBy(['id' => $user['dbUser']['id']]);
 
-				$userUdg = $this->userUdgGuiExists($email);
-				if(!$userUdg)
+				if(!$userDb->isEnabled())
 				{
-					// create the user in udg gui db
-					$entityManager = $this->getDoctrine()->getManager("gui");
-					$user = new User();
-					$user->setUserName($email);
-					$user->setEmail($email);
-					$user->setEnabled( (!is_null($isActive)) ? true : false );
-					$user->setKeyrockId($newUserKeyrockId);
-					$user->setCity($city);
-					$userRole = [];
-					foreach ($roles as $roleId) 
-					{
-						$role = $em_gui->getRepository('App\Entity\Gui\Role')->findOneById($roleId);
-						array_push($userRole,$role->getName());
-					}
-
-					
-					$user->addRole(implode(",",$userRole));
-	
-					$entityManager->persist($user);
+					$userRegistrationToken = $this->userManagement->generateRegistrationToken();
+					$userDb->setRegistrationToken($userRegistrationToken);
+					$entityManager->persist($userDb);
 					$entityManager->flush();
-
-				} 
+					$message = (new \Swift_Message('UDG: you got mail!'))
+						->setFrom('demo@mandint.org')
+						->setTo($email)
+						->setBody(
+							$this->renderView('emails/registration.html.twig',['name' => $username ,'token'=>$userRegistrationToken]), 'text/html'
+						);
+					$mailer->send($message);
+				}
 
 				$this->setMessage('ok', 'conf.ok.added_user');
 				return $this->redirect($this->generateUrl("iot6_ConfigBundle_AccessSecurity_Users"));
@@ -1537,36 +1530,7 @@ class ConfigController extends AbstractController
 		$this->denyAccessUnlessGranted('ROLE_ADMIN');
 
 		try {
-			// impersonate the logged user (city admin only allowed in this action)
-			$userLogged = $this->container->get('security.token_storage')->getToken()->getUser();
-			$city = $userLogged->getCity();
-			$this->keyRockAPI->setAuthToken($userLogged->getSubjectToken());
-
-			$response = $this->keyRockAPI->getOrganizations();
-			$organizations = (string)$response->getBody();
-			$organizations =json_decode($organizations,true);
-			
-			
-		
-			foreach($organizations['organizations'] as $organization)
-			{
-					if($organization['Organization']['name'] == $city->getName()){
-						$organizationId = $organization['Organization']['id'];
-					}
-			}
-
-			$roles = $user->getRoles();
-			$userToDeleteRole = 'member'; 
-
-			foreach ($roles as $role) 
-			{
-				if($role == "ROLE_ADMIN")
-				{
-					$userToDeleteRole = 'owner';
-				}
-			}
-
-			$response = $this->keyRockAPI->removeUserFromOrganization($user->getKeyrockId(),$organizationId,$userToDeleteRole);
+			$this->userManagement->deleteUserKeyRock($user->getKeyrockId());
 			$entityManager = $this->getDoctrine()->getManager("gui");
 			$entityManager->remove($user);
 			$entityManager->flush();

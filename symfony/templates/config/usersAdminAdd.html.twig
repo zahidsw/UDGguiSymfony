@@ -44,13 +44,13 @@
 	
 	<br/><br/>
 	
-	<h1>{{ 'conf.user_add'|trans }}</h1>
+	<h1>Add city admin</h1>
 	
 	<br/>
 	
 	{% include 'config/msg.html.twig' %}
 	
-	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Add' ) }}" }}>
+	<form method="post" id="form" action="{{ path('iot6_ConfigBundle_AccessSecurity_UsersAdmin_Add' ) }}" }}>
 		<table>
 			<tr>
 				<td>{{ 'conf.username'|trans }}</td>
@@ -60,42 +60,19 @@
 				<td>{{ 'conf.email'|trans }}:</td>
 				<td><input type="text" class="long" name="email" required="required"/></td>
 			</tr>
-		</table>
-		
-		<br/>
-		
-		<table>
 			<tr>
-				<td>{{ 'conf.roles_availables'|trans }}</td>
-				<td>&nbsp;</td>
-				<td>{{ 'conf.roles_selected'|trans }}</td>
-			</tr>
-			<tr>
-				<td>
-					<select id="source" multiple="" size="10" class="selectList">
-						{% for role in rolesSource %}
-							<option value="{{ role.id }}">{{ role.name }}</option>
-						{% endfor %}
-					</select>
-				</td>
-				<td>
-					<input id="ltr" type="button" value=">>" />
-					<br/>
-					<input id="rtl" type="button" value="<<" />
-				</td>
-				<td>
-					<select id="destination" name="roles[]" multiple="" size="10" class="selectList">
-						{% for role in rolesDestination %}
-							<option value="{{ role.id }}">{{ role.name }}</option>
-						{% endfor %}
-					</select>
-				</td>
+				<td>City:</td>
+				<td><input type="text" class="long" name="city" required="required"/></td>
 			</tr>
 		</table>
 		
 		<br/>
 		
-		<input type="submit" name="send" id="send" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_AccessSecurity_Users') }}'" />
+		
+		
+		<br/>
+		
+		<input type="submit" name="send" id="send" value="{{ 'conf.add'|trans }}" />&nbsp;<input type="button" value="{{ 'conf.cancel'|trans }}" onclick="window.location='{{ path('iot6_ConfigBundle_AccessSecurity_UsersAdmin') }}'" />
 	</form>
 	
 {% endblock %}

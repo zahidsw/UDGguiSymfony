@@ -25,7 +25,7 @@ class UserManagement extends AbstractController
     }
 
     // need to add parameter for user privileges
-    public function addUser(String $email, String $city): array
+    public function addUser(String $email, String $city, String $role = "owner"): array
     {
 
         $keyrockUser = $this->getKeyRockUser($email);
@@ -43,13 +43,13 @@ class UserManagement extends AbstractController
         }
 
 
-        $this->keyRockAPI->addUserToOrganization($keyrockUser['id'], $organization['id'], 'owner');
+        $this->keyRockAPI->addUserToOrganization($keyrockUser['id'], $organization['id'], $role);
 
         $dbUser = $this->getDbUser($email);
 
         if($dbUser == NULL)
         {
-            $dbUser = $this->userRegistrationDatabase($email, $keyrockUser['id']);
+            $dbUser = $this->userRegistrationDatabase($email, $keyrockUser['id'], $role);
             $dbUser->setEnabled(0);
         }
 
@@ -114,19 +114,14 @@ class UserManagement extends AbstractController
     // todo return type string (status code) and test
     public function deleteUserKeyRock($userId)
     {
-
         $response = $this->keyRockAPI->createToken($this->getParameter('keyrock.admin.user'),$this->getParameter('keyrock.admin.password'));
         $headers = $response->getHeaders();
         $this->keyRockAPI->setAuthToken($headers['X-Subject-Token'][0]);
 
         $response = $this->keyRockAPI->deleteUser($userId);
-        /*$newUser = (string)$response->getBody();
-        $newUser =json_decode($newUser,true);
-
-        return $newUser;*/
     }
 
-    public function userRegistrationDatabase(String $email, String $keyRockId): object
+    public function userRegistrationDatabase(String $email, String $keyRockId, String $role): object
     {
         $entityManager = $this->getDoctrine()->getManager("gui");
         $user = new User();
@@ -134,11 +129,14 @@ class UserManagement extends AbstractController
         $user->setEmail($email);
         $user->setEnabled(true);
         $userRole = ['ROLE_USER','ROLE_ADMIN'];
+        if($role == 'member')
+        {
+            $userRole = ['ROLE_USER'];
+        }
         $user->addRole(implode(",",$userRole));
         $user->setKeyrockId($keyRockId);
         $entityManager->persist($user);
         $entityManager->flush();
-
         return $user;
     }
 

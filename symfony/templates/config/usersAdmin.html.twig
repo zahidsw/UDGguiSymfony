@@ -1,0 +1,92 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+	{{ parent() }} - {{ 'subMenu.config.accessAndSecurity'|trans }} - {{ 'conf.subMenu.users'|trans }}
+{% endblock %}
+
+{% block head %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+	
+	<h1>{{ 'subMenu.config.accessAndSecurity'|trans }}</h1>
+	
+	<br/>
+	
+	{% include 'config/accessSecurityMenus.html.twig' %}
+	
+	<br/><br/>
+	
+	<h1>City Admins</h1>
+	
+	<br/>
+	
+	{% include 'config/msg.html.twig' %}
+	
+	<a class="subtitle2" href="{{ path('iot6_ConfigBundle_AccessSecurity_UsersAdmin_Add') }}">[Add admin]</a>
+	
+	<br/><br/>
+	
+	<div id="zebraTableDiv">
+		<table id="table" style="width:100%;">
+			<tr>
+				<th colspan="2"></th>
+				<th>{{ 'conf.username'|trans }}</th>
+				<th>City</th>
+			</tr>
+		
+			{% for user in users %}
+				<tr>
+				
+					{% if user.enabled %}
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_ActDesact', { 'id': user.id }) }}">
+								<img alt="{{ 'conf.deactivate'|trans }}" src="{{ asset('assets/images/interface/icons/actif.png') }}" />
+							</a>
+						</td>
+					{% else %}
+						<td style="width: 30px; text-align: center;">
+							<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_ActDesact', { 'id': user.id }) }}">
+								<img alt="{{ 'conf.activate'|trans }}" src="{{ asset('assets/images/interface/icons/inactif.png') }}" />
+							</a>
+						</td>
+					{% endif %}
+					
+					<td style="width:30px; text-align:center;">
+						<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Delete', { 'id': user.id }) }}">
+							<img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+								onclick="return(confirm('{{ 'conf.ask.delete_user'|trans }}'));" />
+						</a>
+					</td>
+					<td>
+						<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users_Edit', { 'id': user.id }) }}">
+							{{ user.username }}
+						</a>
+					</td>
+					<td>{{ user.city.name |capitalize}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		
+		<br/>
+		
+		{#
+		{%
+			render(controller("iot6PaginatorBundle:Paginator:paginator", {
+				'_locale': app.request.locale,
+				'nbItems': nbRooms,
+				'nbItemPerPage': nbProPage,
+				'route': route,
+				'nbPagesDisplayed': nbPageDisplayed,
+				'currentPage': page,
+				'arg': 'page'
+				}
+			)) 
+		%}
+	    #}
+	    
+	</div>
+	
+{% endblock %}
