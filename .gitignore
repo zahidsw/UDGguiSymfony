@@ -4,7 +4,8 @@
 /symfony/.env.local
 /symfony/.env.local.php
 /symfony/.env.*.local
-/symfony/public/bundles/
+/symfony/public/bundles/fosjsrouting
+/symfony/public/bundles/map/node_modules
 /symfony/var/
 /symfony/vendor/
 
@@ -30,4 +31,5 @@ symfony/src/Migrations/
 /symfony/tosca_file
 /symfony/config
 /symfony/symfony.lock
+
 

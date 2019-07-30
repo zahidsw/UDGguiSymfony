@@ -1,0 +1,9 @@
+map-component {
+    height:20vw;
+}
+
+icon-air-quality-cluster {
+    height:100px;
+    width:100px;
+    transform: translate(-50%,-100%);
+}

@@ -26,7 +26,7 @@ class NavigatorController extends AbstractController
 		$listFloors = $em_upv6->getRepository('App\Entity\Upv6\Floors')->findBy(array(), array('name' => 'ASC'));
 		$listRoomTypes = $em_upv6->getRepository('App\Entity\Upv6\RoomTypes')->findBy(array(), array('name' => 'ASC'));
 		$listRooms = $em_upv6->getRepository('App\Entity\Upv6\Rooms')->findBy(array(), array('name' => 'ASC'));
-		$listDevices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(array(), array('assignedName' => 'ASC'));
+		$listDevices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(array(), array('assignedName' => 'ASC'),25);
 		$listCategories = $em_upv6->getRepository('App\Entity\Upv6\Categories')->findBy(array(), array('internalName' => 'ASC'));
 		$listFamilies = $em_upv6->getRepository('App\Entity\Upv6\Families')->findBy(array(), array('internalName' => 'ASC'));
 		

@@ -1,6 +1,9 @@
 {% extends is_mobile() ? is_tablet() ? "smartBoard.html.twig" : "mobile.html.twig" : "layout.html.twig" %}
 
-
+{% block head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/map-component.css') }}" />
+{% endblock %}
  
 {% block body %}
 
@@ -20,8 +23,59 @@
 
 
 
-<script type="module" src="{{ asset('assets/bundles/map/node_modules/map-component/index.js') }}">
-</script>
+<script type="module" src="{{ asset('bundles/map/dist/map.min.js') }}"></script>
+
+<map-component style="height:450px" id="map-component" poweredby="google" api-key="AIzaSyB8HLaCfQOr5UOuDm_p6HotKa0Y8bWaO3Y" location='"latitude":46.220634,"longitude":6.147364'>
+
+<map-dom-overlay >
+
+	<!--<span latitude="46.220634" longitude="6.147364" >Text inside</span>
+	<icon-air-quality-cluster fill="red" stroke="black" tickvisible="false" alerts="test" latitude="46.220632" longitude="6.147362" ></icon-air-quality-cluster>
+	<img src="{{ asset('assets/images/site/iot6.png') }}"  latitude="46.220634" longitude="6.147364"  />-->
+
+	{% for device in devices %}
+
+
+		{% if device.category == null %}
+		
+		{% elseif device.category.internalName ==  "Temperature" %}
+
+			<span latitude="46.220634" longitude="6.147364" >25C
+				<icon-thermometer class="demo" percent="7" fill="#ceae9a"></icon-thermometer>
+			</span>
+		{% elseif device.category.internalName ==  "Sensors" %}
+
+			{% if device.description ==  "Carouge smart parking" %}
+				<span latitude="46.2095" longitude="6.13521"  >
+					<icon-park-with-text style="width:70px" class="demo" messagecolor="#e8fbae" message="tons of info about the parking!" ></icon-park-with-text>
+				</span>
+			{% endif %}OrbiWise noise sensor
+
+			{% if device.description ==  "OrbiWise noise sensor" %}
+				<span latitude="46.2095" longitude="6.13300"  >
+					<icon-custom-noise-icon-with-height style="width:70px"  class="demo" rodelength="0" fill="#f02e85" stroke="#851248" rodtext="text" text="55" strength="50" ></icon-custom-noise-icon-with-height>
+				</span>				
+			{% endif %}
+
+			{% if device.description ==  "Humidity" %}
+				<span latitude="46.2095" longitude="6.13100"  >
+					<icon-humidity style="width:70px" class="demo" fill="#1e3adf" stroke="#5f5fb7" percentage="12"></icon-humidity>
+				</span>				
+			{% endif %}
+
+
+		{% endif %}
+
+		
+		
+
+	{% endfor %}
+
+</map-dom-overlay>
+
+
+</map-component>
+
 
 
 

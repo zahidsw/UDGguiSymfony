@@ -32,13 +32,14 @@ class InteractController extends AbstractController
 
 	public function iotNavigator(Request $request)
     {
+
     	$em_upv6 = $this->getDoctrine()->getManager("upv6");
     	
     	// Posted Form
     	$postedButton = $request->request->get('searchBtn');
     	
     	if(!is_null($postedButton))
-    	{
+    	{dd('d');
     		$idBuilding = $request->request->get('buildings');
     		$building = $em_upv6->getRepository('App\Entity\Upv6\Buildings')->find($idBuilding);
     		
@@ -98,7 +99,7 @@ class InteractController extends AbstractController
     public function availableDevices()
     {
         $em_upv6 = $this->getDoctrine()->getManager("upv6");
-        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findAll();
+        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(array(), array(),55);
 
         $data['devices'] = $devices;
 

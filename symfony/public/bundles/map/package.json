@@ -1,0 +1,21 @@
+{
+  "name": "map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "SynchronicityParametricIcons": "git+ssh://git@gitlab.distantaccess.com:turien/SynchronicityParametricIcons.git",
+    "map-component": "git+ssh://git@gitlab.distantaccess.com:turien/map-component.git",
+    "map-dom-overlay": "git+ssh://git@gitlab.distantaccess.com:turien/map-dom-overlay.git"
+  },
+  "devDependencies": {
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  },
+  "author": "",
+  "license": "ISC"
+}

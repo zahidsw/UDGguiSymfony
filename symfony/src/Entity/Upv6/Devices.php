@@ -92,8 +92,8 @@ class Devices
     private $family;
     
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Upv6\Categories", inversedBy="devices")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Upv6\Categories", inversedBy="devices", fetch="EAGER")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category;
 
@@ -226,7 +226,7 @@ class Devices
     private $epcAddress;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Upv6\Variables", mappedBy="device")
+     * @ORM\OneToMany(targetEntity="App\Entity\Upv6\Variables", mappedBy="device", fetch="EAGER")
      **/
     private $variables;
 
