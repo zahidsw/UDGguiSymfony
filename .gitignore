@@ -5,7 +5,7 @@
 /symfony/.env.local.php
 /symfony/.env.*.local
 /symfony/public/bundles/fosjsrouting
-/symfony/public/bundles/map/node_modules
+#/symfony/public/bundles/map/node_modules
 /symfony/var/
 /symfony/vendor/
 
