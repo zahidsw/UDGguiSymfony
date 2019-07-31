@@ -32,6 +32,15 @@
 	<!--<span latitude="46.220634" longitude="6.147364" >Text inside</span>
 	<icon-air-quality-cluster fill="red" stroke="black" tickvisible="false" alerts="test" latitude="46.220632" longitude="6.147362" ></icon-air-quality-cluster>
 	<img src="{{ asset('assets/images/site/iot6.png') }}"  latitude="46.220634" longitude="6.147364"  />-->
+	<span latitude="46.194442" longitude="6.147831" >
+		<icon-bus-sign style="width:70px" class="demo" stopname="15" ></icon-bus-sign>
+	</span>
+	<span latitude="46.184553" longitude="6.070588" >
+		<icon-bus-sign style="width:70px" class="demo" stopname="9" ></icon-bus-sign>	
+	</span>
+
+
+
 
 	{% for device in devices %}
 
@@ -39,28 +48,71 @@
 		{% if device.category == null %}
 		
 		{% elseif device.category.internalName ==  "Temperature" %}
-
-			<span latitude="46.220634" longitude="6.147364" >25C
-				<icon-thermometer class="demo" percent="7" fill="#ceae9a"></icon-thermometer>
-			</span>
+			{% for variable in device.variables %}
+					{% if variable.name !=  "temperature"  %}
+        			{% elseif variable.name ==  "temperature" %}
+						<span latitude="{{device.latitude}}" longitude="{{device.longitude}}" >{{variable.stringValue}}C
+							<icon-thermometer class="demo" percent="{{variable.stringValue}}" fill="#ceae9a"></icon-thermometer>
+						</span>					
+					{% endif %}
+    			{% endfor %}		
+			
 		{% elseif device.category.internalName ==  "Sensors" %}
 
 			{% if device.description ==  "Carouge smart parking" %}
-				<span latitude="46.2095" longitude="6.13521"  >
-					<icon-park-with-text style="width:70px" class="demo" messagecolor="#e8fbae" message="tons of info about the parking!" ></icon-park-with-text>
-				</span>
-			{% endif %}OrbiWise noise sensor
+				{% for variable in device.variables %}
+					{% if variable.name !=  "parking_slot"  %}
+        			{% elseif variable.name ==  "parking_slot" %}
+						<span latitude="{{device.latitude}}" longitude="{{device.longitude}}"  >
+							<icon-park-with-text style="width:70px" class="demo" messagecolor="#e8fbae" message="{{variable.stringValue}} free slot" ></icon-park-with-text>
+						</span>
+					{% endif %}
+    			{% endfor %}
+				
+			{% endif %}
+
+			{% if device.description ==  "Frontenex smart parking" %}
+				{% for variable in device.variables %}
+					{% if variable.name !=  "parking_slot"  %}
+        			{% elseif variable.name ==  "parking_slot" %}
+						<span latitude="{{device.latitude}}" longitude="{{device.longitude}}"  >
+							<icon-park-with-counter style="width:70px"  class="demo" color="#4e6a67" free="{{variable.stringValue}}" totalslots="500" ></icon-park-with-counter>
+						</span>
+					{% endif %}
+    			{% endfor %}
+			{% endif %}
 
 			{% if device.description ==  "OrbiWise noise sensor" %}
-				<span latitude="46.2095" longitude="6.13300"  >
-					<icon-custom-noise-icon-with-height style="width:70px"  class="demo" rodelength="0" fill="#f02e85" stroke="#851248" rodtext="text" text="55" strength="50" ></icon-custom-noise-icon-with-height>
-				</span>				
+				{% for variable in device.variables %}
+					{% if variable.name !=  "soundLevelAverage"  %}
+        			{% elseif variable.name ==  "soundLevelAverage" %}
+						<span latitude="{{device.latitude}}" longitude="{{device.longitude}}"  >
+							<icon-custom-noise-icon-with-height style="width:70px" class="demo" rodelength="0" fill="#f02e85" stroke="#851248" rodtext="average" text="{{variable.stringValue}}" strength="{{variable.stringValue}}" ></icon-custom-noise-icon-with-height>						</span>	
+					{% endif %}
+    			{% endfor %}			
 			{% endif %}
 
 			{% if device.description ==  "Humidity" %}
-				<span latitude="46.2095" longitude="6.13100"  >
-					<icon-humidity style="width:70px" class="demo" fill="#1e3adf" stroke="#5f5fb7" percentage="12"></icon-humidity>
-				</span>				
+				{% for variable in device.variables %}
+					{% if variable.name !=  "humidity"  %}
+        			{% elseif variable.name ==  "humidity" %}
+						<span latitude="{{device.latitude}}" longitude="{{device.longitude}}"  >
+							<icon-humidity style="width:70px" class="demo" fill="#1e3adf" stroke="#5f5fb7" percentage="{{variable.stringValue}}"></icon-humidity>
+						</span>	
+					{% endif %}
+    			{% endfor %}
+			{% endif %}
+			
+			{% if device.description ==  "Car counter" %}
+				{% for variable in device.variables %}
+					{% if variable.name !=  "car_minute"  %}
+        			{% elseif variable.name ==  "car_minute" %}
+						<span latitude="{{device.latitude}}" longitude="{{device.longitude}}"  >
+							<icon-traffic-flow style="width:70px" class="demo" fill="#b95858" stroke="#c84126" carcount="{{variable.stringValue}}" qm_display="false" ></icon-traffic-flow>
+						</span>				
+					{% endif %}
+    			{% endfor %}
+				
 			{% endif %}
 
 
@@ -78,7 +130,32 @@
 
 
 
+<div id="zebraTableDiv">
+		<table id="table" style="width:100%;">
+			<tr>
+				<th>Id</th>
+				<th>{{ 'Name' }}</th>
+				<th>{{ 'Physical code' }}</th>
+				<th>{{ 'Description' }}</th>
+				<th>{{ 'Latitude' }}</th>
+				<th>{{ 'Longitude' }}</th>
+			</tr>
 
+			{% for device in devices %}
+				<tr>
+				<td>{{ device.id }}</td>
+					
+					
+					<td>{{ device.assignedName }}</td>
+					<td>{{ device.physicalCode }}</td>
+					<td>{{ device.description }}</td>
+					<td>{{ device.latitude }}</td>
+					<td>{{ device.longitude }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	</div>
+	
 
 
 

@@ -23,7 +23,7 @@ class MapController extends AbstractController
             array_push($devices_list, $device->getDeviceId());
         }
 		$devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $devices_list]);
-		
+		// dd($devices);
         $data['devices'] = $devices;
 		
     	return $this->render('map/map1.html.twig', $data);
