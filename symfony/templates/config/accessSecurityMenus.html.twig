@@ -3,7 +3,8 @@
     <a href="{{ path('iot6_ConfigBundle_AccessSecurity_Users') }}" class="subtitle2">[{{ 'conf.subMenu.users'|trans }}]</a>
 {% endif %}
 
-<a href="{{ path('iot6_ConfigBundle_AccessSecurity_Profil') }}" class="subtitle2">[{{ 'conf.subMenu.profil'|trans }}]</a>
+    <a href="{{ path('iot6_ConfigBundle_AccessSecurity_Profil') }}" class="subtitle2">[{{ 'conf.subMenu.profil'|trans }}]</a>
 
-<a href="{{ path('iot6_ConfigBundle_AccessSecurity_UsersAdmin') }}" class="subtitle2">[City admins]</a>
-
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+    <a href="{{ path('iot6_ConfigBundle_AccessSecurity_UsersAdmin') }}" class="subtitle2">[City admins]</a>
+{% endif %}

@@ -123,9 +123,9 @@ private function getBackgroundColor()
 			'href' => 'iot6_InteractBundle_availabledevices',
 			'privileges' => 'admin'));
 
-			array_push($listeSubMenu, array('name' => $translator->trans('City Device Profiles'),
-			'href' => 'iot6_InteractBundle_devices',
-			'privileges' => 'admin'));
+			// array_push($listeSubMenu, array('name' => $translator->trans('City Device Profiles'),
+			// 'href' => 'iot6_InteractBundle_devices',
+			// 'privileges' => 'admin'));
 
 			array_push($listeSubMenu,  array(	'name' => 'Devices Privileges',
 			'href' => 'iot6_InteractBundle_privileges',

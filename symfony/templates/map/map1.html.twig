@@ -1,4 +1,4 @@
-{% extends is_mobile() ? is_tablet() ? "smartBoard.html.twig" : "mobile.html.twig" : "layout.html.twig" %}
+{% extends "interact/layoutInteract.html.twig" %}
 
 {% block head %}
 	{{ parent() }}
@@ -6,7 +6,9 @@
 {% endblock %}
  
 {% block body %}
-
+{{ parent() }}
+	
+	
  
 
 <!--<iframe id="map" src="https://map.cityreport.org:9443#328a7c1c8e12efc1c49a9496c6d65f7f8119465d" name="map">You need a Frames Capable browser to view this content.</iframe>   

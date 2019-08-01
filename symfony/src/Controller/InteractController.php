@@ -39,7 +39,7 @@ class InteractController extends AbstractController
     	$postedButton = $request->request->get('searchBtn');
     	
     	if(!is_null($postedButton))
-    	{dd('d');
+    	{
     		$idBuilding = $request->request->get('buildings');
     		$building = $em_upv6->getRepository('App\Entity\Upv6\Buildings')->find($idBuilding);
     		
@@ -98,8 +98,25 @@ class InteractController extends AbstractController
 
     public function availableDevices()
     {
+        $devices_list = [];
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $city = $user->getCity();
+        $cityDevices = $city->getCityDevices();
+
+        foreach ($cityDevices as $cityDevice)
+        {
+            if($cityDevice->getAccreditedAccessProfile() != -1)
+            {
+                $device = $cityDevice->getDevice();
+                array_push($devices_list,$device->getUpv6DevicesId());
+            }
+            
+        }
+
         $em_upv6 = $this->getDoctrine()->getManager("upv6");
-        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(array(), array(),55);
+        $availableDevices = ['6','8','10','34','35','69'];
+        $result = array_diff($availableDevices, $devices_list);
+        $devices = $em_upv6->getRepository('App\Entity\Upv6\Devices')->findBy(['id' => $result]);
 
         $data['devices'] = $devices;
 

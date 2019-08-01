@@ -1235,7 +1235,7 @@ class ConfigController extends AbstractController
 
 	public function usersAdmin(Request $request)
 	{
-		//$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+		$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 		$user = $this->container->get('security.token_storage')->getToken()->getUser();
 		$em_gui = $this->getDoctrine()->getManager("gui");
         $cityAdmins = $em_gui->getRepository('App\Entity\Gui\User')
@@ -1298,7 +1298,7 @@ class ConfigController extends AbstractController
 
 	public function usersAdminAdd(Request $request, \Swift_Mailer $mailer)
 	{
-		//$this->denyAccessUnlessGranted('SUPER_ADMIN');
+		$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
 		if ($request->getMethod() == 'POST' && $request->get('send'))
 		{
 			$username	= $request->get('username');
@@ -1324,8 +1324,12 @@ class ConfigController extends AbstractController
                     );
                 $mailer->send($message);
             }
-
+			$this->setMessage('ok', 'Admin added');
+			$referer = $request->headers->get('referer');
+			return $this->redirect($referer);
 		}
+
+		
 
 		return $this->render('config/usersAdminAdd.html.twig');
 	}
