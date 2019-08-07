@@ -11,12 +11,12 @@ class ViewerController extends AbstractController
 {
     public function index()
     {
-        return $this->render('location/viewer/index.html.twig');
+        return $this->render('location/Viewer/index.html.twig');
     }
 	
 	public function viewer()
     {
-		return $this->render('location/viewer/viewer.html.twig');
+		return $this->render('location/Viewer/viewer.html.twig');
     }
 	
 	public function list()
@@ -31,7 +31,7 @@ class ViewerController extends AbstractController
 		$data["floors"] = $listFloors;
 		$data["locations"] = $listLocations;
 				
-		return $this->render('location/viewer/list.html.twig', $data);
+		return $this->render('location/Viewer/list.html.twig', $data);
     }
 	
 	public function getLocations() {
