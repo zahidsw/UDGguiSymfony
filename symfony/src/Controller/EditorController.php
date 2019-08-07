@@ -17,7 +17,7 @@ class EditorController extends AbstractController
 		$families_icon = $em_upv6->getRepository('App\Entity\Upv6\Families')->findAll();
 		$data["families_icon"] = $families_icon;
 		
-        return $this->render('location/editor/index.html.twig', $data);
+        return $this->render('location/Editor/index.html.twig', $data);
     }
 	
 	public function renameLocation(Request $request)
