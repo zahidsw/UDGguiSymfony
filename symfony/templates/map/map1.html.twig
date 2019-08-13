@@ -131,32 +131,6 @@
 </map-component>
 
 
-
-<div id="zebraTableDiv">
-		<table id="table" style="width:100%;">
-			<tr>
-				<th>Id</th>
-				<th>{{ 'Name' }}</th>
-				<th>{{ 'Physical code' }}</th>
-				<th>{{ 'Description' }}</th>
-				<th>{{ 'Latitude' }}</th>
-				<th>{{ 'Longitude' }}</th>
-			</tr>
-
-			{% for device in devices %}
-				<tr>
-				<td>{{ device.id }}</td>
-					
-					
-					<td>{{ device.assignedName }}</td>
-					<td>{{ device.physicalCode }}</td>
-					<td>{{ device.description }}</td>
-					<td>{{ device.latitude }}</td>
-					<td>{{ device.longitude }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-	</div>
 	
 
 
