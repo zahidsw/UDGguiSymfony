@@ -6,4 +6,4 @@ swiftmailer:
     #spool: { type: 'memory' }
 
     url: '%env(MAILER_URL)%'
-    delivery_addresses: ['smaglione@mandint.org']
+    #delivery_addresses: ['smaglione@mandint.org']
