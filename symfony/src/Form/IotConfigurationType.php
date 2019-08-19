@@ -11,6 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use \Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+
 
 
 class IotConfigurationType extends AbstractType {
@@ -30,7 +33,6 @@ class IotConfigurationType extends AbstractType {
 				'help' => 'Temperature threshold value in (℃)',
 				'required' => false,
 			] )
-
 			->add( 'emergencySliceName', ChoiceType::class,[
 				'help' => 'Choose Trigger action',
 				'placeholder' => 'Choose Slice type',
@@ -39,13 +41,11 @@ class IotConfigurationType extends AbstractType {
 					'SMS alert' => 'sms',
 					'Email alert' => 'email',
 				],
-
 			])
 			->add( 'cameraIP', TextType::class ,[
 				'help' => 'Camera Port Number',
 				'required' => false,
 				'attr'=> array('readonly' => true)
-
 			])
 			->add( 'cameraPort', TextType::class ,[
 				'help' => 'Camera Port Number',
@@ -53,7 +53,6 @@ class IotConfigurationType extends AbstractType {
 				'attr'=> array('readonly' => true)
 
 			])
-
 			->add( 'cameraUser', TextType::class ,[
 				'help' => 'Camera User Name',
 				'required' => false,
@@ -69,14 +68,17 @@ class IotConfigurationType extends AbstractType {
 				'required' => false,
 				'attr'=> array('readonly' => true)
 			])
-
 			->add( 'maxBandwidth', TextType::class ,[
 				'help' => 'Maximum bandwidth (bits/s)',
 				'required' => false,
 				'attr'=> array('readonly' => true)
 			])
-		->add( 'slicemanager', EntityType::class, [// drop down multiple selection
+
+		->add( 'slicemanager', EntityType::class, [
 			'class'        => Slicemanager::class,
+			'choice_value' => function (Slicemanager $entity = null) {
+				return $entity ? $entity->getId() : '';
+			},
 			'choice_label' => function ( Slicemanager $slicemanager ) {
 				return sprintf( $slicemanager->getSlicename());
 			},

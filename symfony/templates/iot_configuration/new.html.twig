@@ -43,15 +43,18 @@
             {{ include('iot_configuration/_form.html.twig') }}
             {{ form_rest(form) }}
             <br/>
-            <input type="submit" title="add a new configuration" value="{{ 'Add'|trans }}"/>
+            <input type="submit" class="videoslice" title="add a new configuration" value="{{ 'Add'|trans }}"/>
 
-            <a href="{{ path('iot_configuration') }}" class="btn btn-sm btn-default">
+            <a href="{{ path('iot_configuration') }}" class="btn btn-sm btn-default videoslice">
                 <i class="fa fa-eye" aria-hidden="true"></i>
                 <input type="button" title="back to configuration list" value="{{ 'Cancel'|trans }}"/>
             </a>
             {{ form_end(form) }}
             <div id="div_humidity" class="blocLeft">
                 <p><span><h1>This section is still under construction</h1></span></p>
+            </div>
+            <div id="smsslice" class="blocLeft">
+                <p><span><h1>This slice type still under construction</h1></span></p>
             </div>
 
         </div>
