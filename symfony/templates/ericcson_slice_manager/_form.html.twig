@@ -1,0 +1,88 @@
+<table>
+
+     <tr>
+        <td>{{ form_label(form.slicename, 'Slice Name'|trans) }}</td>
+        <td>{{ form_widget(
+                form.slicename,
+                (slice.slicename is null ? {'attr': {'value':'IoT_slice'} } : {}))
+            }}
+        </td>
+         <td>
+             <small>{{ form_help(form.slicename) }}</small>
+         </td>
+        <td>{{ form_errors(form.slicename) }}</td>
+         <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                                src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+             <span class="popuptext">{{ form_help(form.slicename) }}</span>
+         </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.slicedescription, 'Slice Description'|trans) }}</td>
+        <td>{{ form_widget(
+                form.slicedescription,
+                (slice.slicedescription is null ? {'attr': {'value':'Mandat International / Device Gateway'} } : {}))
+            }}
+        </td>
+        <td>
+            <small>{{ form_help(form.slicedescription) }}</small>
+        </td>
+        <td>{{ form_errors(form.slicedescription) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.slicedescription) }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.slcieprovider, 'Slice Provider'|trans) }}</td>
+        <td>{{ form_widget(
+                form.slcieprovider,
+                (slice.slcieprovider is null ? {'attr': {'value':'DeviceGateway'} } : {}))
+            }}
+        </td>
+        <td>
+            <small>{{ form_help(form.slcieprovider) }}</small>
+        </td>
+        <td>{{ form_errors(form.slcieprovider) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.slcieprovider) }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td>{{ form_label(form.flavourkeys, 'Slice flavour'|trans) }}</td>
+        <td>{{ form_widget(form.flavourkeys) }}</td>
+        <td>
+            <small>{{ form_help(form.flavourkeys) }}</small>
+        </td>
+        <td>{{ form_errors(form.flavourkeys) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.flavourkeys) }}</span>
+        </td>
+        <td>  <a href="{{ path('slicecreateflavour', {backId:'ericsson'}) }}" class="btn btn-link">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <input type="button" title="Available flavour for slice creation" value="{{ 'add Flavour type'|trans }}"/>
+            </a>
+        </td>
+
+    </tr>
+    <tr>
+        <td>{{ form_label(form.virtuallink, 'add network name'|trans) }}</td>
+        <td>{{ form_widget(form.virtuallink) }}</td>
+        <td>
+            <small>{{ form_help(form.virtuallink) }}</small>
+        </td>
+        <td>{{ form_errors(form.virtuallink) }}</td>
+        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+            <span class="popuptext">{{ form_help(form.virtuallink) }}</span>
+        </td>
+        <td>  <a href="{{ path('slicecreatenetworks', {backId:'ericsson'})}}" class="btn btn-link">
+                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                <input type="button" title="Available virtual network for communication" value="{{ 'add Network type'|trans }}"/>
+            </a>
+        </td>
+    </tr>
+
+</table>

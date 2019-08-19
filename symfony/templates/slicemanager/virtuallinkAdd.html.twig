@@ -27,7 +27,7 @@
     <br/>
     <br/>
     <br/>
-
+    {{ dump() }}
     <div class="leftColumn">
 
         <div class="blocLeft">
@@ -50,12 +50,17 @@
             {{ form_rest(form) }}
             <br/>
             <input type="submit" value="{{ 'Add'|trans }}"/>
-
-            <a href="{{ path('slice_new') }}" class="btn btn-link">
-                <i class="fa fa-list-alt" aria-hidden="true"></i>
-                <input type="button" value="{{ 'Back to Slice Form'|trans }}"/>
-            </a>
-
+            {% if backId == 'ericsson' %}
+                <a href="{{ path('ericsson_slice_new') }}" class="btn btn-link">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                    <input type="button" value="{{ 'Back to Slice Form'|trans }}"/>
+                </a>
+            {% else %}
+                <a href="{{ path('slice_new') }}" class="btn btn-link">
+                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                    <input type="button" value="{{ 'Back to slice Form'|trans }}"/>
+                </a>
+            {% endif %}
             {{ form_end(form) }}
 
         </div>

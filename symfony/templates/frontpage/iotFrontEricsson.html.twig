@@ -21,43 +21,22 @@
 <br/>
 <br/>
 
-
 <div class="scenarios">
-
-	<a href="{{ path('pop_list')}}">
-		<div>
-			<img src="{{ asset('/assets/images/front/virtual.png') }}">
-				<br>
-				<span>POP Management</span>
-			</div>
-	</a>
-
-		<div>
-			<img src="{{ asset('/assets/images/front/arrow.png') }}">
-			<br>
-		</div>
-
-	<a href="{{ path('slice_list')}}">
+	<a href="{{ path('ericsson_slice_list')}}">
 		<div>
 			<img src="{{ asset('assets/images/front/camera.png') }}">
 				<br>
-				<span>Slice Management</span>
+				<span>Ericsson Slice Management</span>
 			</div>
 	</a>
-	<div>
-		<img src="{{ asset('/assets/images/front/arrow.png') }}">
-		<br>
-	</div>
-	<a href="{{ path('iot_configuration')}}">
+	<a href="{{ path('iot_configuration_ericsson')}}">
 		<div>
 			<img src="{{ asset('/assets/images/front/design.png') }}">
 				<br>
-				<span>Application Configuration</span>
+				<span>Ericsson Application Configuration</span>
 			</div>
 	</a>
+					
 </div>
-	<br>
-
-		<b><span><h1>Networks Slices creation and configuration</h1></span></b>
-
+    
 {% endblock %}

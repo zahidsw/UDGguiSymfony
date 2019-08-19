@@ -1,1 +1,2 @@
-{"name":"dqw","authUrl":"dqw","tenant":"dwq","username":"dwq","password":"dqw","keyPair":"dqw","securityGroups":["Default"],"type":"openstack","location":{"name":"dqw","latitude":"dwq","longitude":"dwq"}}
+{"name":"client8","authUrl":"http:\/\/10.10.0.10:5000\/v3","tenant":"cf133311bf2846f89e3832c8307a547a","username":"admin","password":"65S8xLcC57","keyPair":"mhazan","securityGroups":["default","ICMP campus","ssh-campus","ssh-fc00","udg_network"],"type":"openstack","location":{"name":"Aarhus","latitude":"56.162939","longitude":"10.203921"}}
+

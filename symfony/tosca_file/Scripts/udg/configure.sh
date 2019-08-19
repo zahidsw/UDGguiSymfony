@@ -1,11 +1,10 @@
 #!/bin/bash
-export DEBIAN_FRONTEND=noninteractive
 
 getIP ()
 {
   echo "Getting info from spawned instance"
   ipv4_address=$(ip -o addr list ens3 | awk '{print $4}' | cut -d/ -f1 | head -1)
-  ipv6_address=$(ip -o addr list ens3 | awk '{print $4}' | cut -d/ -f1 | tail -1)
+  ipv6_address='' #$(ip -o addr list ens3 | awk '{print $4}' | cut -d/ -f1 | tail -1)
   mac_address=$(cat /sys/class/net/ens3/address)
 }
 
@@ -40,8 +39,8 @@ setupDB ()
 # CASE 2: entries already there and we just want to update them
   echo "UPDATE config_settings SET value='$ipv4_address' where config_set_id=$config_set_id and name='ipv4_udg';" | mysql -u root -proot upv6
   echo "UPDATE config_settings SET value='$ipv6_address' where config_set_id=$config_set_id and name='ipv6_udg';" | mysql -u root -proot upv6
-  echo "UPDATE config_settings SET value='$ipv4_parent_udg' where config_set_id=$config_set_id and name='ipv4_parent_address';" | mysql -u root -proot upv6
-  echo "UPDATE config_settings SET value='$ipv6_parent_udg' where config_set_id=$config_set_id and name='ipv6_parent_address';" | mysql -u root -proot upv6
+  echo "UPDATE config_settings SET value='$ipv4_parent_address' where config_set_id=$config_set_id and name='ipv4_parent_udg';" | mysql -u root -proot upv6
+  echo "UPDATE config_settings SET value='$ipv6_parent_address' where config_set_id=$config_set_id and name='ipv6_parent_udg';" | mysql -u root -proot upv6
   echo "UPDATE config_settings SET value='$server_name' where config_set_id=$config_set_id and name='short_server_name';" | mysql -u root -proot upv6
   echo "UPDATE config_settings SET value='$server_name' where config_set_id=$config_set_id and name='long_server_name';" | mysql -u root -proot upv6
   echo "UPDATE config_settings SET value='$mac_address' where config_set_id=$config_set_id and name='mac_address';" | mysql -u root -proot upv6
@@ -113,6 +112,7 @@ done
 # cms_id="UDGaaF_cms_id"
 # ipv4_parent_address="172.16.100.97"
 # ipv6_parent_address="fe80::f816:3eff:fe1a:fe63"
+
 
 echo "Starting to update DB fields using current environment info.. "
 getIP

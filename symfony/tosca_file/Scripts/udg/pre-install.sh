@@ -1,7 +1,4 @@
 #!/bin/bash
 
-export DEBIAN_FRONTEND=noninteractive
+echo "running VNF PRE-INSTALL step"
 
-su - ubuntu && cd $HOME
-
-echo "no pre-install actions.."

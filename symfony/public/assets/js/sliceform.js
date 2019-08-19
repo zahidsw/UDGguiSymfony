@@ -161,6 +161,32 @@ $(document).ready(function () {
         }
 
     });
+
+    //------- end ---------------------
+    $(".iotslicedelete").click(function () {
+        var path = $(this).attr("path");
+        var value = $(this).attr("value");
+        $(".hidden").show();
+        $.ajax({
+            url: path,
+            type: 'POST',
+            data: {slice: value},
+            dataType: 'json',
+            async: true,
+            success: function (data, status) {
+                $('.outputtext').slideToggle('slow', function () {
+                    $(this).text(data);
+                });
+                $(".hidden").hide();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                $('.outputtext').slideToggle('slow', function () {
+                 });
+                $(".hidden").hide();
+            }
+        });
+    });
+
     var input;
     $("tbody p").each(function () {
         var inputId = $(this).attr("id");
@@ -171,6 +197,5 @@ $(document).ready(function () {
         $(".hidden").show();
         //  $(".hidden").hidden();
     });
-
 
 });

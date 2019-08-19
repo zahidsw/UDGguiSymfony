@@ -1,7 +1,10 @@
 <table>
     <tr>
         <td>{{ form_label(form.targetTempSensName, 'Temparature Sensor Name'|trans) }}</td>
-        <td>{{ form_widget(form.targetTempSensName) }}</td>
+        <td>{{ form_widget(
+                form.targetTempSensName,
+                (slice.targetTempSensName is null ? {'attr': {'value':'CoAP Sensor #4'} } : {}))
+            }}</td>
         <td>
             <small>{{ form_help(form.targetTempSensName) }}</small>
         </td>
@@ -14,7 +17,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.targetTempSensURL, 'Temparature Sensor URL'|trans) }}</td>
-        <td>{{ form_widget(form.targetTempSensURL) }}</td>
+        <td>{{ form_widget(
+                form.targetTempSensURL,
+                (slice.targetTempSensURL is null ? {'attr': {'value':'coap://[2001:41e0:6002:1800:0:0:0:4]:61616/temp'} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.targetTempSensURL, {'attr': {'style.display':none } }) }}</small>
         </td>
@@ -27,7 +33,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.tempThreshold, 'Threshold Value'|trans) }}</td>
-        <td>{{ form_widget(form.tempThreshold) }}</td>
+        <td>{{ form_widget(
+                form.tempThreshold,
+                (slice.tempThreshold is null ? {'attr': {'value':'40'} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.tempThreshold) }}</small>
         </td>
@@ -40,8 +49,11 @@
     </tr>
 
     <tr>
-        <td>{{ form_label(form.emergencySliceName, 'Emergency Slice Name'|trans) }}</td>
-        <td>{{ form_widget(form.emergencySliceName) }}</td>
+        <td>{{ form_label(form.emergencySliceName, 'Trigger action'|trans) }}</td>
+        <td>{{ form_widget(
+                form.emergencySliceName,
+                (slice.emergencySliceName is null ? {'attr': {'value':'select'} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.emergencySliceName) }}</small>
         </td>
@@ -50,25 +62,29 @@
                                src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
             <span class="popuptext">{{ form_help(form.emergencySliceName) }}</span>
         </td>
-
     </tr>
     <tr>
-        <td>{{ form_label(form.cameraIP, 'Camera IP'|trans) }}</td>
-        <td>{{ form_widget(form.cameraIP) }}</td>
-        <td>
-            <small>{{ form_help(form.cameraIP) }}</small>
-        </td>
-        <td>{{ form_errors(form.cameraIP) }}</td>
-        <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
-                               src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
-            <span class="popuptext">{{ form_help(form.cameraIP) }}</span>
-        </td>
-
-
+            <td>{{ form_label(form.cameraIP, 'Camera IP'|trans) }}</td>
+            <td>{{ form_widget(
+                    form.cameraIP,
+                    (slice.cameraIP is null ? {'attr': {'value':''} } : {})
+                )}}</td>
+            <td>
+                <small>{{ form_help(form.cameraIP) }}</small>
+            </td>
+            <td>{{ form_errors(form.cameraIP) }}</td>
+            <td class="popup"><img class="slice_input_suggestion" alt="{{ 'msg.interact'|trans }}"
+                                   src="{{ asset('/assets/images/front/confirmation_.png') }}"/>
+                <span class="popuptext">{{ form_help(form.cameraIP) }}</span>
+            </td>
     </tr>
+    </div>
     <tr>
         <td>{{ form_label(form.cameraPort, 'camera Port') }}</td>
-        <td>{{ form_widget(form.cameraPort) }}</td>
+        <td>{{ form_widget(
+                form.cameraPort,
+                (slice.cameraPort is null ? {'attr': {'value':''} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.cameraPort) }}</small>
         </td>
@@ -81,7 +97,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.cameraUser, 'User') }}</td>
-        <td>{{ form_widget(form.cameraUser) }}</td>
+        <td>{{ form_widget(
+                form.cameraUser,
+                (slice.cameraUser is null ? {'attr': {'value':''} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.cameraUser) }}</small>
         </td>
@@ -94,7 +113,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.cameraPassword, 'Password') }}</td>
-        <td>{{ form_widget(form.cameraPassword) }}</td>
+        <td>{{ form_widget(
+                form.cameraPassword,
+                (slice.cameraPassword is null ? {'attr': {'value':''} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.cameraPassword) }}</small>
         </td>
@@ -107,7 +129,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.minimumBandwidth, 'Minimum Bandwidth') }}</td>
-        <td>{{ form_widget(form.minimumBandwidth) }}</td>
+        <td>{{ form_widget(
+                form.minimumBandwidth,
+                (slice.minimumBandwidth is null ? {'attr': {'value':''} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.minimumBandwidth) }}</small>
         </td>
@@ -120,7 +145,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.maxBandwidth, 'Maximum Bandwidth') }}</td>
-        <td>{{ form_widget(form.maxBandwidth) }}</td>
+        <td>{{ form_widget(
+                form.maxBandwidth,
+                (slice.maxBandwidth is null ? {'attr': {'value':''} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.maxBandwidth) }}</small>
         </td>
@@ -132,7 +160,10 @@
     </tr>
     <tr>
         <td>{{ form_label(form.slicemanager, 'Choose Slices') }}</td>
-        <td>{{ form_widget(form.slicemanager) }}</td>
+        <td>{{ form_widget(
+                form.slicemanager,
+                (slice.slicemanager is null ? {'attr': {'value':'client6'} } : {})
+            ) }}</td>
         <td>
             <small>{{ form_help(form.slicemanager) }}</small>
         </td>

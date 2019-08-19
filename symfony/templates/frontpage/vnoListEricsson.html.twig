@@ -1,0 +1,112 @@
+{% extends "config/layoutConfig.html.twig" %}
+
+{% block title %}
+    add value
+{% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+    <div id="submenu">
+        <a abc="/" class="selected" href="/">Services</a>
+        |
+        <a abc="/en/front/discussion/serviceSubscription" class="selected"
+           href="/en/front/discussion/serviceSubscription">Discussion</a>
+
+        |
+
+        <a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="lds-hourglass ajax_loader hidden"><i class="fa fa-spinner fa-spin"></i></div>
+    <div class="leftColumn">
+        <div class="blocLeft">
+            <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
+            <a href="http://udg.cityreport.org"
+               class="title indent"><strong> {{ 'IoT Pop List'|trans }}</strong></a>
+        </div>
+
+        <div id="zebraTableDiv">
+            <table style="width:100%">
+                <thead>
+                <tr>
+                    <th scope="col">{{ 'Name' }}</th>
+                    <th scope="col">{{ 'Auth'|trans }}</th>
+                    <th scope="col">{{ 'Tenant'|trans }}</th>
+                    <th scope="col">{{ 'UserName'|trans }}</th>
+                    <th scope="col">{{ 'Type'|trans }}</th>
+                    <th scope="col">{{ 'keyPair'|trans }}</th>
+                    <th colspan="4" scope="col" class="text-center">{{ 'Actions'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pop in pops %}
+                    <tr>
+                        <td>{{ pop.name }}</td>
+                        <td>{{ pop.auth }}</td>
+                        <td>{{ pop.tenant }}</td>
+                        <td>{{ pop.username }}</td>
+                        <td>{{ pop.type }}</td>
+                        <td>{{ pop.keypair }}</td>
+                        <td style="width:30px; text-align:center;">
+                            {% if pop.status == false %}
+                                <div path="{{ path('pop_register', {id: pop.id}) }}"  value="{{pop.id}}" class="iotpop">
+                                    <img src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                                </div>
+                            {% else %}
+                                <img src="{{ asset('assets/images/interface/icons/updated.png') }}"/>
+                            {% endif %}
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('pop_show', {id: pop.id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-eye" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/show.png') }}"/>
+                            </a>
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('vnoedit', {id: pop.id}) }}" class="btn btn-sm btn-primary">
+                                <i class="fa fa-edit" aria-hidden="true"></i> <img
+                                        src="{{ asset('assets/images/interface/icons/edit.png') }}"/>
+                            </a>
+                        </td>
+                        <td style="width:30px; text-align:center;">
+                            <a href="{{ path('vnodelete', { 'id': pop.id }) }}">
+                                <img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+                                     onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"/>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" align="center">{{ 'pop.no_pops_found'|trans }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <br/>
+        </div>
+    </div>
+    <div class="section actions">
+        <a href="{{ path('vnocreate') }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Pop'|trans }}"/>
+        </a>
+        <a href="{{ path('iot_list') }}" class="btn btn-sm btn-default">
+            <i class="fa fa-eye" aria-hidden="true"></i>
+            <input type="button" value="{{ 'Cancel'|trans }}"/>
+        </a>
+        <div class="outputtext box">
+        </div>
+    </div>
+
+    <div class="blocRight">
+        {# read and display just one flash message type #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

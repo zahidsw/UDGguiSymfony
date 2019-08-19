@@ -1,7 +1,4 @@
 #!/bin/bash
 
-export DEBIAN_FRONTEND=noninteractive
+echo "running VNF TEST step"
 
-su - ubuntu && cd $HOME
-
-echo "Test echo :)"

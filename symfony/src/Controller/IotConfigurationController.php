@@ -92,8 +92,9 @@ class IotConfigurationController extends AbstractController {
 	 */
 	public function register(Request $request, IotConfiguration $iot_configuration): Response
 	{
-		$ar = Yaml::parseFile("../tosca_file/Definitions/IoT_slice.yaml");
+		$iot_configuration->getSlicemanager()->getSliceid();
 
+		$ar = Yaml::parseFile("../tosca_file/Definitions/IoT_slice.yaml");
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][6]['target_temp_Sens_name']= $iot_configuration->getTargetTempSensName();
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][7]['target_temp_sens_URL']= $iot_configuration->getTargetTempSensURL();
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][8]['temp_threshold']= $iot_configuration->getTempThreshold();
@@ -105,6 +106,9 @@ class IotConfigurationController extends AbstractController {
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][14]['max_bandwidth']= $iot_configuration->getMaxBandwidth();
 		$iot_configuration->setStatus(1);
 		var_dump($ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters']);
+
+
+
 		$yaml = Yaml::dump($ar);
 
 		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);

@@ -1,10 +1,10 @@
-name: IoT_slice
+
+name: IoT_slice_test
 image:
     upload: false
-    names:
-        - udg_image_20190619 # dl380 openstack
-        #- Ubuntu_16.04 # dl380 openstack
-        #- Ubuntu-16.04 # mobile openstack
+    names: [udg_image_20190816]
 vim_types:
     - openstack
+description: 'Mandat International / Device Gateway'
+provider: DeviceGateway
 

@@ -1,14 +1,15 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Gui\Flavourkeys;
 use App\Entity\Gui\Slicemanager;
+use App\Entity\Gui\SliceManagerEricsson;
 use App\Entity\Gui\Virtuallink;
+use App\Form\EricssonSlicemanagerType;
 use App\Form\FlavourkeysType;
 use App\Form\SlicemanagerType;
 use App\Form\VirtuallinkType;
-use App\Repository\Gui\SlicemanagerRepository;
+use App\Repository\Gui\SliceManagerEricssonRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Process\Process;
@@ -19,11 +20,10 @@ use Symfony\Component\Yaml\Yaml;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Process\InputStream;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
-class SlicemanagerController extends AbstractController {
+class EriccsonSliceManagerController extends AbstractController
+{
 	private $logger;
 	private $translator;
 
@@ -31,34 +31,34 @@ class SlicemanagerController extends AbstractController {
 		$this->logger     = $logger;
 		$this->translator = $translator;
 	}
-
 	/**
-	 * @Route("/{_locale}/slicemanager", name="slice_list")
+	 * @Route("/{_locale}/ericssonslicemanager", name="ericsson_slice_list")
 	 */
-	public function index( SlicemanagerRepository $slices ): Response {
-
+	public function index(SliceManagerEricssonRepository $slices): Response
+	{
 		$slices = $slices->findAll();
-
-		return $this->render( 'slicemanager/index.html.twig', [ 'slices' => $slices ] );
+		return $this->render('ericcson_slice_manager/index.html.twig', ['slices' => $slices]);
 	}
 
 	/**
 	 * Creates a new slice entity.
 	 *
-	 * @Route("/{_locale}/new", methods={"GET", "POST"}, name="slice_new")
+	 * @Route("/{_locale}/ericssonnew", methods={"GET", "POST"}, name="ericsson_slice_new")
 	 *
 	 * NOTE: the Method annotation is optional, but it's a recommended practice
 	 * to constraint the HTTP methods each controller responds to (by default
 	 * it responds to all methods).
 	 */
-	public function new( Request $request ): Response {
-		$slice = new Slicemanager();
-		$form  = $this->createForm( SlicemanagerType::class, $slice );
+
+	public function new(Request $request): Response
+	{
+		$slice = new SliceManagerEricsson();
+		$form = $this->createForm( EricssonSlicemanagerType::class, $slice );
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
-			$slice->setStatus( 0 );
-			$slice->setSliceid( "null" );
+			$slice->setStatus(0);
+			$slice->setSliceid("null");
 			$em = $this->getDoctrine()->getManager();
 			$em->persist( $slice );
 			$em->flush();
@@ -69,176 +69,170 @@ class SlicemanagerController extends AbstractController {
 			// See https://symfony.com/doc/current/book/controller.html#flash-messages
 			$this->addFlash( 'success', 'slice created_successfully' );
 
-			return $this->redirectToRoute( 'slice_list' );
+			return $this->redirectToRoute( 'ericsson_slice_list' );
 		}
 
-		return $this->render( 'slicemanager/new.html.twig', [
+		return $this->render( 'ericcson_slice_manager/new.html.twig', [
 			'slice' => $slice,
-			'form'  => $form->createView(),
+			'form' => $form->createView(),
 		] );
 	}
 
 	/**
 	 * Displays a form to edit an existing Slicemanager entity.
 	 *
-	 * @Route("/{id<\d+>}/registerslice",methods={"GET", "POST"}, name="slice_register")
+	 * @Route("/{id<\d+>}/ericssonregister",methods={"GET", "POST"}, name="ericsson_slice_register")
 	 */
-	public function register( Request $request, Slicemanager $slice ): Response {
-		$ar                = Yaml::parseFile( "../tosca_file/TOSCA-Metadata/Metadata.yaml" );
-		$ar["name"]        = $slice->getSlicename();
+	public function register(Request $request, SliceManagerEricsson $slice): Response
+	{
+		$ar = Yaml::parseFile("../tosca_file/TOSCA-Metadata/Metadata.yaml");
+		$ar["name"] = $slice->getSlicename();
 		$ar["description"] = $slice->getSlicedescription();
-		$ar["provider"]    = $slice->getSlcieprovider();
-		$yaml              = Yaml::dump( $ar );
-		file_put_contents( '../tosca_file/TOSCA-Metadata/Metadata.yaml', $yaml );
+		$ar["provider"] = $slice->getSlcieprovider();
+		$yaml = Yaml::dump($ar);
+		file_put_contents('../tosca_file/TOSCA-Metadata/Metadata.yaml', $yaml);
 
-		$ar                                                                          = Yaml::parseFile( "../tosca_file/Definitions/IoT_slice.yaml" );
-		$ar['tosca_definitions_version']                                             = $slice->getSlicename();
-		$ar['description']                                                           = $slice->getSlicedescription();
-		$ar['metadata']['vendor']                                                    = $slice->getSlcieprovider();
-		$ar['topology_template']['node_templates']['UDGaaF']['properties']['vendor'] = $slice->getSlcieprovider();
-		$i                                                                           = 0;
-		foreach ( $slice->getFlavourkeys() as $keys ) {
-			$ar['topology_template']['node_templates']['UDGaaF']['properties']['deploymentFlavour'][ $i ]['flavour_key'] = $keys->getName();
-			$i ++;
+		$ar = Yaml::parseFile("../tosca_file/Definitions/IoT_slice.yaml");
+		$ar['tosca_definitions_version'] = $slice->getSlicename();
+		$ar['description'] = $slice->getSlicedescription();
+		$ar['metadata']['vendor'] = $slice->getSlcieprovider();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['vendor'] =$slice->getSlcieprovider();
+		$i=0;
+		foreach ($slice->getFlavourkeys() as $keys)
+		{
+			$ar['topology_template']['node_templates']['UDGaaF']['properties']['deploymentFlavour'][$i]['flavour_key']= $keys->getName();
+			$i++;
 		}
-		$i = 0;
-		foreach ( $slice->getVirtuallink() as $keys ) {
+		$i=0;
+		foreach ($slice->getVirtuallink() as $keys)
+		{
 
-			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][ $i ]['virtualLink'] = $keys->getNeworkname();
-			$i ++;
+			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][$i]['virtualLink']=  $keys->getNeworkname();
+			$i++;
 		}
-		$ar['topology_template']['node_templates']['CP_UDG']['requirements'][1]['virtualLink'] = $keys->getNeworkname();
-		$i                                                                                     = 0;
-		foreach ( $slice->getPopinstance() as $keys ) {
-			$ar['topology_template']['node_templates']['VDU_UDG']['properties']['vim_instance_name'][ $i ] = $keys->getName();
-			$i ++;
-		}
+		$ar['topology_template']['node_templates']['CP_UDG']['requirements'][1]['virtualLink']=  $keys->getNeworkname();
+		$i=0;
+		$yaml = Yaml::dump($ar);
+		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
+		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
+	//	$output1 =shell_exec('chmod +x example.sh');
+		//$output1 = shell_exec('bash ../example.sh');
 
-		$yaml = Yaml::dump( $ar );
-		file_put_contents( '../tosca_file/Definitions/IoT_slice.yaml', $yaml );
-		$output        = shell_exec( 'cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"' );
-		$command       = '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
-		$this->process = New Process( $command );
+		//$process = new Process($command);
+		chdir('../');
+		$output = shell_exec('./script.sh');
+		$process = new Process(['./example.sh']);
+		$process->run();
+		// executes after the command finishes
+		if (!$process->isSuccessful()) {
+			throw new ProcessFailedException($process);
+		}
+		echo $process->getOutput();
+		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../p';
+		$this->process = New Process($command);
 		$this->process->start();
 		try {
 			$this->process->waitUntil( function ( $type, $buffer ) {
 				$this->logger->info( $buffer );
-			} );
-			if ( substr( $this->process->getOutput(), 18, 7 ) == 'FAILURE' ) {
-				return new JsonResponse( $this->process->getOutput() );
+			});
+			if (substr($this->process->getOutput(), 18, 7) =='FAILURE'){
+				return new JsonResponse($this->process->getOutput());
 
-			} else {
-				$pos = strpos( $this->process->getOutput(), 'nsr_id:' );
-				$slice->setSliceid( substr( $this->process->getOutput(), $pos + 8, 36 ) );
-				$slice->setStatus( 1 );
+			}else{
+				$pos=strpos($this->process->getOutput(), 'nsr_id:');
+				$slice->setSliceid(substr($this->process->getOutput(), $pos+8, 36));
+				$slice->setStatus(1);
 				$em = $this->getDoctrine()->getManager();
-				$em->persist( $slice );
+				$em->persist($slice);
 				$em->flush();
-
-				return new JsonResponse( $this->process->getOutput() );
+				return new JsonResponse($this->process->getOutput());
 			}
 
-		} catch ( ProcessFailedException $exception ) {
+		} catch (ProcessFailedException $exception) {
 			echo $exception->getMessage();
-
-			return new JsonResponse( $this->process->getOutput() );
+			return new JsonResponse($this->process->getOutput());
 		}
 	}
 
 	/**
 	 * Displays a form to edit an existing Slicemanager entity.
 	 *
-	 * @Route("/{id<\d+>}/slice_status",methods={"GET", "POST"}, name="slice_status")
+	 * @Route("/{id<\d+>}/status",methods={"GET", "POST"}, name="ericsson_slice_status")
 	 */
-	public function status( Request $request, Slicemanager $slice ): Response {
-		$command = '/home/mandint/slice-manager/slice_manager.py --get-states ' . $slice->getSliceid();
-		$process = New Process( $command );
+	public function status(Request $request, SliceManagerEricsson $slice): Response
+	{
+		$command ='/home/mandint/slice-manager/slice_manager.py --get-states '. $slice->getSliceid();
+		$process = New Process($command);
 		$process->start();
-		$process->waitUntil( function ( $type, $buffer ) {
+		$process->waitUntil( function ( $type, $buffer) {
 			$this->logger->info( $buffer );
 		} );
 
-		return new JsonResponse( $process->getOutput() );
+		return new JsonResponse($process->getOutput());
 	}
 
 	/**
 	 * Displays a form to edit an existing slice entity.
 	 *
-	 * @Route("/{_locale}/{id<\d+>}/editslice",methods={"GET", "POST"}, name="slice_edit")
+	 * @Route("/{_locale}/{id<\d+>}/erricssoneditslice",methods={"GET", "POST"}, name="ericsson_slice_edit")
 	 */
 
-	public function edit( Request $request, Slicemanager $slice ): Response {
+	public function edit( Request $request, SliceManagerEricsson $slice ): Response {
 
-		$form = $this->createForm( SlicemanagerType::class, $slice );
+		$form = $this->createForm( EricssonSlicemanagerType::class, $slice );
 		$form->handleRequest( $request );
 		if ( $form->isSubmitted() && $form->isValid() ) {
-			$slice->setStatus( 0 );
+			$slice->setStatus(0);
 			$this->getDoctrine()->getManager()->flush();
 			$this->addFlash( 'success', 'Slice updated successfully' );
-
-			return $this->redirectToRoute( 'slice_list', [ 'id' => $slice->getId() ] );
+			return $this->redirectToRoute( 'ericsson_slice_list',  ['id' => $slice->getId()]);
 		}
-
-		return $this->render( 'slicemanager/edit.html.twig', [
+		return $this->render( 'ericcson_slice_manager/edit.html.twig', [
 			'slice' => $slice,
-			'form'  => $form->createView(),
+			'form' => $form->createView(),
 		] );
 	}
 
 	//////////////////////////////////////////////
-
 	/**
 	 * Finds and displays a slice entity.
 	 *
-	 * @Route("/{id<\d+>}/sliceshow", methods={"GET","POST"}, name="slice_show")
+	 * @Route("/{id<\d+>}/erricssonshow", methods={"GET","POST"}, name="ericsson_slice_show")
 	 */
 
-	public function show( Slicemanager $slice ): Response {
-
+	public function show(SliceManagerEricsson $slice): Response
+	{
 		// This security check can also be performed
 		// using an annotation: @IsGranted("show", subject="post")
 		// $this->denyAccessUnlessGranted('show', $post, 'Posts can only be shown to their authors.');
 
-		return $this->render( 'slicemanager/show.html.twig', [
+		return $this->render('ericcson_slice_manager/show.html.twig', [
 			'slice' => $slice,
-		] );
+		]);
 	}
 
 	/**
-	 * Deletes a slice entity.
+	 * Deletes a Pop entity.
 	 *
-	 * @Route("/{id<\d+>}/delete", methods={"GET","POST"}, name="slice_delete")
+	 * @Route("/{id<\d+>}/ericssondelete", methods={"GET","POST"}, name="ericsson_slice_delete")
 	 */
 
-	public function deleteVno( Request $request, Slicemanager $slice, AuthenticationUtils $authenticationUtils ): Response {
-		if ( ! $authenticationUtils->getLastUsername() == '' ) {
-			$command       = '/home/mandint/slice-manager/slice_manager.py --delete-slice ' . $slice->getSliceid();
-			$this->process = New Process( $command );
-			$this->process->start();
-			try {
-				$this->process->waitUntil( function ( $type, $buffer ) {
-					$this->logger->info( $buffer );
-				} );
-			} catch ( ProcessFailedException $exception ) {
-				echo $exception->getMessage();
-				return new JsonResponse( $this->process->getOutput() );
-			}
+	public function deleteVno(Request $request, SliceManagerEricsson $slice, AuthenticationUtils $authenticationUtils): Response
+	{
+
+		if (!$authenticationUtils->getLastUsername()=='') {
+
 			// Delete the popinstance associated with this blog post. This is done automatically
 			// by Doctrine, except for SQLite (the database used in this application)
 			// because foreign key support is not enabled by default in SQLite
-			$slice->getPopinstance()->clear();
 			$slice->getVirtuallink()->clear();
 			$em = $this->getDoctrine()->getManager();
-			$em->remove( $slice );
+			$em->remove($slice);
 			$em->flush();
-			$this->addFlash( 'success', 'post.deleted_successfully' );
-
-			return $this->redirectToRoute( 'slice_list' );
-		}else{
-			$this->logger->info( "please login before delete any VNF" );
-			return new JsonResponse( $this->logger->info( "please login before delete any VNF" ));
-
+			$this->addFlash('success', 'post.deleted_successfully');
+			return $this->redirectToRoute('slice_list');
 		}
+		return $this->redirectToRoute('slice_list');
 	}
 
 	/**
@@ -248,9 +242,8 @@ class SlicemanagerController extends AbstractController {
 	 */
 
 	public function createFlavour( Request $request ): Response {
-
 		$flavourkeys = new Flavourkeys();
-		$form        = $this->createForm( FlavourkeysType::class, $flavourkeys );
+		$form = $this->createForm( FlavourkeysType::class, $flavourkeys );
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
@@ -268,12 +261,10 @@ class SlicemanagerController extends AbstractController {
 		}
 
 		return $this->render( 'slicemanager/flavourkeysAdd.html.twig', [
-			'post'   => $flavourkeys,
-			'form'   => $form->createView(),
-			'backId' => $request->query->get( 'backId' )
+			'post' => $flavourkeys,
+			'form' => $form->createView(),
 		] );
 	}
-
 	/**
 	 * Deletes a links entity.
 	 *
@@ -282,7 +273,7 @@ class SlicemanagerController extends AbstractController {
 
 	public function createNetowrks( Request $request ): Response {
 		$virtuallink = new Virtuallink();
-		$form        = $this->createForm( VirtuallinkType::class, $virtuallink );
+		$form          = $this->createForm( VirtuallinkType::class, $virtuallink );
 		$form->handleRequest( $request );
 
 		if ( $form->isSubmitted() && $form->isValid() ) {
@@ -300,9 +291,8 @@ class SlicemanagerController extends AbstractController {
 		}
 
 		return $this->render( 'slicemanager/virtuallinkAdd.html.twig', [
-			'post'   => $virtuallink,
-			'form'   => $form->createView(),
-			'backId' => $request->query->get( 'backId' )
+			'post' => $virtuallink,
+			'form' => $form->createView(),
 		] );
 	}
 
@@ -340,6 +330,7 @@ class SlicemanagerController extends AbstractController {
 			return new JsonResponse();
 		}
 	}
+
 
 
 }
