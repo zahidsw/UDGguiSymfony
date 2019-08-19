@@ -1,14 +1,18 @@
 {% extends "config/layoutConfig.html.twig" %}
-
+ 
 {% block title %}
-    add value
+
 {% endblock %}
 
 {% block head %}
 
+
 {% endblock %}
 
 {% block body %}
+
+
+
     <div id="submenu">
         <a abc="/" class="selected" href="/">Services</a>
 
@@ -34,52 +38,30 @@
         <div class="blocLeft">
             <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
             <a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'IoT Virtual Network'|trans }}</strong></a>
-
         </div>
-
         <div class="blocLeft">
 
-            {{ form_start(form, {'attr': {'id': 'form'},'action': path('slicecreateflavour') }) }}
+            {{ form_start(form, {attr: attr|default({})}) }}
             {{ form_errors(form) }}
-            <table>
-                <tr>
-                    {% if form.vars.help ?? false %}
-                        <div class="form--help">{{ form.vars.help }}</div>
-                    {% endif %}
-                    <td>{{ form_label(form.name, 'conf.name'|trans) }}</td>
-                    <td>{{ form_widget(form.name) }}</td>
-                    <td>{{ form_errors(form.name) }}</td>
-                </tr>
-            </table>
-
+            {{ include('ericcson_slice_manager/_form.html.twig') }}
             {{ form_rest(form) }}
             <br/>
+            <input type="submit" value="{{ 'Update'|trans }}"/>
 
-            <input type="submit" value="{{ 'Add'|trans }}"/>
-            {% if backId == 'ericsson' %}
-                    <a href="{{ path('ericsson_slice_new') }}" class="btn btn-link">
-                        <i class="fa fa-list-alt" aria-hidden="true"></i>
-                        <input type="button" value="{{ 'Back to slice Form'|trans }}"/>
-                    </a>
-            {% else %}
-                <a href="{{ path('slice_new') }}" class="btn btn-link">
-                    <i class="fa fa-list-alt" aria-hidden="true"></i>
-                    <input type="button" value="{{ 'Back to slice Form'|trans }}"/>
-                </a>
-            {% endif %}
+            <a href="{{ path('ericsson_slice_list') }}" class="btn btn-sm btn-default">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+                <input type="button" value="{{ 'Cancel'|trans }}"/>
+            </a>
             {{ form_end(form) }}
         </div>
-
-
     </div>
-
     <div class="blocRight">
 
         {# read and display just one flash message type #}
         {% for message in app.flashes('notice') %}
             <div class="flash-notice">
-			{{ message }}
-		</div>
+                {{ message }}
+            </div>
         {% endfor %}
     </div>
 

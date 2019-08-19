@@ -44,32 +44,32 @@
              h1>{{ 'Slice Details'|trans }}</h1>
             <table class="table table-striped table-middle-aligned">
                 <tbody>
-                <tr>
-                    <td>{{ slice.slicename }}</td>
-                    <td>{{ slice.slicedescription }}</td>
-                    <td>{{ slice.slcieprovider }}</td>
-                    <td>
+
+                <tr><td>{{ slice.slicename }}</td></tr>
+                <tr><td>{{ slice.slicedescription }}</td></tr>
+                <tr>    <td>{{ slice.slcieprovider }}</td></tr>
+                    <tr><td>
                         {% for sl in slice.virtuallink %}
                             <br>  {{ sl.neworkname }}
                         {% endfor %}
-                    </td>
+                        </td>
+                    <tr>
+                   <tr>
                     <td>
                         {% for sl in slice.popinstance %}
                             <br> {{ sl.name }}
                         {% endfor %}
-                    </td>
-
+                        </td>
                 </tr>
                 <tr>
-
-
                     {# it's not mandatory to set the timezone in localizeddate(). This is done to
                       avoid errors when the 'intl' PHP extension is not available and the application
                       is forced to use the limited "intl polyfill", which only supports UTC and GMT #}
                     <td class="text-right">
                         <div class="item-actions">
                             <a href="{{ path('slice_list') }}" class="btn btn-sm btn-primary">
-                                <i class="fa fa-edit" aria-hidden="true"></i> {{ 'Links List'|trans }}
+                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                <input type="button" value="{{ 'Back to Slice List'|trans }}"/>
                             </a>
 
                         </div>
@@ -84,7 +84,6 @@
     </div>
 
     <div class="blocRight">
-
 
         {# read and display just one flash message type #}
         {% for message in app.flashes('notice') %}

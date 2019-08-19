@@ -145,13 +145,62 @@ class FrontController extends AbstractController {
 	}
 
 	/**
-	 * Lists all Post entities.
+	 * two option vno creation manues.
+	 *
+	 * @Route(" /{_locale}/iotListOption", methods={"GET", "POST"}, name="iot_list_option")
+	 */
+
+	public function iotVnoOption() {
+		return $this->render( 'frontpage/iotFrontOption.html.twig' );
+
+	}
+
+
+
+	/**
+	 * Lists all vno entities.
 	 *
 	 * @Route(" /{_locale}/iotList", methods={"GET", "POST"}, name="iot_list")
 	 */
 
 	public function iotVno() {
 		return $this->render( 'frontpage/iotFront.html.twig' );
+
+	}
+
+	/**
+	 * Lists all vno entities.
+	 *
+	 * @Route(" /{_locale}/iotList_ericsson", methods={"GET", "POST"}, name="iot_list_ericsson")
+	 */
+
+	public function iotEricssonVno() {
+		return $this->render( 'frontpage/iotFrontEricsson.html.twig' );
+
+	}
+
+	/**
+	 * Lists all Vno entities.
+	 *
+	 * @Route(" /{_locale}/listVnoEricsson", methods={"GET", "POST"}, name="slice_list_ericsson")
+	 */
+
+	public function listVnoEricsson( PopRepository $pops ) {
+		$pops = $pops->findAll();
+		return $this->render( 'frontpage/vnoListEricsson.html.twig', [ 'pops' => $pops ] );
+
+	}
+
+	/**
+	 * Lists all Post entities.
+	 *
+	 * @Route(" /{_locale}/iotConfigurationEricsson", methods={"GET", "POST"}, name="iot_configuration_ericsson")
+	 */
+
+	public function iotConfigurationEricsson( PopRepository $pops ) {
+		$pops = $pops->findAll();
+
+		return $this->render( 'frontpage/iotConfigurationEricsson.html.twig', [ 'pops' => $pops ] );
 
 	}
 

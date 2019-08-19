@@ -24,40 +24,20 @@
 
 <div class="scenarios">
 
-	<a href="{{ path('pop_list')}}">
+	<a href="{{ path('iot_list_ericsson')}}">
 		<div>
 			<img src="{{ asset('/assets/images/front/virtual.png') }}">
 				<br>
-				<span>POP Management</span>
+				<span>Deploy IoT Virtual Network (by Ericsson)</span>
 			</div>
 	</a>
-
-		<div>
-			<img src="{{ asset('/assets/images/front/arrow.png') }}">
-			<br>
-		</div>
-
-	<a href="{{ path('slice_list')}}">
+	<a href="{{ path('iot_list')}}">
 		<div>
 			<img src="{{ asset('assets/images/front/camera.png') }}">
 				<br>
-				<span>Slice Management</span>
-			</div>
-	</a>
-	<div>
-		<img src="{{ asset('/assets/images/front/arrow.png') }}">
-		<br>
-	</div>
-	<a href="{{ path('iot_configuration')}}">
-		<div>
-			<img src="{{ asset('/assets/images/front/design.png') }}">
-				<br>
-				<span>Application Configuration</span>
+				<span>Deploy IoT Virtual Network (by OpenBaton)</span>
 			</div>
 	</a>
 </div>
-	<br>
-
-		<b><span><h1>Networks Slices creation and configuration</h1></span></b>
-
+    
 {% endblock %}

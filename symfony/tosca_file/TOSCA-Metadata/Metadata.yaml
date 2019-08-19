@@ -1,8 +1,8 @@
-name: TEST2
+name: IoT_slice_test
 image:
     upload: false
-    names: [Ubuntu-16.04]
+    names: [udg_image_20190816]
 vim_types:
     - openstack
-description: 'USE FOR PERSONAL'
-provider: mandate
+description: 'Mandat International / Device Gateway'
+provider: DeviceGateway

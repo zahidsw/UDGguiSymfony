@@ -30,7 +30,7 @@
         <div class="blocLeft">
             <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
             <a href="http://udg.cityreport.org"
-               class="title indent"><strong> {{ 'IoT Slices List'|trans }}</strong></a>
+               class="title indent"><strong> {{ 'IoT Ericsson based Slices List'|trans }}</strong></a>
         </div>
         <div id="zebraTableDiv">
             <table style="width:100%">
@@ -55,15 +55,9 @@
                                 {{ sl.neworkname }}|
                             {% endfor %}
                         </td>
-                        <td>
-                            {% for sl in slice.popinstance %}
-                                {{ sl.name }}|
-                            {% endfor %}
-                        </td>
-
                         <td style="width:30px; text-align:center;">
                     {% if slice.status == false %}
-                            <div path="{{ path('slice_register', {id: slice.id}) }}"  value="{{slice.id}}" class="iotslicerigister">
+                            <div path="{{ path('ericsson_slice_register', {id: slice.id}) }}"  value="{{slice.id}}" class="iotslicerigister">
                                 <img src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
                             </div>
                     {% else %}
@@ -71,25 +65,26 @@
                     {% endif %}
                         </td>
                        <td style="width:30px; text-align:center;">
-                            <a href="{{ path('slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">
+                            <a href="{{ path('ericsson_slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">
                                 <i class="fa fa-edit" aria-hidden="true"></i> <img
                                         src="{{ asset('assets/images/interface/icons/show.png') }}"/>
                             </a>
                         </td>
                         <td style="width:30px; text-align:center;">
-                            <a href="{{ path('slice_edit', {id: slice.id}) }}" class="btn btn-sm btn-primary">
+                            <a href="{{ path('ericsson_slice_edit', {id: slice.id}) }}" class="btn btn-sm btn-primary">
                                 <i class="fa fa-edit" aria-hidden="true"></i> <img
                                         src="{{ asset('assets/images/interface/icons/edit.png') }}"/>
                             </a>
                         </td>
                         <td style="width:30px; text-align:center;">
-                            <a href="{{ path('slice_delete', { 'id': slice.id }) }}" class="iotslicedelete" value="{{slice.id}}">
+                            <a href="{{ path('ericsson_slice_delete', { 'id': slice.id }) }}">
                                 <img src="{{ asset('assets/images/interface/icons/delete.png') }}"
+                                     {#onclick="return(confirm('{{ 'conf.ask.delete_building'|trans }}'));"#}
                                 />
                             </a>
                         </td>
                           <td style="width:30px; text-align:center;">
-                            <div class="iotslicestatus" id="iotslice{{slice.id }}" path="{{ path('slice_status', { 'id': slice.id }) }}" status="{{slice.status}}">
+                            <div class="iotslicestatus" id="iotslice{{slice.id }}" path="{{ path('ericsson_slice_status', { 'id': slice.id }) }}" status="{{slice.status}}">
                                 <img src="{{ asset('assets/images/interface/icons/info_icon.png') }}"
                                 />
                             </div>
@@ -101,10 +96,10 @@
             <br/>
         </div>
         <div class="section actions">
-            <a href="{{ path('slice_new') }}" class="btn btn-lg btn-block btn-success">
+            <a href="{{ path('ericsson_slice_new') }}" class="btn btn-lg btn-block btn-success">
                 <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Slice'|trans }}"/>
             </a>
-            <a href="{{ path('iot_list') }}" class="btn btn-sm btn-default">
+            <a href="{{ path('iot_list_ericsson') }}" class="btn btn-sm btn-default">
                 <i class="fa fa-eye" aria-hidden="true"></i>
                 <input type="button" title="back to IoT slice lists" value="{{ 'Cancel'|trans }}"/>
             </a>
