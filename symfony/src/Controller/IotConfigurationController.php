@@ -92,9 +92,36 @@ class IotConfigurationController extends AbstractController {
 	 */
 	public function register(Request $request, IotConfiguration $iot_configuration): Response
 	{
-		$iot_configuration->getSlicemanager()->getSliceid();
+		$ar                = Yaml::parseFile( "../tosca_file/TOSCA-Metadata/Metadata.yaml" );
+		$ar["name"]        = $iot_configuration->getSlicemanager()->getSlicename();
+		$ar["description"] = $iot_configuration->getSlicemanager()->getSlicedescription();
+		$ar["provider"]    = $iot_configuration->getSlicemanager()->getSlcieprovider();
+		$yaml              = Yaml::dump( $ar );
 
-		$ar = Yaml::parseFile("../tosca_file/Definitions/IoT_slice.yaml");
+		file_put_contents( '../tosca_file/TOSCA-Metadata/Metadata.yaml', $yaml );
+		$ar                                                                          = Yaml::parseFile( "../tosca_file/Definitions/IoT_slice.yaml" );
+		$ar['tosca_definitions_version']                                             = $iot_configuration->getSlicemanager()->getSlicename();
+		$ar['description']                                                           = $iot_configuration->getSlicemanager()->getSlicedescription();
+		$ar['metadata']['vendor']                                                    = $iot_configuration->getSlicemanager()->getSlcieprovider();
+		$ar['topology_template']['node_templates']['UDGaaF']['properties']['vendor'] = $iot_configuration->getSlicemanager()->getSlcieprovider();
+		$i                                                                           = 0;
+		foreach ( $iot_configuration->getSlicemanager()->getFlavourkeys() as $keys ) {
+			$ar['topology_template']['node_templates']['UDGaaF']['properties']['deploymentFlavour'][ $i ]['flavour_key'] = $keys->getName();
+			$i ++;
+		}
+		$i = 0;
+		foreach ( $iot_configuration->getSlicemanager()->getVirtuallink() as $keys ) {
+
+			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][ $i ]['virtualLink'] = $keys->getNeworkname();
+			$i ++;
+		}
+		$ar['topology_template']['node_templates']['CP_UDG']['requirements'][1]['virtualLink'] = $keys->getNeworkname();
+		$i                                                                                     = 0;
+		foreach ( $iot_configuration->getSlicemanager()->getPopinstance() as $keys ) {
+			$ar['topology_template']['node_templates']['VDU_UDG']['properties']['vim_instance_name'][ $i ] = $keys->getName();
+			$i ++;
+		}
+
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][6]['target_temp_Sens_name']= $iot_configuration->getTargetTempSensName();
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][7]['target_temp_sens_URL']= $iot_configuration->getTargetTempSensURL();
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][8]['temp_threshold']= $iot_configuration->getTempThreshold();
@@ -105,107 +132,52 @@ class IotConfigurationController extends AbstractController {
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][13]['minimum_bandwidth']= $iot_configuration->getMinimumBandwidth();
 		$ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters'][14]['max_bandwidth']= $iot_configuration->getMaxBandwidth();
 		$iot_configuration->setStatus(1);
-		var_dump($ar['topology_template']['node_templates']['UDGaaF']['properties']['configurations']['configurationParameters']);
-
-
 
 		$yaml = Yaml::dump($ar);
-
 		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
 		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
 		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
-		$process = New Process($command);
+		$this->process = New Process($command);
+		$this->process->start();
 		try {
-			$process->mustRun( function ( $type, $buffer ) {
+			$this->process->waitUntil( function ( $type, $buffer ) {
 				$this->logger->info( $buffer );
-				$this->addFlash(
-					'notice',
-					$buffer
-				);
 			} );
+			if ( substr( $this->process->getOutput(), 18, 7 ) == 'FAILURE' ) {
+				return new JsonResponse( $this->process->getOutput() );
 
-			if (substr($process->getOutput(), 18, 7) =='FAILURE'){
-
-			}else{
-				$iot_configuration->setStatus(1);
+			} else {
+				$pos = strpos( $this->process->getOutput(), 'nsr_id:' );
+				$iot_configuration->getSlicemanager()->setSliceid( substr( $this->process->getOutput(), $pos + 8, 36 ) );
+				$iot_configuration->getSlicemanager()->setStatus( 1 );
 				$em = $this->getDoctrine()->getManager();
 				$em->persist( $iot_configuration );
 				$em->flush();
+				return new JsonResponse( $this->process->getOutput() );
 			}
 
-		} catch (ProcessFailedException $exception) {
+		} catch ( ProcessFailedException $exception ) {
 			echo $exception->getMessage();
-			return $this->redirectToRoute( 'iot_configuration' );
+
+			return new JsonResponse( $this->process->getOutput() );
 		}
-
-		return $this->redirectToRoute('iot_configuration');
 	}
-
-
 	/**
-	 * Deletes a Security entity.
+	 * Displays a form to edit an existing Slicemanager entity.
 	 *
-	 * @Route("/iotconfig/ajax"), methods={"POST"},  name="iotajax")
+	 * @Route("/{id<\d+>}/iot_status",methods={"GET", "POST"}, name="iot_status")
 	 */
+	public function status( Request $request, IotConfiguration $iot ): Response {
+		$command = '/home/mandint/slice-manager/slice_manager.py --get-states ' . $iot->getSlicemanager()->getSliceid();
+		$process = New Process( $command );
+		$process->start();
+		$process->waitUntil( function ( $type, $buffer ) {
+			$this->logger->info( $buffer );
+		} );
 
-	public function ajaxAction( Request $request ) {
-
-		if ( $request->isXmlHttpRequest() ) {
-			$template_ids = $request->request->get( 'template_id' );
-			//		var_dump($template_ids);
-		}
-
-		if ( $request->isXmlHttpRequest() || $template_ids == 'temp' ) {
-			//	var_dump("asdfsd");
-			//	die("sdfsd");
-			//	$iotconfig = new IotConfiguration();
-			//	$form = $this->createForm( IotConfigurationType::class, $iotconfig );
-			//	$form->handleRequest( $request );
-			/*
-						if ( $form->isSubmitted() && $form->isValid() ) {
-							$em = $this->getDoctrine()->getManager();
-							$em->persist( $iotconfig );
-							$em->flush();
-
-							// Flash messages are used to notify the user about the result of the
-							// actions. They are deleted automatically from the session as soon
-							// as they are accessed.
-							// See https://symfony.com/doc/current/book/controller.html#flash-messages
-							$this->addFlash( 'success', 'slice created_successfully' );
-
-							return $this->redirectToRoute( 'slice_list' );
-						}
-			*/
-			//	return $this->JsonResponse();
-
-			/*	$template_ids = $request->request->get( 'template_id' );
-				$total        = count( $template_ids );
-				for ( $i = 0; $i < $total; $i ++ ) {
-					$repo = $this->getDoctrine()->getRepository( Securitygroup::class )->find( $template_ids[ $i ] );
-					$em   = $this->getDoctrine()->getManager();
-					$em->remove( $repo );
-					$em->flush();
-				}
-				$this->addFlash( 'success', 'SecurityGroups deleted successfully' );
-				$securitygroups = $this->getDoctrine()
-									   ->getRepository( Securitygroup::class )
-									   ->findAll();
-
-				$jsonData       = array();
-				$idx            = 0;
-				foreach ( $securitygroups as $student ) {
-					$temp                = array(
-						'name' => $student->getName(),
-						'ids'  => $student->getId(),
-					);
-					$jsonData[ $idx ++ ] = $temp;
-				}
-			*/
-
-			return $this->json( [ 'username' => $template_ids ] );
-		}
-
+		return new JsonResponse( $process->getOutput() );
 	}
+
 
 	/**
 	 * Displays a form to edit an existing slice entity.
