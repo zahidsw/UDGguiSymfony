@@ -6,8 +6,11 @@ use App\Entity\Gui\Pop;
 
 
 use App\Entity\Gui\Securitygroup;
+use App\Entity\Gui\SliceManagerEricsson;
 use App\Form\PopType;
 use App\Form\SecuritygroupType;
+use App\Repository\Gui\IotConfigurationEricssonRepository;
+use App\Repository\Gui\IotConfigurationRepository;
 use App\Repository\Gui\PopRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -176,31 +179,6 @@ class FrontController extends AbstractController {
 
 	public function iotEricssonVno() {
 		return $this->render( 'frontpage/iotFrontEricsson.html.twig' );
-
-	}
-
-	/**
-	 * Lists all Vno entities.
-	 *
-	 * @Route(" /{_locale}/listVnoEricsson", methods={"GET", "POST"}, name="slice_list_ericsson")
-	 */
-
-	public function listVnoEricsson( PopRepository $pops ) {
-		$pops = $pops->findAll();
-		return $this->render( 'frontpage/vnoListEricsson.html.twig', [ 'pops' => $pops ] );
-
-	}
-
-	/**
-	 * Lists all Post entities.
-	 *
-	 * @Route(" /{_locale}/iotConfigurationEricsson", methods={"GET", "POST"}, name="iot_configuration_ericsson")
-	 */
-
-	public function iotConfigurationEricsson( PopRepository $pops ) {
-		$pops = $pops->findAll();
-
-		return $this->render( 'frontpage/iotConfigurationEricsson.html.twig', [ 'pops' => $pops ] );
 
 	}
 
