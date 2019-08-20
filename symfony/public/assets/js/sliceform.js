@@ -157,6 +157,7 @@ $(document).ready(function () {
             $('#form').hide();
             $('#div_humidity').show();
         } else {
+            $('#form').hide();
             $('#div_humidity').show();
         }
 
@@ -198,4 +199,31 @@ $(document).ready(function () {
         //  $(".hidden").hidden();
     });
 
+
+
+    $('#iot_configuration_emergencySliceName').on('change', function() {
+        if(this.value == 'video') {
+            $('.videoslice').show();
+        }
+        else if(this.value == 'sms') {
+            $('.videoslice').hide();
+            $('.second-select option[value="4"]').hide();
+            $('.second-select option[value="3"]').hide();
+            $('.second-select').prop('selectedIndex',2);
+            $('#smsslice').show();
+        }
+        else if(this.value == 'email') {
+            $('.videoslice').hide();
+            $('.second-select option[value="4"]').hide();
+            $('.second-select option[value="3"]').hide();
+            $('.second-select').prop('selectedIndex',2);
+            $('#smsslice').show();
+        }
+        else{
+            $('.videoslice').hide();
+            $('#smsslice').hide();
+        }
+    })
+    $('.videoslice').hide();
+    $('#smsslice').hide();
 });

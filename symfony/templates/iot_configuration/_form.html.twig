@@ -63,11 +63,11 @@
             <span class="popuptext">{{ form_help(form.emergencySliceName) }}</span>
         </td>
     </tr>
-    <tr>
+    <tr class="videoslice">
             <td>{{ form_label(form.cameraIP, 'Camera IP'|trans) }}</td>
             <td>{{ form_widget(
                     form.cameraIP,
-                    (slice.cameraIP is null ? {'attr': {'value':''} } : {})
+                    (slice.cameraIP is null ? {'attr': {'value':'10.0.0.20'} } : {})
                 )}}</td>
             <td>
                 <small>{{ form_help(form.cameraIP) }}</small>
@@ -78,12 +78,12 @@
                 <span class="popuptext">{{ form_help(form.cameraIP) }}</span>
             </td>
     </tr>
-    </div>
-    <tr>
+
+    <tr class="videoslice">
         <td>{{ form_label(form.cameraPort, 'camera Port') }}</td>
         <td>{{ form_widget(
                 form.cameraPort,
-                (slice.cameraPort is null ? {'attr': {'value':''} } : {})
+                (slice.cameraPort is null ? {'attr': {'value':'554'} } : {})
             ) }}</td>
         <td>
             <small>{{ form_help(form.cameraPort) }}</small>
@@ -95,11 +95,11 @@
         </td>
 
     </tr>
-    <tr>
+    <tr class="videoslice">
         <td>{{ form_label(form.cameraUser, 'User') }}</td>
         <td>{{ form_widget(
                 form.cameraUser,
-                (slice.cameraUser is null ? {'attr': {'value':''} } : {})
+                (slice.cameraUser is null ? {'attr': {'value':'demo'} } : {})
             ) }}</td>
         <td>
             <small>{{ form_help(form.cameraUser) }}</small>
@@ -111,11 +111,11 @@
         </td>
 
     </tr>
-    <tr>
+    <tr class="videoslice">
         <td>{{ form_label(form.cameraPassword, 'Password') }}</td>
         <td>{{ form_widget(
                 form.cameraPassword,
-                (slice.cameraPassword is null ? {'attr': {'value':''} } : {})
+                (slice.cameraPassword is null ? {'attr': {'value':'5GDEMbru'} } : {})
             ) }}</td>
         <td>
             <small>{{ form_help(form.cameraPassword) }}</small>
@@ -127,11 +127,11 @@
         </td>
 
     </tr>
-    <tr>
+    <tr class="videoslice">
         <td>{{ form_label(form.minimumBandwidth, 'Minimum Bandwidth') }}</td>
         <td>{{ form_widget(
                 form.minimumBandwidth,
-                (slice.minimumBandwidth is null ? {'attr': {'value':''} } : {})
+                (slice.minimumBandwidth is null ? {'attr': {'value':'1000000'} } : {})
             ) }}</td>
         <td>
             <small>{{ form_help(form.minimumBandwidth) }}</small>
@@ -143,11 +143,11 @@
         </td>
 
     </tr>
-    <tr>
+    <tr class="videoslice">
         <td>{{ form_label(form.maxBandwidth, 'Maximum Bandwidth') }}</td>
         <td>{{ form_widget(
                 form.maxBandwidth,
-                (slice.maxBandwidth is null ? {'attr': {'value':''} } : {})
+                (slice.maxBandwidth is null ? {'attr': {'value':'5000000'} } : {})
             ) }}</td>
         <td>
             <small>{{ form_help(form.maxBandwidth) }}</small>
@@ -158,7 +158,7 @@
             <span class="popuptext">{{ form_help(form.targetTempSensURL) }}</span>
         </td>
     </tr>
-    <tr>
+    <tr class="videoslice">
         <td>{{ form_label(form.slicemanager, 'Choose Slices') }}</td>
         <td>{{ form_widget(
                 form.slicemanager,
