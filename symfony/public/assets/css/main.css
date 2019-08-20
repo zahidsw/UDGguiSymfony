@@ -469,7 +469,7 @@ div.scenarios {
     text-align: center;
     width: 160px;
 }
-.scenarios div:hover {
+.scenarios > a > div:hover {
 	background-color: #efebef;
 	color: red;
 	cursor: pointer;
@@ -786,6 +786,15 @@ div.messageKo {
 }
 
 /*--------------------- end of spinner -----------------*/
+
+/*----------------------start of div for overlapping ---------------*/
+#tempsensurl{
+
+max-width: 100px;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+/*----------------------end of div */
 
 body{
 	position:relative;
