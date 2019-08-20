@@ -93,7 +93,7 @@ $(document).ready(function () {
             $(this).css('display', 'none');
         }
     });
-    $(".iotslicerigister").click(function () {
+    $(".iotregister").click(function () {
         $('.outputtext').css('display', 'none');
         var path = $(this).attr("path");
         var value = $(this).attr("value");

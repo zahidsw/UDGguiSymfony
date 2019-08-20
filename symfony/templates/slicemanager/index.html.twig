@@ -8,7 +8,7 @@
 
 {% block body %}
     <div id="lds-hourglass"></div>
-<div id="submenu">
+    <div id="submenu">
         <a abc="/" class="selected" href="/">Services</a>
 
         |
@@ -62,15 +62,17 @@
                         </td>
 
                         <td style="width:30px; text-align:center;">
-{#                    {% if slice.status == false %}
-                            <div path="{{ path('slice_register', {id: slice.id}) }}"  value="{{slice.id}}" class="iotslicerigister">
-                                <img src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
-                            </div>
-                    {% else %}
-                          <img src="{{ asset('assets/images/interface/icons/updated.png') }}" class="updateslice"/>
-                    {% endif %}
-                        </td>#}
-                       <td style="width:30px; text-align:center;">
+                            {% if slice.status == false %}
+                                <div path="{{ path('slice_register', {id: slice.id}) }}" value="{{ slice.id }}"
+                                     class="iotregister">
+                                    <img src="{{ asset('assets/images/interface/icons/exec.png') }}"/>
+                                </div>
+                            {% else %}
+                                <img src="{{ asset('assets/images/interface/icons/updated.png') }}"
+                                     class="updateslice"/>
+                            {% endif %}
+                        </td>
+                        <td style="width:30px; text-align:center;">
                             <a href="{{ path('slice_show', {id: slice.id}) }}" class="btn btn-sm btn-default">
                                 <i class="fa fa-edit" aria-hidden="true"></i> <img
                                         src="{{ asset('assets/images/interface/icons/show.png') }}"/>
@@ -83,13 +85,15 @@
                             </a>
                         </td>
                         <td style="width:30px; text-align:center;">
-                            <a href="{{ path('slice_delete', { 'id': slice.id }) }}" class="iotslicedelete" value="{{slice.id}}">
+                            <a href="{{ path('slice_delete', { 'id': slice.id }) }}" class="iotslicedelete"
+                               value="{{ slice.id }}">
                                 <img src="{{ asset('assets/images/interface/icons/delete.png') }}"
                                 />
                             </a>
                         </td>
-                          <td style="width:30px; text-align:center;">
-                            <div class="iotslicestatus" id="iotslice{{slice.id }}" path="{{ path('slice_status', { 'id': slice.id }) }}" status="{{slice.status}}">
+                        <td style="width:30px; text-align:center;">
+                            <div class="iotslicestatus" id="iotslice{{ slice.id }}"
+                                 path="{{ path('slice_status', { 'id': slice.id }) }}" status="{{ slice.status }}">
                                 <img src="{{ asset('assets/images/interface/icons/info_icon.png') }}"
                                 />
                             </div>
@@ -99,7 +103,7 @@
                 </tbody>
             </table>
             <br/>
-        </div>3
+        </div>
         <div class="section actions">
             <a href="{{ path('slice_new') }}" class="btn btn-lg btn-block btn-success">
                 <i class="fa fa-plus" aria-hidden="true"></i><input type="button" value="{{ 'New Slice'|trans }}"/>
