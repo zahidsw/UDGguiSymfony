@@ -1,7 +1,7 @@
 name: IoT_slice_test
 image:
     upload: false
-    names: [udg_image_20190816]
+    names: [udg_image_20190820]
 vim_types:
     - openstack
 description: 'Mandat International / Device Gateway'
