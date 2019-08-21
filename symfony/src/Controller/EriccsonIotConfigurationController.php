@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Gui\IotConfiguration;
 use App\Form\IotConfigurationType;
+use App\Repository\Gui\IotConfigurationEricssonRepository;
 use App\Repository\Gui\IotConfigurationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ use App\Repository\Gui\PopRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class IotConfigurationController extends AbstractController {
+class EriccsonIotConfigurationController extends AbstractController {
 	private $logger;
 	private $translator;
 
@@ -40,17 +41,19 @@ class IotConfigurationController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/{_locale}/listiot", name="iot_configuration")
+	 * @Route("/{_locale}/ericssonlistiot", name="ericsson_iot_configuration")
 	 */
-	public function index( IotConfigurationRepository $iotconfig ): Response {
+	public function index( IotConfigurationEricssonRepository $iotconfig ): Response {
+
 		$iotconfig = $iotconfig->findAll();
-		return $this->render( 'iot_configuration/index.html.twig', [ 'iotconfigs' => $iotconfig ] );
+
+		return $this->render( 'ericsson_iot_configuration/index.html.twig', [ 'iotconfigs' => $iotconfig ] );
 	}
 
 	/**
 	 * Creates a new iot configration entity.
 	 *
-	 * @Route("/{_locale}/newconfig", methods={"GET", "POST"}, name="configuration_new")
+	 * @Route("/{_locale}/ericssonnewconfig", methods={"GET", "POST"}, name="ericsson_configuration_new")
 	 *
 	 * NOTE: the Method annotation is optional, but it's a recommended practice
 	 * to constraint the HTTP methods each controller responds to (by default
@@ -74,10 +77,10 @@ class IotConfigurationController extends AbstractController {
 			// See https://symfony.com/doc/current/book/controller.html#flash-messages
 			$this->addFlash( 'success', 'slice created_successfully' );
 
-			return $this->redirectToRoute( 'iot_configuration' );
+			return $this->redirectToRoute( 'ericsson_iot_configuration' );
 		}
 
-		return $this->render( 'iot_configuration/new.html.twig', [
+		return $this->render( 'ericsson_iot_configuration/new.html.twig', [
 			'slice' => $iotconfig,
 			'form'  => $form->createView(),
 		] );
@@ -86,7 +89,7 @@ class IotConfigurationController extends AbstractController {
 	/**
 	 * Displays a form to edit an existing IotConfiguration entity.
 	 *
-	 * @Route("/{id<\d+>}/iotregister",methods={"GET", "POST"}, name="iot_register")
+	 * @Route("/{id<\d+>}/ericssoniotregister",methods={"GET", "POST"}, name="ericsson_iot_register")
 	 */
 	public function register(Request $request, IotConfiguration $iot_configuration): Response
 	{
@@ -133,13 +136,7 @@ class IotConfigurationController extends AbstractController {
 
 		$yaml = Yaml::dump($ar);
 		file_put_contents('../tosca_file/Definitions/IoT_slice.yaml', $yaml);
-		$commond = 'cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"';
-		$this->process = New Process($commond);
-		$this->process->start();
-		// waits until the given anonymous function returns true
-		$this->process->waitUntil(function ($type, $output) {
-			$output === 'Ready. Waiting for commands...';
-		});
+		$output = shell_exec('cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"');
 		$command ='/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
 		$this->process = New Process($command);
 		$this->process->start();
@@ -169,7 +166,7 @@ class IotConfigurationController extends AbstractController {
 	/**
 	 * Displays a form to edit an existing Slicemanager entity.
 	 *
-	 * @Route("/{id<\d+>}/iot_status",methods={"GET", "POST"}, name="iot_status")
+	 * @Route("/{id<\d+>}/ericssoniot_status",methods={"GET", "POST"}, name="ericsson_iot_status")
 	 */
 	public function status( Request $request, IotConfiguration $iot ): Response {
 		$command = '/home/mandint/slice-manager/slice_manager.py --get-states ' . $iot->getSlicemanager()->getSliceid();
@@ -186,7 +183,7 @@ class IotConfigurationController extends AbstractController {
 	/**
 	 * Displays a form to edit an existing slice entity.
 	 *
-	 * @Route("/{_locale}/{id<\d+>}/editiotconfig",methods={"GET", "POST"}, name="iot_edit")
+	 * @Route("/{_locale}/{id<\d+>}/ericssoneditiotconfig",methods={"GET", "POST"}, name="ericsson_iot_edit")
 	 */
 
 	public function edit( Request $request, IotConfiguration $iot ): Response {
@@ -212,7 +209,7 @@ class IotConfigurationController extends AbstractController {
 	/**
 	 * Finds and displays a slice entity.
 	 *
-	 * @Route("/{id<\d+>}/iotconfigshow", methods={"GET","POST"}, name="iot_show")
+	 * @Route("/{id<\d+>}/ericssoniotconfigshow", methods={"GET","POST"}, name="ericsson_iot_show")
 	 */
 
 	public function show( IotConfiguration $iot ): Response {
@@ -229,7 +226,7 @@ class IotConfigurationController extends AbstractController {
 	/**
 	 * Deletes a Pop entity.
 	 *
-	 * @Route("/{id<\d+>}/iotdelete", methods={"GET","POST"}, name="iot_delete")
+	 * @Route("/{id<\d+>}/ericssoniotdelete", methods={"GET","POST"}, name="ericsson_iot_delete")
 	 */
 
 	public function deleteVno( Request $request, IotConfiguration $slice, AuthenticationUtils $authenticationUtils ): Response {
