@@ -1,0 +1,74 @@
+{% extends "config/layoutConfig.html.twig" %}
+ 
+{% block title %}
+    add value
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+    <div id="submenu">
+        <a abc="/" class="selected" href="/">Services</a>
+        |
+        <a abc="/en/front/discussion/serviceSubscription" class="selected"
+           href="/en/front/discussion/serviceSubscription">Discussion</a>
+        |
+        <a abc="/en/front/customer" href="/en/front/customer">Customer Support</a>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="blocLeft">
+        <img class="legend" alt="{{ 'msg.interact'|trans }}" src="{{ asset('/assets/images/front/virtual.png') }}"/>
+        <a href="http://udg.cityreport.org" class="title indent"><strong> {{ 'New IoT configuration for avaliable slices'|trans }}</strong></a>
+    </div>
+    <div class="leftColumn">
+        <div class="blocLeft">
+            <input id="temp" type="radio" name="ingredients[]" displayvalue="Temperature Monitoring"/>
+            <label for="temp">Temperature Monitoring</label><br>
+            <input id="humidity" type="radio" name="ingredients[]" value="Humidity"/>
+            <label for="humidity">Humidity Monitoring</label><br>
+            <input id="traffic" type="radio" name="ingredients[]" value="Traffic"/>
+            <label for="traffic">Traffic Monitoring</label>
+            <br/>
+        </div>
+
+        <div class="blocLeft">
+            {{ form_start(form, {'attr': {'id': 'form', 'hidden':true },'action': path('ericsson_configuration_new')}) }}
+            {{ form_errors(form) }}
+            {{ include('iot_configuration/_form.html.twig') }}
+            {{ form_rest(form) }}
+            <br/>
+            <input type="submit" class="videoslice" title="add a new configuration" value="{{ 'Add'|trans }}"/>
+
+            <a href="{{ path('ericsson_iot_configuration') }}" class="btn btn-sm btn-default videoslice">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+                <input type="button" title="back to configuration list" value="{{ 'Cancel'|trans }}"/>
+            </a>
+            {{ form_end(form) }}
+            <div id="div_humidity" class="blocLeft">
+                <p><span><h1>This section is still under construction</h1></span></p>
+            </div>
+            <div id="smsslice" class="blocLeft">
+                <p><span><h1>This slice type still under construction</h1></span></p>
+            </div>
+
+        </div>
+    </div>
+    <div class="blocRight">
+        {# read and display just one flash message type #}
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+
+{% endblock %}

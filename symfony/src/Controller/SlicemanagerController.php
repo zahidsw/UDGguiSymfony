@@ -116,7 +116,13 @@ class SlicemanagerController extends AbstractController {
 
 		$yaml = Yaml::dump( $ar );
 		file_put_contents( '../tosca_file/Definitions/IoT_slice.yaml', $yaml );
-		$output        = shell_exec( 'cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"' );
+		 $command ='cd ../tosca_file && zip -r IoT_slice.csar . -x ".*" -x "*/.*"' ;
+		$this->process = New Process($command);
+		$this->process->start();
+		// waits until the given anonymous function returns true
+		$this->process->waitUntil(function ($type, $output) {
+			$output === 'Ready. Waiting for commands...';
+		});
 		$command       = '/home/mandint/slice-manager/slice_manager.py --tosca-file ../tosca_file/IoT_slice.csar';
 		$this->process = New Process( $command );
 		$this->process->start();
