@@ -31,6 +31,10 @@
 				<span>POP Management</span>
 			</div>
 	</a>
+
+	<div>
+		<img src="{{ asset('/assets/images/front/arrow.png') }}">
+	</div>
 	<a href="{{ path('slice_list')}}">
 		<div>
 			<img src="{{ asset('assets/images/front/camera.png') }}">
@@ -38,6 +42,10 @@
 				<span>Slice Management</span>
 			</div>
 	</a>
+	<div>
+		<img src="{{ asset('/assets/images/front/arrow.png') }}">
+	</div>
+
 	<a href="{{ path('iot_configuration')}}">
 		<div>
 			<img src="{{ asset('/assets/images/front/design.png') }}">
@@ -45,7 +53,9 @@
 				<span>Application Configuration</span>
 			</div>
 	</a>
-					
 </div>
+	<div>
+		<p><b>These steps are need to follow in order to make a VNF Slices</b></p>
+	</div>
     
 {% endblock %}
