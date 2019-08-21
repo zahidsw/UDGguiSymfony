@@ -840,3 +840,7 @@ body{
 .outputtext {
 	display: none
 }
+#icon{
+	padding-left: 50px;
+	padding-top: inherit;
+}
