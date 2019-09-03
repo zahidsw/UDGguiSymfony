@@ -108,13 +108,15 @@ class IotConfigurationController extends AbstractController {
 			$i ++;
 		}
 		$i = 0;
+		$ar['topology_template']['node_templates']['UDGaaF']['requirements']= null;
 		foreach ( $iot_configuration->getSlicemanager()->getVirtuallink() as $keys ) {
 
 			$ar['topology_template']['node_templates']['UDGaaF']['requirements'][ $i ]['virtualLink'] = $keys->getNeworkname();
 			$i ++;
 		}
 		$ar['topology_template']['node_templates']['CP_UDG']['requirements'][1]['virtualLink'] = $keys->getNeworkname();
-		$i                                                                                     = 0;
+		$i = 0;
+		$ar['topology_template']['node_templates']['VDU_UDG']['properties']['vim_instance_name'] = null;
 		foreach ( $iot_configuration->getSlicemanager()->getPopinstance() as $keys ) {
 			$ar['topology_template']['node_templates']['VDU_UDG']['properties']['vim_instance_name'][ $i ] = $keys->getName();
 			$i ++;
